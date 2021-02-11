@@ -1,5 +1,26 @@
+.SideBar {
+  position: fixed;
+  width: 60px;
+  height: 100vh;
+  background-color: #282c34;
+  color: white;
+  box-shadow: 5px 0px 5px 2px rgb(109, 107, 112);
+}
+
+.Bars {
+  background-color: whitesmoke;
+  width: 40px;
+  height: 40px;
+  margin: 10px;
+}
+
+
 .App {
   text-align: center;
+  display: inline-block;
+  padding-left: 60px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .App-logo {
