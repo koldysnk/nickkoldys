@@ -6,6 +6,7 @@ import './App.css';
 function App() {
   return (
     <div>
+      <script src='src/sidebarFunction.js'></script>
       <SideBar />
     <div className="App">
       <Switch>
