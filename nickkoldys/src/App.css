@@ -1,60 +1,3 @@
-.SideBar {
-  position: fixed;
-  width: 60px;
-  height: 100vh;
-  background-color: #282c34;
-  color: white;
-  box-shadow: 5px 0px 5px 2px rgb(109, 107, 112);
-  transition-duration: 1s;
-}
-
-.SideBarOpen {
-  width: 200px;
-}
-
-.Bars {
-  color: #61dafb;
-  width: 40px;
-  height: 40px;
-  margin: 0px 10px 10px 10px;
-  font-size: 2em;
-  text-align: center;
-  vertical-align: middle;
-  transition-duration: 1s;
-}
-.Bars:hover{
-  cursor: pointer;
-}
-
-.SideBarArrow {
-  margin: 0;
-  transition-duration: 1s;
-}
-
-.Rotate {
-  transform: rotate(180deg);
-}
-
-.Menu {
-  color: white;
-  text-align: center;
-
-}
-
-.menu-option {
-  color: #61DBFB;
-  text-decoration: none;
-}
-
-.menu > .menu-option:hover {
-  background-color: #61DBFB;
-  border-radius: 5px;
-}
-
-Link, Link > p, a {
-  text-decoration: none;
-}
-
 .App {
   text-align: center;
   display: inline-block;
@@ -85,9 +28,7 @@ Link, Link > p, a {
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
+
 
 @keyframes App-logo-spin {
   from {
