@@ -51,15 +51,16 @@
     color: #61DBFB;
   }
   
-  
-  .menu > .menu-option:hover {
-    background-color: #61DBFB;
-    border-radius: 5px;
-  }
-  
   Link, Link > p, a {
     text-decoration: none;
   }
+
+  .menu-option:hover{
+    color: #ee61fb;
+    text-decoration: underline;
+  }
+  
+ 
   
   
   .Hidden {

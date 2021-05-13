@@ -21,11 +21,9 @@ export function SideBar(){
         <p className="SideBarArrow">&#x2B95;</p>
         </div>
         <div className="Menu Hidden">
-            <Link to="/schoolProjects"><p onClick={toggleOpen} className="menu-option">School Projects</p></Link>
-            <Link to="/rasterCaster"><p onClick={toggleOpen} className="menu-option">Raster Caster</p></Link>
-            <Link to="/Games"><p onClick={toggleOpen} className="menu-option">Games</p></Link>
-            <Link to="/hangMan"><p onClick={toggleOpen} className="menu-option">Hangman</p></Link>
-            <Link to="/chess"><p onClick={toggleOpen} className="menu-option">Chess</p></Link>
+            <Link to="/projects"><p onClick={toggleOpen} className="menu-option">Projects</p></Link>
+            <Link to="/games"><p onClick={toggleOpen} className="menu-option">Games</p></Link>
+            <Link to="/about"><p onClick={toggleOpen} className="menu-option">About</p></Link>
             <Link to="/home"><p onClick={toggleOpen} className="menu-option">Home</p></Link>
         </div>
     </div>

@@ -45,13 +45,13 @@ export function Home(props) {
             </div>
             <div className='navSection'>
                 <div className="gameBox navBox">
-                    <Link to="/Games">
+                    <Link to="/games">
                         <img src='controllerIcon.png' className="navIcon"></img>
                         <p className="navItem">Games</p>
                     </Link>
                 </div>
                 <div className="projectBox navBox">
-                    <Link to="/Projects">
+                    <Link to="/projects">
                         <img src='computerIcon.png' className="navIcon"></img>
                         <p className="navItem">Projects</p>
                     </Link>
