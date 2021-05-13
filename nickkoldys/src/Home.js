@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './App.css';
 import './Home.css';
 import anime from 'animejs/lib/anime.es.js';
 
 export function Home(props) {
 
-    console.log("animate");
+    console.log("animates");
     anime.timeline({ loop: true })
         .add({
             targets: '.ml13 .letter',

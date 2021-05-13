@@ -21,8 +21,8 @@ export function SideBar(){
         <p className="SideBarArrow">&#x2B95;</p>
         </div>
         <div className="Menu Hidden">
-            <Link to="/projects"><p onClick={toggleOpen} className="menu-option">Projects</p></Link>
             <Link to="/games"><p onClick={toggleOpen} className="menu-option">Games</p></Link>
+            <Link to="/projects"><p onClick={toggleOpen} className="menu-option">Projects</p></Link>
             <Link to="/about"><p onClick={toggleOpen} className="menu-option">About</p></Link>
             <Link to="/home"><p onClick={toggleOpen} className="menu-option">Home</p></Link>
         </div>

@@ -1,5 +1,6 @@
 import {Switch, Route, Redirect} from 'react-router-dom';
 import {Home} from './Home';
+import {Games} from './Games';
 import {About} from './About';
 import {RasterCaster} from './RasterCaster';
 import {SideBar} from './SideBar';
@@ -13,6 +14,9 @@ function App() {
       <Switch>
         <Route exact path="/home">
           <Home />
+        </Route>
+        <Route exact path="/games">
+          <Games />
         </Route>
         <Route exact path="/about">
           <About />

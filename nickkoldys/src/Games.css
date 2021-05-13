@@ -1,0 +1,15 @@
+.gameTile{
+    display: flex;
+    height: 33vh;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameTileTitle{
+    margin: 0;
+}
+
+.ticTacToeTile{
+    background-color: aquamarine;
+}
