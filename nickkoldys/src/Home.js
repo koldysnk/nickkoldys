@@ -33,7 +33,7 @@ export function Home(props) {
                     <span className='letter'>i</span>
                     <span className='letter'>c</span>
                     <span className='letter'>k</span>
-                    <span className='letter'> </span>
+                    <span className='letter'>&#8226;</span>
                     <span className='letter'>K</span>
                     <span className='letter'>o</span>
                     <span className='letter'>l</span>
@@ -42,6 +42,20 @@ export function Home(props) {
                     <span className='letter'>s</span>
                 </h1>
 
+            </div>
+            <div className='navSection'>
+                <div className="gameBox navBox">
+                    <Link to="/Games">
+                        <img src='controllerIcon.png' className="navIcon"></img>
+                        <p className="navItem">Games</p>
+                    </Link>
+                </div>
+                <div className="projectBox navBox">
+                    <Link to="/Projects">
+                        <img src='computerIcon.png' className="navIcon"></img>
+                        <p className="navItem">Projects</p>
+                    </Link>
+                </div>
             </div>
         </div>
     );

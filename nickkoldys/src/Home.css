@@ -25,3 +25,39 @@
     line-height: 1em;
     color: #282c34;
 }
+
+.navSection{
+    position: fixed;
+    bottom: 5%;
+    left:50%;
+    transform: translate(-50%);
+}
+
+.navBox{
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 32px;
+}
+
+.navIcon{
+    position: relative;
+    top: 0;
+    transition: top ease 0.5s
+}
+
+.navBox:hover .navIcon{
+    top: -10px;
+}
+
+.navBox:hover .navItem{
+    text-decoration: underline;
+}
+
+.navBox:hover {
+    cursor: pointer;
+}
+
+.navItem{
+    margin: 0;
+    color: #282c34;
+}
