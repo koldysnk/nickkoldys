@@ -1,0 +1,27 @@
+.Home{
+    background-color: #61dafb;
+}
+
+.nameBox{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    color: #282c34;
+}
+
+.ml13 {
+    margin: 0;
+    font-size: 3em;
+    text-transform: uppercase;
+    letter-spacing: 0.5em;
+    font-weight: 600;
+    color: #282c34;
+}
+  
+.ml13 .letter {
+    display: inline-block;
+    line-height: 1em;
+    color: #282c34;
+}
