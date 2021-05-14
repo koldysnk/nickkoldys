@@ -1,6 +1,11 @@
+Link{
+    text-decoration: none;
+    color: black;
+}
+
 .gameTile{
     display: flex;
-    height: 33vh;
+    height: 33.333vh;
     width: 100%;
     justify-content: center;
     align-items: center;
@@ -8,8 +13,32 @@
 
 .gameTileTitle{
     margin: 0;
+    color: black;
 }
 
+.gameTileText{
+    display:none;
+    color: black;
+}
+
+.gameTile:hover > .gameTileTitle{
+    display:none;
+}
+
+.gameTile:hover > .gameTileText{
+    display:block;
+}
+
+/* Color Theme from https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_theme_light-blue*/
+
 .ticTacToeTile{
-    background-color: aquamarine;
+    background-color: rgb(27,122,159);
+}
+
+.hangmanTile{
+    background-color:rgb(161,217,239);
+}
+
+.chessTile{
+    background-color:rgb(32,146,191);
 }

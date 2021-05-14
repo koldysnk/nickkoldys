@@ -1,0 +1,43 @@
+.TicTacToeMenu{
+    background-color: #61dafb;
+}
+
+.tttModeSelectBox{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    overflow: auto;
+    color: #282c34;
+}
+
+.navBox{
+    display: inline-block;
+    box-sizing: border-box;
+    margin: 0 96px;
+}
+
+.navIcon{
+    position: relative;
+    top: 0;
+    transition: top ease 0.5s
+}
+
+.navBox:hover .navIcon{
+    top: -10px;
+}
+
+.navBox:hover .navItem{
+    text-decoration: underline;
+}
+
+.navBox:hover {
+    cursor: pointer;
+}
+
+.navItem{
+    margin: 0;
+    color: #282c34;
+    font-weight: bold;
+}

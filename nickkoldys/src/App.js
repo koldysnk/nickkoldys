@@ -1,14 +1,17 @@
 import {Switch, Route, Redirect} from 'react-router-dom';
+import './App.css';
 import {Home} from './Home';
 import {Games} from './Games';
 import {About} from './About';
 import {RasterCaster} from './RasterCaster';
 import {SideBar} from './SideBar';
-import './App.css';
+import { Projects } from './Projects';
+import { TicTacToeMenu } from './TicTacToeMenu';
+import { TicTacToeMultiplayer } from './TicTacToeMultiplayer';
 
 function App() {
   return (
-    <div>
+    <div className='appAndSidebar'>
       <SideBar />
     <div className="App">
       <Switch>
@@ -17,6 +20,15 @@ function App() {
         </Route>
         <Route exact path="/games">
           <Games />
+        </Route>
+        <Route exact path="/tictactoemenu">
+          <TicTacToeMenu />
+        </Route>
+        <Route exact path="/tictactoemultiplayer">
+          <TicTacToeMultiplayer />
+        </Route>
+        <Route exact path="/projects">
+          <Projects />
         </Route>
         <Route exact path="/about">
           <About />
