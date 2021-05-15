@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { TicTacToeBoard } from './TicTacToeBoard';
-import {tttResetGame, tttAITurn} from './actions';
+import {tttResetGame, tttAITurn, tttSetPlayerFirstAndReset} from './actions';
 import './TicTacToeSingleplayer.css';
 
 export function TicTacToeSingleplayer(props) {
@@ -45,12 +45,20 @@ export function TicTacToeSingleplayer(props) {
         dispatch(tttResetGame())
     }
 
+    const swapTurn = () => {
+        dispatch(tttSetPlayerFirstAndReset(!playerFirst))
+    }
+
     return (
         <div className='TicTacToeSingleplayer'>
             <h2 className='tttTitle'>Tic-Tac-Toe</h2>
             <p>{turnText}</p>
-            <TicTacToeBoard playable={playable}/>
-            <button className='tttSingleplayerButton' onClick={reset}>Reset</button>
+            <TicTacToeBoard playable={playerFirst ? playable : !playable}/>
+            <div>
+            <button className='tttSingleplayerButton tttButton' onClick={reset}>Reset</button>
+
+            <button className='tttGoSecond tttButton' onClick={swapTurn}>Go {playerFirst ? 'Second' : 'First'}</button>
+            </div>
         </div>
     );
 }

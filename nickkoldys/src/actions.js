@@ -6,6 +6,7 @@ export const Action = Object.freeze({
     TTTSetTurn: 'TTTSetTurn',
     TTTUpdateResult: 'TTTUpdateResult',
     TTTResetGame: 'TTTResetGame',
+    TTTSetPlayerFirst: 'TTTSetPlayerFirst',
 });
 
 export function startWaiting() {
@@ -57,6 +58,22 @@ export function tttResetGame(){
         payloadTurn: 0,
         payloadResult: 0,
         payloadGameOver: false,
+    }
+}
+
+export function tttSetPlayerFirst(playerFirst){
+    return {
+        type: Action.TTTSetPlayerFirst,
+        payloadPlayerFirst: playerFirst,
+    }
+}
+
+export function tttSetPlayerFirstAndReset(playerFirst){
+    return dispatch => {
+        dispatch(startWaiting())
+        dispatch(tttResetGame())
+        dispatch(tttSetPlayerFirst(playerFirst))
+        dispatch(stopWaiting())
     }
 }
 

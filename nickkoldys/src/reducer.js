@@ -6,8 +6,8 @@ const initialState = {
     gameOver: false,
     gameResult: 0,
     playerFirst: true,
-    turn: 0,
-    tttBoard: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    turn: 1,
+    tttBoard: [0, 0, 0, 0, 0, 0, 0, 0, 1],
 }
 
 export function reducer(state = initialState, action) {
@@ -51,6 +51,11 @@ export function reducer(state = initialState, action) {
                 turn: action.payloadTurn,
                 gameOver: action.payloadGameOver,
                 gameResult: action.payloadGameResult,
+            };
+        case Action.TTTSetPlayerFirst:
+            return {
+                ...state,
+                playerFirst: action.payloadPlayerFirst,
             };
         default:
             return state;
