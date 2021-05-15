@@ -1,0 +1,98 @@
+.tttTable{
+    width: 30vw;
+    height: 30vw;
+    border: 1px black;
+    border-style: none;
+    display: flex;
+    flex-flow: row wrap;
+    
+}
+
+.tttTile{
+    box-sizing: border-box;
+    width: 33.333%;
+    height: 33.333%;
+    border: 3px black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tttSquare{
+    width: 80%;
+    height: 80%;
+}
+
+.tttImage{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.tttSelectable:hover{
+    border: 1px black;
+    border-style: solid;
+    cursor: pointer;
+}
+
+.t0{
+    border-top-style: none;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: none;
+}
+
+.t1{
+    border-top-style: none;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+}
+
+.t2{
+    border-top-style: none;
+    border-right-style: none;
+    border-bottom-style: solid;
+    border-left-style: solid;
+}
+
+.t3{
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: none;
+}
+
+.t4{
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+}
+
+.t5{
+    border-top-style: solid;
+    border-right-style: none;
+    border-bottom-style: solid;
+    border-left-style: solid;
+}
+
+.t6{
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: none;
+    border-left-style: none;
+}
+
+.t7{
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: none;
+    border-left-style: solid;
+}
+
+.t8{
+    border-top-style: solid;
+    border-right-style: none;
+    border-bottom-style: none;
+    border-left-style: solid;
+}
