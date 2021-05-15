@@ -10,6 +10,7 @@ export function TicTacToeSingleplayer(props) {
     const result = useSelector(state => state.gameResult);
     const isWaiting = useSelector(state => state.isWaiting);
     const board = useSelector(state => state.tttBoard);
+    const playerFirst = useSelector(state => state.playerFirst);
     const dispatch = useDispatch();
 
     let turnText = "Analyzing..."
@@ -17,7 +18,11 @@ export function TicTacToeSingleplayer(props) {
     let playable = playerActive;
 
     if(!isWaiting){
-        turnText = (playerActive) ? "Player 1's Turn" : "AI Nick's Turn";
+        if(playerFirst){
+            turnText = (playerActive) ? "Player 1's Turn" : "AI Nick's Turn";
+        }else{
+            turnText = (playerActive) ? "AI Nick's Turn" : "Player 1's Turn";
+        }
 
         if (gameOver){
             playable = false;
@@ -28,7 +33,7 @@ export function TicTacToeSingleplayer(props) {
             }else{
                 turnText = `Game Over: AI Nick Wins`
             }
-        }else if(!playerActive){
+        }else if((!playerActive && playerFirst) || (playerActive && !playerFirst)){
             dispatch(tttAITurn(board, turn))
         }
         

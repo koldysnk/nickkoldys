@@ -5,6 +5,7 @@ const initialState = {
     menuOpen: false,
     gameOver: false,
     gameResult: 0,
+    playerFirst: true,
     turn: 0,
     tttBoard: [0, 0, 0, 0, 0, 0, 0, 0, 0],
 }

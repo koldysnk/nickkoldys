@@ -152,8 +152,13 @@ function tttMaxAnalysis(board, turn){
             board[pos] = 0;
             // console.log('out max', `chose: ${pos} for turn: ${turn}`, board)
             maxPos=pos
-            maxScore=-1
+            maxScore=1
             return {maxPos, maxScore};
+        }else if(turn == 8){
+            if(0<=maxScore){
+                maxScore = 0;
+                maxPos = pos;
+            }
         }else{
             let {minPos, minScore} = tttMinAnalysis(board,turn+1)
             if(minScore>=maxScore){
