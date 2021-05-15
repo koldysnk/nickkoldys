@@ -43,6 +43,14 @@ export function reducer(state = initialState, action) {
                     gameOver: action.payloadGameOver,
                     gameResult: action.payloadGameResult,
                 };
+                case Action.TTTResetGame:
+                    return {
+                        ...state,
+                        tttBoard: action.payloadBoard,
+                        turn: action.payloadTurn,
+                        gameOver: action.payloadGameOver,
+                        gameResult: action.payloadGameResult,
+                    };
         default:
             return state;
     }

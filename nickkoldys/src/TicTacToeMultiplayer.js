@@ -1,6 +1,7 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { TicTacToeBoard } from './TicTacToeBoard';
+import {tttResetGame} from './actions';
 import './TicTacToeMultiplayer.css';
 
 export function TicTacToeMultiplayer(props) {
@@ -8,6 +9,7 @@ export function TicTacToeMultiplayer(props) {
     const gameOver = useSelector(state => state.gameOver);
     const result = useSelector(state => state.gameResult);
     const isWaiting = useSelector(state => state.isWaiting);
+    const dispatch = useDispatch();
 
     let turnText = "Analyzing..."
     let playable = true;
@@ -29,11 +31,16 @@ export function TicTacToeMultiplayer(props) {
         playable = false;
     }
 
+    const reset = () => {
+        dispatch(tttResetGame())
+    }
+
     return (
         <div className='TicTacToeMultiplayer'>
             <h2 className='tttTitle'>Tic-Tac-Toe</h2>
             <p>{turnText}</p>
             <TicTacToeBoard playable={playable}/>
+            <button className='tttSingleplayerButton' onClick={reset}>Reset</button>
         </div>
     );
 }

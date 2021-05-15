@@ -5,6 +5,7 @@ export const Action = Object.freeze({
     CloseMenu: 'CloseMenu',
     TTTSetTurn: 'TTTSetTurn',
     TTTUpdateResult: 'TTTUpdateResult',
+    TTTResetGame: 'TTTResetGame',
 });
 
 export function startWaiting() {
@@ -44,11 +45,20 @@ export function tttSetTurn(board, turn) {
 }
 
 export function tttUpdateResult(gameOver, result){
-    console.log('update')
     return {
         type: Action.TTTUpdateResult,
         payloadGameOver: gameOver,
         payloadGameResult: result,
+    }
+}
+
+export function tttResetGame(){
+    return {
+        type: Action.TTTResetGame,
+        payloadBoard: [0,0,0,0,0,0,0,0,0],
+        payloadTurn: 0,
+        payloadResult: 0,
+        payloadGameOver: false,
     }
 }
 
@@ -79,7 +89,7 @@ export function tttCheckWin(pos, board, turn){
             }
         });
         if(winFound){
-            dispatch(tttUpdateResult(true, (turn%2)+1))
+            dispatch(tttUpdateResult(true, ((turn-1)%2)+1))
         }else if(turn>=9){
             dispatch(tttUpdateResult(true,0))
         }else{
