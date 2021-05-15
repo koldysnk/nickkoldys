@@ -80,7 +80,7 @@ const TTTLines = [
 function tttCheckWinNoPush(pos,board){
     let winFound = false;
     TTTLines[pos].forEach(line => {
-        console.log('checkwin',`${pos}:${board[pos]}, ${line[0]}:${board[line[0]]}, ${line[1]}:${board[line[1]]}`)
+        // console.log('checkwin',`${pos}:${board[pos]}, ${line[0]}:${board[line[0]]}, ${line[1]}:${board[line[1]]}`)
         if(!winFound && (board[pos] == board[line[0]] && board[pos] == board[line[1]])){
             winFound = true;
         }
@@ -90,6 +90,7 @@ function tttCheckWinNoPush(pos,board){
 
 export function tttCheckWin(pos, board, turn){
     return dispatch => {
+        // console.log('check win', `pos:${pos}`)
         const winFound = tttCheckWinNoPush(pos, board);
 
         if(winFound){
@@ -115,20 +116,28 @@ export function tttTakeTurn(pos, board, turn) {
 
 export function tttAITurn(board, turn){
     return dispatch => {
-        console.log('StartAI')
+        // console.log('StartAI')
         dispatch(startWaiting());
-        let availablePositions = getTTTAvailablePositions(board);
-        let maxPos = getTTTRandomMove(availablePositions);
-        //let maxPos, maxScore = tttMaxAnalysis(board,turn)
-        console.log('done')
-        dispatch(tttTakeTurn(maxPos,board,turn));
-        dispatch(stopWaiting());
+        //let availablePositions = getTTTAvailablePositions(board);
+        //let maxPos = getTTTRandomMove(availablePositions);
+        dispatch(tttStartMinMax(board, turn));
+        // dispatch(tttTakeTurn(maxPos,board,turn));
+        // dispatch(stopWaiting());
 
     }
 }
 
-export function tttMaxAnalysis(board, turn){
-    console.log('max')
+export function tttStartMinMax(board, turn){
+    return dispatch => {
+        let {maxPos, maxScore} = tttMaxAnalysis(board,turn)
+        // console.log('done',`pos: ${maxPos}`)
+        dispatch(tttTakeTurn(maxPos,board,turn));
+        dispatch(stopWaiting());
+    }
+}
+
+function tttMaxAnalysis(board, turn){
+    // console.log('in max',`turn: ${turn}`, board)
     const playerTurn = (turn%2)+1;
     const availablePositions = getTTTAvailablePositions(board);
     let maxPos = -1;
@@ -137,26 +146,31 @@ export function tttMaxAnalysis(board, turn){
     for(let i = 0; i<availablePositions.length;i++){
         let pos = availablePositions[i]
         board[pos] = playerTurn;
+        // console.log(`change pos: ${pos} player: ${playerTurn}`,board)
         let win = tttCheckWinNoPush(pos, board, turn)
         if(win){
             board[pos] = 0;
-            return (pos, 1);
+            // console.log('out max', `chose: ${pos} for turn: ${turn}`, board)
+            maxPos=pos
+            maxScore=-1
+            return {maxPos, maxScore};
         }else{
-            let score = tttMinAnalysis(board,turn++)
-            if(score>=maxScore){
-                maxScore = score;
+            let {minPos, minScore} = tttMinAnalysis(board,turn+1)
+            if(minScore>=maxScore){
+                maxScore = minScore;
                 maxPos = pos;
             }
         }
-        console.log(turn, win, board);
         board[pos] = 0;
+        // console.log('continue max',`turn: ${turn}`, board)
     }
 
-    return maxPos, maxScore;
+    // console.log('out max', `chose: ${maxPos} for turn: ${turn}`, board)
+    return {maxPos, maxScore};
 }
 
-export function tttMinAnalysis(board, turn){
-    console.log('min')
+function tttMinAnalysis(board, turn){
+    // console.log('in min', `turn: ${turn}`, board)
     const playerTurn = (turn%2)+1;
     const availablePositions = getTTTAvailablePositions(board);
     let minPos = 9;
@@ -165,27 +179,32 @@ export function tttMinAnalysis(board, turn){
     for(let i = 0; i<availablePositions.length;i++){
         let pos = availablePositions[i]
         board[pos] = playerTurn;
+        // console.log(`change pos: ${pos} player: ${playerTurn}`,board)
         let win = tttCheckWinNoPush(pos, board, turn)
         if(win){
             board[pos] = 0;
-            return (pos, -1);
+            // console.log('out min', `chose: ${pos} for turn: ${turn}`, board)
+            minPos=pos
+            minScore=-1
+            return {minPos, minScore};
         }else if(turn == 8){
             if(0<=minScore){
                 minScore = 0;
                 minPos = pos;
             }
         }else{
-            let pos, score = tttMaxAnalysis(board,turn++)
-            if(score<=minScore){
-                minScore = score;
+            let {maxPos, maxScore} = tttMaxAnalysis(board,turn+1)
+            if(maxScore<=minScore){
+                minScore = maxScore;
                 minPos = pos;
             }
         }
-        console.log(turn, win, board);
         board[pos] = 0;
+        // console.log('continue min', `turn: ${turn}`, board)
     }
 
-    return minScore;
+    // console.log('out min', `chose: ${minPos} for turn: ${turn}`, board)
+    return {minPos, minScore};
 }
 
 export function getTTTAvailablePositions(board){

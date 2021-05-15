@@ -29,7 +29,6 @@ export function TicTacToeSingleplayer(props) {
                 turnText = `Game Over: AI Nick Wins`
             }
         }else if(!playerActive){
-            console.log('AI turn')
             dispatch(tttAITurn(board, turn))
         }
         
