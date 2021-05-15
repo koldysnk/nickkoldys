@@ -13,7 +13,6 @@ export function TicTacToeBoard(props) {
     
     const takeTurn = (open,position) => {
         if(open){
-            console.log(board)
             dispatch(tttTakeTurn(position, board, turn))
         }
     }

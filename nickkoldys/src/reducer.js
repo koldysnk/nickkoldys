@@ -37,20 +37,20 @@ export function reducer(state = initialState, action) {
                 turn: action.payloadTurn,
                 board: action.payloadBoard,
             };
-            case Action.TTTUpdateResult:
-                return {
-                    ...state,
-                    gameOver: action.payloadGameOver,
-                    gameResult: action.payloadGameResult,
-                };
-                case Action.TTTResetGame:
-                    return {
-                        ...state,
-                        tttBoard: action.payloadBoard,
-                        turn: action.payloadTurn,
-                        gameOver: action.payloadGameOver,
-                        gameResult: action.payloadGameResult,
-                    };
+        case Action.TTTUpdateResult:
+            return {
+                ...state,
+                gameOver: action.payloadGameOver,
+                gameResult: action.payloadGameResult,
+            };
+        case Action.TTTResetGame:
+            return {
+                ...state,
+                tttBoard: action.payloadBoard,
+                turn: action.payloadTurn,
+                gameOver: action.payloadGameOver,
+                gameResult: action.payloadGameResult,
+            };
         default:
             return state;
     }

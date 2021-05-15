@@ -8,6 +8,7 @@ import {SideBar} from './SideBar';
 import { Projects } from './Projects';
 import { TicTacToeMenu } from './TicTacToeMenu';
 import { TicTacToeMultiplayer } from './TicTacToeMultiplayer';
+import { TicTacToeSingleplayer } from './TicTacToeSingleplayer';
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
         </Route>
         <Route exact path="/tictactoemultiplayer">
           <TicTacToeMultiplayer />
+        </Route>
+        <Route exact path="/tictactoesingleplayer">
+          <TicTacToeSingleplayer />
         </Route>
         <Route exact path="/projects">
           <Projects />

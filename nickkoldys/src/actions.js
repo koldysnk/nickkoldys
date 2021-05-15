@@ -11,14 +11,12 @@ export const Action = Object.freeze({
 export function startWaiting() {
     return {
         type: Action.StartWaiting,
-        payload: true,
     }
 }
 
 export function stopWaiting() {
     return {
         type: Action.StopWaiting,
-        payload: false,
     }
 }
 
@@ -79,15 +77,21 @@ const TTTLines = [
     [[0,4],[2,5],[6,7]],
 ];
 
+function tttCheckWinNoPush(pos,board){
+    let winFound = false;
+    TTTLines[pos].forEach(line => {
+        console.log('checkwin',`${pos}:${board[pos]}, ${line[0]}:${board[line[0]]}, ${line[1]}:${board[line[1]]}`)
+        if(!winFound && (board[pos] == board[line[0]] && board[pos] == board[line[1]])){
+            winFound = true;
+        }
+    });
+    return winFound;
+}
+
 export function tttCheckWin(pos, board, turn){
     return dispatch => {
-        let winFound = false;
-        TTTLines[pos].forEach(line => {
-            console.log('checkwin',`${pos}:${board[pos]}, ${line[0]}:${board[line[0]]}, ${line[1]}:${board[line[1]]}`)
-            if(!winFound && (board[pos] == board[line[0]] && board[pos] == board[line[1]])){
-                winFound = true;
-            }
-        });
+        const winFound = tttCheckWinNoPush(pos, board);
+
         if(winFound){
             dispatch(tttUpdateResult(true, ((turn-1)%2)+1))
         }else if(turn>=9){
@@ -99,14 +103,102 @@ export function tttCheckWin(pos, board, turn){
 }
 
 export function tttTakeTurn(pos, board, turn) {
-    console.log('startTurn')
-    return dispatch =>{
+    return dispatch => {
         dispatch(startWaiting());
         board[pos] = (turn%2)+1;
         turn += 1;
         dispatch(tttCheckWin(pos,board,turn));
         dispatch(tttSetTurn(board,turn));
         dispatch(stopWaiting());
-        console.log('endTurn')
     }
+}
+
+export function tttAITurn(board, turn){
+    return dispatch => {
+        console.log('StartAI')
+        dispatch(startWaiting());
+        let availablePositions = getTTTAvailablePositions(board);
+        let maxPos = getTTTRandomMove(availablePositions);
+        //let maxPos, maxScore = tttMaxAnalysis(board,turn)
+        console.log('done')
+        dispatch(tttTakeTurn(maxPos,board,turn));
+        dispatch(stopWaiting());
+
+    }
+}
+
+export function tttMaxAnalysis(board, turn){
+    console.log('max')
+    const playerTurn = (turn%2)+1;
+    const availablePositions = getTTTAvailablePositions(board);
+    let maxPos = -1;
+    let maxScore = -2
+
+    for(let i = 0; i<availablePositions.length;i++){
+        let pos = availablePositions[i]
+        board[pos] = playerTurn;
+        let win = tttCheckWinNoPush(pos, board, turn)
+        if(win){
+            board[pos] = 0;
+            return (pos, 1);
+        }else{
+            let score = tttMinAnalysis(board,turn++)
+            if(score>=maxScore){
+                maxScore = score;
+                maxPos = pos;
+            }
+        }
+        console.log(turn, win, board);
+        board[pos] = 0;
+    }
+
+    return maxPos, maxScore;
+}
+
+export function tttMinAnalysis(board, turn){
+    console.log('min')
+    const playerTurn = (turn%2)+1;
+    const availablePositions = getTTTAvailablePositions(board);
+    let minPos = 9;
+    let minScore = 2
+
+    for(let i = 0; i<availablePositions.length;i++){
+        let pos = availablePositions[i]
+        board[pos] = playerTurn;
+        let win = tttCheckWinNoPush(pos, board, turn)
+        if(win){
+            board[pos] = 0;
+            return (pos, -1);
+        }else if(turn == 8){
+            if(0<=minScore){
+                minScore = 0;
+                minPos = pos;
+            }
+        }else{
+            let pos, score = tttMaxAnalysis(board,turn++)
+            if(score<=minScore){
+                minScore = score;
+                minPos = pos;
+            }
+        }
+        console.log(turn, win, board);
+        board[pos] = 0;
+    }
+
+    return minScore;
+}
+
+export function getTTTAvailablePositions(board){
+    let availablePositions = []
+    board.forEach((val, i) => {
+        if(val==0){
+            availablePositions.push(i)
+        }
+    });
+    return availablePositions;
+}
+
+export function getTTTRandomMove(availablePositions){
+    const random = Math.floor(Math.random() * availablePositions.length);
+    return availablePositions[random];
 }
