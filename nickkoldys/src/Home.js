@@ -5,27 +5,28 @@ import anime from 'animejs/lib/anime.es.js';
 
 export function Home(props) {
 
-    console.log("animates");
-    anime.timeline({ loop: true })
-        .add({
-            targets: '.ml13 .letter',
-            translateY: [0, 100],
-            translateZ: 0,
-            opacity: [1, 0],
-            easing: "easeInExpo",
-            duration: 1400,
-            delay: (el, i) => 100 + 30 * i
-        }).add({
-            targets: '.ml13 .letter',
-            translateY: [-100, 0],
-            opacity: [0, 1],
-            easing: "easeOutExpo",
-            duration: 1800,
-            delay: (el, i) => 300 + 30 * i
-        });
+    const animate = () => {
+        anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, 100],
+                translateZ: 0,
+                opacity: [1, 0],
+                easing: "easeInExpo",
+                duration: 1400,
+                delay: (el, i) => 100 + 30 * i
+            }).add({
+                targets: '.ml13 .letter',
+                translateY: [-100, 0],
+                opacity: [0, 1],
+                easing: "easeOutExpo",
+                duration: 1800,
+                delay: (el, i) => 300 + 30 * i
+            });
+    }
 
     return (
-        <div className='Home'>
+        <div className='Home' onLoad={animate}>
             <div className="nameBox">
                 <h1 className='ml13'>
                     <span className='letter'>N</span>
