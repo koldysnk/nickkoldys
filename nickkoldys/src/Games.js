@@ -9,7 +9,7 @@ export function Games(props) {
             <Link to="/tictactoemenu">
             <div className="gameTile ticTacToeTile">
                 <h2 className='gameTileTitle ticTacToeTileTitle'>Tic-Tac-Toe</h2>
-                <p className='gameTileText ticTacToeTileText'>Play Tic-Tac-Toe against an AI or local multiplayer.</p>
+                <p className='gameTileText ticTacToeTileText'>Play Tic-Tac-Toe against an AI or local multiplayer.<br></br>The Tic-Tac-Toe AI uses a MinMax algorithm to decide it's next move.</p>
             </div>
             </Link>
             <div className="gameTile hangmanTile">

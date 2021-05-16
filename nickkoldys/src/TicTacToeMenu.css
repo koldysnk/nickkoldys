@@ -12,7 +12,7 @@
     color: #282c34;
 }
 
-.navBox{
+.tttNavBox{
     display: inline-block;
     box-sizing: border-box;
     margin: 0 96px;
@@ -24,15 +24,15 @@
     transition: top ease 0.5s
 }
 
-.navBox:hover .navIcon{
+.tttNavBox:hover .navIcon{
     top: -10px;
 }
 
-.navBox:hover .navItem{
+.tttNavBox:hover .navItem{
     text-decoration: underline;
 }
 
-.navBox:hover {
+.tttNavBox:hover {
     cursor: pointer;
 }
 
@@ -40,4 +40,14 @@
     margin: 0;
     color: #282c34;
     font-weight: bold;
+}
+
+@media (max-width:715px){
+    .tttModeSelectBox{
+        flex-direction: column;
+    }
+
+    .tttNavBox{
+        margin: 15px 0;
+    }
 }

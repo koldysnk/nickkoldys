@@ -33,7 +33,9 @@ export function Home(props) {
                     <span className='letter'>i</span>
                     <span className='letter'>c</span>
                     <span className='letter'>k</span>
+                    <br className='homeNameBreak'></br>
                     <span className='letter'>&#8226;</span>
+                    <br className='homeNameBreak'></br>
                     <span className='letter'>K</span>
                     <span className='letter'>o</span>
                     <span className='letter'>l</span>
