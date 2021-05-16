@@ -28,7 +28,7 @@ export function TicTacToeSingleplayer(props) {
             playable = false;
             if (result==0){
                 turnText = "Game Over: Tie"
-            }else if(result == 1){
+            }else if((result == 1 && playerFirst) || (result == 2 && !playerFirst)){
                 turnText = 'Game Over: Player 1 Wins'
             }else{
                 turnText = `Game Over: AI Nick Wins`
@@ -53,7 +53,7 @@ export function TicTacToeSingleplayer(props) {
         <div className='TicTacToeSingleplayer'>
             <h2 className='tttTitle'>Tic-Tac-Toe</h2>
             <p>{turnText}</p>
-            <TicTacToeBoard playable={playerFirst ? playable : !playable}/>
+            <TicTacToeBoard playable={((playerFirst ? playable : !playable)  && !gameOver)}/>
             <div>
             <button className='tttSingleplayerButton tttButton' onClick={reset}>Reset</button>
 

@@ -6,8 +6,8 @@ const initialState = {
     gameOver: false,
     gameResult: 0,
     playerFirst: true,
-    turn: 1,
-    tttBoard: [0, 0, 0, 0, 0, 0, 0, 0, 1],
+    turn: 0,
+    tttBoard: [0, 0, 0, 0, 0, 0, 0, 0, 0],
 }
 
 export function reducer(state = initialState, action) {
