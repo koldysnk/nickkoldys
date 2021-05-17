@@ -4,6 +4,7 @@
   padding-left: 60px;
   width: 100%;
   box-sizing: border-box;
+  transition-duration: 1s;
 }
 
 .App-logo {
@@ -42,4 +43,16 @@
 
 .Hidden {
   display:none;
+}
+
+
+@media (orientation:portrait){
+  .App {
+    padding-left: 0;
+  }
+
+  .Shifted{
+    transition-duration: 1s;
+    transform: translateX(100vw);
+  }
 }

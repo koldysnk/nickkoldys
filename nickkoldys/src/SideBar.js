@@ -7,11 +7,10 @@ export function SideBar(){
     const toggleOpen = () => {
         document.getElementsByClassName("SideBar")[0].classList.toggle('SideBarOpen');
         document.getElementsByClassName("SideBarArrow")[0].classList.toggle('Rotate');
-        //setTimeout(function (){
-            document.getElementsByClassName("Menu")[0].classList.toggle('Hidden');
-
-            //document.getElementsByClassName("menu-option").forEach(e => e.classList.toggle('menu-option-visible'));
-        //}, 5000);
+        document.getElementsByClassName("Menu")[0].classList.toggle('Hidden');
+        document.getElementsByClassName("SideBarBurger")[0].classList.toggle('Hidden');
+        document.getElementsByClassName("SideBarBurger")[1].classList.toggle('Hidden');
+        document.getElementsByClassName("App")[0].classList.toggle('Shifted');
     }
 
     const open = useSelector(state=> state.menuOpen);
@@ -19,6 +18,8 @@ export function SideBar(){
     <div className='SideBar' >
         <div className='Bars' onClick={toggleOpen}>
         <p className="SideBarArrow">&#x2B95;</p>
+        <img className='SideBarBurger' src="hamburg.png"></img>
+        <img className='SideBarBurger Hidden' src="hamburg2.png"></img>
         </div>
         <div className="Menu Hidden">
             <Link to="/games"><p onClick={toggleOpen} className="menu-option">Games</p></Link>

@@ -1,69 +1,99 @@
 .SideBar {
-    position: fixed;
-    width: 60px;
+  position: fixed;
+  width: 60px;
+  height: 100vh;
+  background-color: #282c34;
+  color: white;
+  box-shadow: 5px 0px 5px 2px rgb(109, 107, 112);
+  transition-duration: 1s;
+}
+
+.SideBarOpen {
+  width: 200px;
+}
+
+.Bars {
+  color: #61dafb;
+  width: 40px;
+  height: 40px;
+  margin: 0px 10px 10px 10px;
+  font-size: 2em;
+  text-align: center;
+  vertical-align: middle;
+  transition-duration: 1s;
+}
+.Bars:hover{
+  cursor: pointer;
+}
+  
+.SideBarArrow {
+  margin: 0;
+  transition-duration: 1s;
+}
+  
+.Rotate {
+  transform: rotate(180deg);
+}
+  
+.Menu {
+  color: white;
+  text-align: center;
+ 
+}
+  
+.menu-option {
+  color:#282c34;
+  color: #61DBFB;
+  text-decoration: none;
+  transition-duration: 1s;
+}
+.menu-option-visible{
+  color: #61DBFB;
+}
+  
+Link, Link > p, a {
+  text-decoration: none;
+}
+
+.menu-option:hover{
+  color: #ee61fb;
+  text-decoration: underline;
+}
+  
+.SideBarBurger{
+  display: none;
+  max-width: 100%;
+  max-height: 100%;
+}
+  
+  
+
+  
+
+@media (orientation:portrait){
+
+  .SideBarBurger{
+    display: block;
+  }
+
+  .SideBarArrow {
+    display: none;
+  }
+
+  .Bars {
+    margin: 10px;
+  }
+
+  .SideBar {
     height: 100vh;
-    background-color: #282c34;
-    color: white;
-    box-shadow: 5px 0px 5px 2px rgb(109, 107, 112);
-    transition-duration: 1s;
+    width: 0;
   }
   
   .SideBarOpen {
-    width: 200px;
+    width: 100vw;
   }
-  
-  .Bars {
-    color: #61dafb;
-    width: 40px;
-    height: 40px;
-    margin: 0px 10px 10px 10px;
-    font-size: 2em;
-    text-align: center;
-    vertical-align: middle;
-    transition-duration: 1s;
-  }
-  .Bars:hover{
-    cursor: pointer;
-  }
-  
-  .SideBarArrow {
-    margin: 0;
-    transition-duration: 1s;
-  }
-  
-  .Rotate {
-    transform: rotate(180deg);
-  }
-  
-  .Menu {
-    color: white;
-    text-align: center;
-  
-  }
-  
-  .menu-option {
-    color:#282c34;
-    color: #61DBFB;
-    text-decoration: none;
-    transition-duration: 1s;
-  }
-  .menu-option-visible{
-    color: #61DBFB;
-  }
-  
-  Link, Link > p, a {
-    text-decoration: none;
-  }
+}
 
-  .menu-option:hover{
-    color: #ee61fb;
-    text-decoration: underline;
-  }
-  
- 
-  
-  
-  .Hidden {
-    display:none;
-  }
-  
+.Hidden {
+  display:none;
+}
