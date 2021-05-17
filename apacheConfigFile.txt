@@ -1,0 +1,32 @@
+# Redirect all HTTP traffic to HTTPS.
+<VirtualHost *:80>
+  ServerAlias react-man.me
+  ServerName project2.react-man.me
+  Redirect / https://nickkoldys.com/
+</VirtualHost>
+
+# Secure HTTP typically runs on port 443.
+<VirtualHost *:443>
+  ServerAdmin webmaster@localhost
+  ServerName nickkoldys.com
+  DocumentRoot /home/nkoldys/personalSite/nickkoldys/nickkoldys/build
+
+  # Allow access to all files.
+  <Directory /home/nkoldys/personalSite/nickkoldys/nickkoldys/build>
+    Require all granted
+    RewriteEngine on
+
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    RewriteRule ^ index.html [L]
+  </Directory>
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+  SSLCertificateFile /etc/letsencrypt/live/nickkoldys.com/fullchain.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/nickkoldys.com/privkey.pem
+  Include /etc/letsencrypt/options-ssl-apache.conf
+</VirtualHost>
