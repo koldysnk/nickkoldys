@@ -8,6 +8,11 @@ const initialState = {
     playerFirst: true,
     turn: 0,
     tttBoard: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    dictionary: [
+        /*{id:1, word:'a', length:1, weight:1, difficulty:0, won:0, played:0},
+        {id:2, word:'aa', length:2, weight:1, difficulty:0, won:0, played:0},*/
+    ],
+    currPage:0,
 }
 
 export function reducer(state = initialState, action) {
@@ -32,6 +37,7 @@ export function reducer(state = initialState, action) {
                 ...state,
                 menuOpen: false,
             };
+        /********************************************Tic Tac Toe **************************/
         case Action.TTTSetTurn:
             return {
                 ...state,
@@ -56,6 +62,22 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 playerFirst: action.payloadPlayerFirst,
+            };
+        /****************************************Hangman **************************************/
+        case Action.LoadDictionary:
+            return {
+                ...state,
+                dictionary: action.payload,
+            };
+        case Action.PageLeft:
+            return {
+                ...state,
+                currPage: action.payload,
+            };
+        case Action.PageRight:
+            return {
+                ...state,
+                currPage: action.payload,
             };
         default:
             return state;

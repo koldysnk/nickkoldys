@@ -42,8 +42,8 @@
 }
   
 .menu-option {
-  color:#282c34;
   color: #61DBFB;
+  font-size: 1.5rem;
   text-decoration: none;
   transition-duration: 1s;
 }

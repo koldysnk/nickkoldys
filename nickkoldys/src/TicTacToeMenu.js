@@ -14,13 +14,13 @@ export function TicTacToeMenu(props) {
         <div className='TicTacToeMenu'>
             <div className="tttModeSelectBox">
             <div className="singlePlayerBox tttNavBox" onClick={reset}>
-                    <Link to="/tictactoesingleplayer">
+                    <Link to="/tictactoe_singleplayer">
                         <img src='singlePersonIcon.png' className="navIcon"></img>
                         <p className="navItem">Single-Player</p>
                     </Link>
                 </div>
                 <div className="multiPlayerBox tttNavBox" onClick={reset}>
-                    <Link to="/tictactoemultiplayer">
+                    <Link to="/tictactoe_multiplayer">
                         <img src='twoPersonIcon.png' className="navIcon"></img>
                         <p className="navItem">Local Multi-Player</p>
                     </Link>

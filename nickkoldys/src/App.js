@@ -9,6 +9,8 @@ import { Projects } from './Projects';
 import { TicTacToeMenu } from './TicTacToeMenu';
 import { TicTacToeMultiplayer } from './TicTacToeMultiplayer';
 import { TicTacToeSingleplayer } from './TicTacToeSingleplayer';
+import { HangmanMenu } from './HangmanMenu';
+import { HangmanDictionary } from './HangmanDictionary';
 
 function App() {
   return (
@@ -22,14 +24,20 @@ function App() {
         <Route exact path="/games">
           <Games />
         </Route>
-        <Route exact path="/tictactoemenu">
+        <Route exact path="/tictactoe_menu">
           <TicTacToeMenu />
         </Route>
-        <Route exact path="/tictactoemultiplayer">
+        <Route exact path="/tictactoe_multiplayer">
           <TicTacToeMultiplayer />
         </Route>
-        <Route exact path="/tictactoesingleplayer">
+        <Route exact path="/tictactoe_singleplayer">
           <TicTacToeSingleplayer />
+        </Route>
+        <Route exact path="/hangman_menu">
+          <HangmanMenu />
+        </Route>
+        <Route exact path="/hangman_dictionary">
+          <HangmanDictionary />
         </Route>
         <Route exact path="/projects">
           <Projects />

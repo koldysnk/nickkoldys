@@ -1,0 +1,8 @@
+.wordList {
+    list-style-type: none;
+    margin: 10px;
+}
+
+.wordListItem {
+    text-align: left;
+}

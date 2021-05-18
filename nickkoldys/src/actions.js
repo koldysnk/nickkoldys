@@ -3,11 +3,28 @@ export const Action = Object.freeze({
     StopWaiting: 'StopWaiting',
     OpenMenu: 'OpenMenu',
     CloseMenu: 'CloseMenu',
+    //Tic Tac Toe
     TTTSetTurn: 'TTTSetTurn',
     TTTUpdateResult: 'TTTUpdateResult',
     TTTResetGame: 'TTTResetGame',
     TTTSetPlayerFirst: 'TTTSetPlayerFirst',
+    //Hangman
+    LoadDictionary: 'LoadDictionary',
+    PageRight: 'PageRight',
+    PageLeft: "PageLeft",
 });
+
+const host = 'https://react-man-server.react-man.me:8442';
+const wordLimit = 100;
+const numWords = 370099;
+const maxPage = Math.ceil(numWords/wordLimit)-1;
+
+function checkForErrors(response){
+    if(!response.ok){
+        throw Error(`${response.status}: ${response.statusText}`);
+    }
+    return response;
+}
 
 export function startWaiting() {
     return {
@@ -34,6 +51,8 @@ export function openMenu() {
         payload: false,
     }
 }
+
+/********************Tic Tac Toe **************************************/
 
 export function tttSetTurn(board, turn) {
     return {
@@ -107,7 +126,6 @@ function tttCheckWinNoPush(pos,board){
 
 export function tttCheckWin(pos, board, turn){
     return dispatch => {
-        // console.log('check win', `pos:${pos}`)
         const winFound = tttCheckWinNoPush(pos, board);
 
         if(winFound){
@@ -141,14 +159,12 @@ export function tttAITurn(board, turn){
 export function tttStartMinMax(board, turn){
     return dispatch => {
         let {maxPos, maxScore} = tttMaxAnalysis(board,turn)
-        // console.log('done',`pos: ${maxPos}`)
         dispatch(tttTakeTurn(maxPos,board,turn));
         dispatch(stopWaiting());
     }
 }
 
 function tttMaxAnalysis(board, turn){
-    // console.log('in max',`turn: ${turn}`, board)
     const playerTurn = (turn%2)+1;
     const availablePositions = getTTTAvailablePositions(board);
     let maxPos = -1;
@@ -157,11 +173,9 @@ function tttMaxAnalysis(board, turn){
     for(let i = 0; i<availablePositions.length;i++){
         let pos = availablePositions[i]
         board[pos] = playerTurn;
-        // console.log(`change pos: ${pos} player: ${playerTurn}`,board)
         let win = tttCheckWinNoPush(pos, board)
         if(win){
             board[pos] = 0;
-            // console.log('out max', `chose: ${pos} for turn: ${turn}`, board)
             maxPos=pos
             maxScore=1
             return {maxPos, maxScore};
@@ -178,15 +192,12 @@ function tttMaxAnalysis(board, turn){
             }
         }
         board[pos] = 0;
-        // console.log('continue max',`turn: ${turn}`, board)
     }
 
-    // console.log('out max', `chose: ${maxPos} for turn: ${turn}`, board)
     return {maxPos, maxScore};
 }
 
 function tttMinAnalysis(board, turn){
-    // console.log('in min', `turn: ${turn}`, board)
     const playerTurn = (turn%2)+1;
     const availablePositions = getTTTAvailablePositions(board);
     let minPos = 9;
@@ -195,11 +206,9 @@ function tttMinAnalysis(board, turn){
     for(let i = 0; i<availablePositions.length;i++){
         let pos = availablePositions[i]
         board[pos] = playerTurn;
-        // console.log(`change pos: ${pos} player: ${playerTurn}`,board)
         let win = tttCheckWinNoPush(pos, board)
         if(win){
             board[pos] = 0;
-            // console.log('out min', `chose: ${pos} for turn: ${turn}`, board)
             minPos=pos
             minScore=-1
             return {minPos, minScore};
@@ -216,10 +225,8 @@ function tttMinAnalysis(board, turn){
             }
         }
         board[pos] = 0;
-        // console.log('continue min', `turn: ${turn}`, board)
     }
 
-    // console.log('out min', `chose: ${minPos} for turn: ${turn}`, board)
     return {minPos, minScore};
 }
 
@@ -236,4 +243,57 @@ export function getTTTAvailablePositions(board){
 export function getTTTRandomMove(availablePositions){
     const random = Math.floor(Math.random() * availablePositions.length);
     return availablePositions[random];
+}
+
+/********************************Hangman ***************************/
+
+export function loadDictionary(dictionary) {
+    return {
+        type: Action.LoadDictionary,
+        payload: dictionary,
+    };
+}
+
+export function pageLeft(currPage){
+    if(currPage>0){
+        return {
+            type: Action.PageLeft,
+            payload: currPage-1,
+        }
+    }else{
+        return {
+            type: Action.PageLeft,
+            payload: maxPage,
+        }
+
+    }
+}
+
+export function pageRight(currPage){
+    if(currPage<maxPage){
+        return {
+            type: Action.PageRight,
+            payload: currPage+1,
+        }
+    }else{
+        return {
+            type: Action.PageRight,
+            payload: 0,
+        }
+
+    }
+}
+
+export function loadAllWords(offset){
+    return dispatch => {
+        fetch(`${host}/allwords/${offset*wordLimit}/${wordLimit}`)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            if(data.ok){
+                dispatch(loadDictionary(data.dictionary));
+            }
+        })
+        .catch(e=> console.error(e));
+    };
 }

@@ -1,0 +1,15 @@
+.HangmanDictionary{
+    background: #61dafb;
+}
+
+.dictionaryContent{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.dictionaryButton{
+    box-sizing: border-box;
+    margin: 5px 15px;
+    padding: 2.5px 20px;
+}
