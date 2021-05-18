@@ -2,6 +2,8 @@ import { Action } from './actions';
 
 const initialState = {
     isWaiting: false,
+    error:false,
+    errorMessage:'',
     menuOpen: false,
     gameOver: false,
     gameResult: 0,
@@ -12,7 +14,13 @@ const initialState = {
         /*{id:1, word:'a', length:1, weight:1, difficulty:0, won:0, played:0},
         {id:2, word:'aa', length:2, weight:1, difficulty:0, won:0, played:0},*/
     ],
-    currPage:0,
+    currPage: 0,
+    hangmanGameStarted: false,
+    numLetters: 1,
+    mostRecentLetter:'',
+    wordToGuess: [],
+    numberOfTries:10,
+    guessedLetters: [],
 }
 
 export function reducer(state = initialState, action) {
@@ -78,6 +86,16 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 currPage: action.payload,
+            };
+        case Action.SetWordLength:
+            return {
+                ...state,
+                numLetters: action.payload,
+            };
+        case Action.SetHangmanGameStarted:
+            return {
+                ...state,
+                hangmanGameStarted: action.payload,
             };
         default:
             return state;

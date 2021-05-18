@@ -11,6 +11,8 @@ import { TicTacToeMultiplayer } from './TicTacToeMultiplayer';
 import { TicTacToeSingleplayer } from './TicTacToeSingleplayer';
 import { HangmanMenu } from './HangmanMenu';
 import { HangmanDictionary } from './HangmanDictionary';
+import { HangmanChoose } from './HangmanChoose';
+import { HangmanGuess } from './HangmanGuess';
 
 function App() {
   return (
@@ -35,6 +37,12 @@ function App() {
         </Route>
         <Route exact path="/hangman_menu">
           <HangmanMenu />
+        </Route>
+        <Route exact path="/hangman_guess">
+          <HangmanGuess />
+        </Route>
+        <Route exact path="/hangman_choose">
+          <HangmanChoose />
         </Route>
         <Route exact path="/hangman_dictionary">
           <HangmanDictionary />

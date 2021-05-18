@@ -14,13 +14,13 @@ export function HangmanMenu(props) {
         <div className='HangmanMenu'>
             <div className="hangmanModeSelectBox">
             <div className="singlePlayerBox hangmanNavBox" onClick={reset}>
-                    <Link to="/hangman_singleplayer">
+                    <Link to="/hangman_guess">
                         <img src='singlePersonIcon.png' className="navIcon"></img>
                         <p className="navItem">Guess Word</p>
                     </Link>
                 </div>
                 <div className="multiPlayerBox hangmanNavBox" onClick={reset}>
-                    <Link to="/hangman_multiplayer">
+                    <Link to="/hangman_choose">
                         <img src='robotIcon.png' className="navIcon"></img>
                         <p className="navItem">Choose Word</p>
                     </Link>

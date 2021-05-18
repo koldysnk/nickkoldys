@@ -12,6 +12,8 @@ export const Action = Object.freeze({
     LoadDictionary: 'LoadDictionary',
     PageRight: 'PageRight',
     PageLeft: "PageLeft",
+    SetWordLength: 'SetWordLength',
+    SetHangmanGameStarted: 'SetHangmanGameStarted',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -281,6 +283,27 @@ export function pageRight(currPage){
             payload: 0,
         }
 
+    }
+}
+
+export function setWordLength(length){
+    return {
+        type: Action.SetWordLength,
+        payload: length,
+    }
+}
+
+export function setHangmanGameStarted(started){
+    return {
+        type: Action.SetHangmanGameStarted,
+        payload: started,
+    }
+}
+
+export function startHangman(length){
+    return dispatch => {
+        dispatch(setWordLength(length))
+        dispatch(setHangmanGameStarted(true))
     }
 }
 
