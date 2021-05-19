@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { startHangman, makeGuess, updateGuessedLetters, updateNumberOfTries, setGuessedCorrect, setWordToGuess, tttUpdateResult } from './actions';
 import './HangmanChoose.css';
+import { HangmanDrawing } from './HangmanDrawing';
 import { Spinner } from './Spinner';
 
 export function HangmanChoose(props) {
@@ -123,22 +124,24 @@ export function HangmanChoose(props) {
     //     dispatch(updateGuessedLetters([]));
     // }, [dispatch, numLetters]);
 
-    let alreadyGuessed = <p>The computer has no previous guesses.</p>
+    let alreadyGuessed = <p className='hangmanContentP'>The computer has no previous guesses.</p>
     if (guessedLetters.length > 0) {
-        alreadyGuessed = <p>The computer's previous guesses: {guessedLetters.map(letter => <span key={letter + (Math.floor(Math.random() * 10000000))}> {letter} </span>)}</p>
+        alreadyGuessed = <p className='hangmanContentP'>The computer's previous guesses: <br></br>{guessedLetters.map(letter => <span key={letter + (Math.floor(Math.random() * 10000000))}> {letter} </span>)}</p>
     }
 
     if (!gameStarted) {
         return (
             <div className='HangmanChoose'>
                 <h2 className='hangmanTitle'>Hangman</h2>
-                <div>
-                    <p>What length word are you thinking of?</p>
-                    <input className="numberIn" type="number" min="1" max="31"
-                        value={nL} onChange={e => setNL(parseInt(e.target.value))}></input>
-                    <button onClick={onConfirmLength}>Confirm</button>
+                <div className='hangmanContent'>
+                    <p className='hangmanContentP'>What length word are you thinking of?</p>
+                    <div className='hangmanInput'>
+                        <input className="numberIn" type="number" min="1" max="31"
+                            value={nL} onChange={e => setNL(parseInt(e.target.value))}></input>
+                        <button onClick={onConfirmLength}>Confirm</button>
+                    </div>
                     <br></br>
-                    <p>Input must be from 1 to 31.</p>
+                    <p className='hangmanContentP'>Input must be from 1 to 31.</p>
                 </div>
             </div>
         );
@@ -148,22 +151,30 @@ export function HangmanChoose(props) {
             return (
                 <div className='HangmanChoose'>
                     <h2 className='hangmanTitle'>Hangman</h2>
-                    <p>The current word is:</p>
-                    <p>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
-                    {alreadyGuessed}
-                    <p>Incorrect guesses remaining: {numberOfTries}</p>
-                    <p>Congratulations! You picked a word the AI could not guess.</p>
+                    <div className='hangmanContent'>
+                        <p className='hangmanContentP'>The current word is:</p>
+                        <p className='hangmanContentP'>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
+                        <br></br>
+                        <HangmanDrawing lives={-1} />
+                        <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
+                        {alreadyGuessed}
+                        <p className='hangmanContentP'>Congratulations! You picked a word the AI could not guess.</p>
+                    </div>
                 </div>
             );
         }
         return (
             <div className='HangmanChoose'>
                 <h2 className='hangmanTitle'>Hangman</h2>
-                <p>The current word is:</p>
-                <p>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
-                {alreadyGuessed}
-                <p>Incorrect guesses remaining: {numberOfTries}</p>
-                <p>Looks like the AI guessed the word you picked.</p>
+                <div className='hangmanContent'>
+                    <p className='hangmanContentP'>The current word is:</p>
+                    <p className='hangmanContentP'>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
+                    <br></br>
+                    <HangmanDrawing lives={numberOfTries} />
+                    <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
+                    {alreadyGuessed}
+                    <p className='hangmanContentP'>Looks like the AI guessed the word you picked.</p>
+                </div>
             </div>
         );
     }
@@ -171,12 +182,15 @@ export function HangmanChoose(props) {
         return (
             <div className='HangmanChoose'>
                 <h2 className='hangmanTitle'>Hangman</h2>
-                <p>The current word is:</p>
-                <p>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
-                {alreadyGuessed}
-                <p>Incorrect guesses remaining: {numberOfTries}</p>
-                <p>The computer is guessing a letter.</p>
-                <Spinner />
+                <div className='hangmanContent'>
+                    <p className='hangmanContentP'>The current word is:</p>
+                    <p className='hangmanContentP'>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
+                    <br></br>
+                    <HangmanDrawing lives={numberOfTries} />
+                    <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
+                    {alreadyGuessed}
+                    <p className='hangmanContentP'>The computer is guessing a letter.</p>
+                </div>
             </div>
         );
     }
@@ -184,29 +198,41 @@ export function HangmanChoose(props) {
         return (
             <div className='HangmanChoose'>
                 <h2 className='hangmanTitle'>Hangman</h2>
-                <p>The current word is:</p>
-                <p>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
-                {alreadyGuessed}
-                <p>Incorrect guesses remaining: {numberOfTries}</p>
-                <p>The computer's new guess is: {guess}</p>
-                <p>Enter the position(s) of the letter seperated by commas.</p>
-                <input placeholder="Enter Here!" onChange={e => setPositions(e.target.value)}></input>
-                <button onClick={onConfirmLetter}>Confirm</button>
-                <p>{inputError}</p>
+                <div className='hangmanContent'>
+                    <p className='hangmanContentP'>The current word is:</p>
+                    <p className='hangmanContentP'>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
+                    <br></br>
+                    <HangmanDrawing lives={numberOfTries} />
+                    <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
+                    {alreadyGuessed}
+                    <p className='hangmanContentP'>The computer's new guess is: {guess}</p>
+                    <p className='hangmanContentP'>Enter the position(s) of the letter seperated by commas.</p>
+                    <div className='hangmanInput'>
+                        <input placeholder="Enter Here!" onChange={e => setPositions(e.target.value)}></input>
+                        <button onClick={onConfirmLetter}>Confirm</button>
+                    </div>
+                    <p className='hangmanContentP'>{inputError}</p>
+                </div>
             </div>
         );
     }
     return (
         <div className='HangmanChoose'>
             <h2 className='hangmanTitle'>Hangman</h2>
-            <p>The current word is:</p>
-            <p>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
-            {alreadyGuessed}
-            <p>Incorrect guesses remaining: {numberOfTries}</p>
-            <p>The computer's new guess is: {guess}</p>
-            <p>Is this correct?</p>
-            <button onClick={onYes}>Yes</button>
-            <button onClick={onNo}>No</button>
+            <div className='hangmanContent'>
+                <p className='hangmanContentP'>The current word is:</p>
+                <p className='hangmanContentP'>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
+                <br></br>
+                <HangmanDrawing lives={numberOfTries} />
+                <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
+                {alreadyGuessed}
+                <p className='hangmanContentP'>The computer's new guess is: {guess}</p>
+                <p className='hangmanContentP'>Is this correct?</p>
+                <div className='hangmanInput'>
+                    <button onClick={onYes}>Yes</button>
+                    <button onClick={onNo}>No</button>
+                </div>
+            </div>
         </div>
     );
 }
