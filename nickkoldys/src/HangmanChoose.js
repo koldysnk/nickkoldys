@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { startHangman, makeGuess, updateGuessedLetters, updateNumberOfTries, setGuessedCorrect, setWordToGuess, tttUpdateResult } from './actions';
+import { startHangman, makeGuess, updateGuessedLetters, updateNumberOfTries, setGuessedCorrect, setWordToGuess, tttUpdateResult, wordLost } from './actions';
 import './HangmanChoose.css';
 import { HangmanDrawing } from './HangmanDrawing';
 import { Spinner } from './Spinner';
@@ -16,7 +16,9 @@ export function HangmanChoose(props) {
     const guess = useSelector(state => state.mostRecentLetter);
     const numberOfTries = useSelector(state => state.numberOfTries);
     const guessedCorrect = useSelector(state => state.guessedCorrect);
+    const wordUpdated = useSelector(state => state.wordUpdated);
     const [positions, setPositions] = useState('');
+    const [wordToUpdate, setWordToUpdate] = useState('');
     const [inputError, setinputError] = useState('');
     const dispatch = useDispatch();
 
@@ -116,13 +118,9 @@ export function HangmanChoose(props) {
         return arr;
     }
 
-    // useEffect(() => {
-    //     dispatch(setGuessedCorrect(false));
-    //     dispatch(setJustUpdated(false));
-    //     dispatch(setWordToGuess(createArr(numLetters)));
-    //     dispatch(updateNumberOfTries(10));
-    //     dispatch(updateGuessedLetters([]));
-    // }, [dispatch, numLetters]);
+    const updateWord = () => {
+        dispatch(wordLost(wordToUpdate))
+    }
 
     let alreadyGuessed = <p className='hangmanContentP'>The computer has no previous guesses.</p>
     if (guessedLetters.length > 0) {
@@ -147,7 +145,8 @@ export function HangmanChoose(props) {
         );
     }
     if (gameOver) {
-        if (result == 2) {
+        if (result == 2 ) {
+            if(!wordUpdated){
             return (
                 <div className='HangmanChoose'>
                     <h2 className='hangmanTitle'>Hangman</h2>
@@ -159,6 +158,43 @@ export function HangmanChoose(props) {
                         <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
                         {alreadyGuessed}
                         <p className='hangmanContentP'>Congratulations! You picked a word the AI could not guess.</p>
+                        <p className='hangmanContentP'>What was the word you picked?</p>
+                        <div className='hangmanInput'>
+                            <input placeholder="Enter Here!" onChange={e => setWordToUpdate(e.target.value)}></input>
+                            <button onClick={updateWord}>Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            );
+            }else{
+                return (
+                    <div className='HangmanChoose'>
+                        <h2 className='hangmanTitle'>Hangman</h2>
+                        <div className='hangmanContent'>
+                            <p className='hangmanContentP'>The current word is:</p>
+                            <p className='hangmanContentP'>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
+                            <br></br>
+                            <HangmanDrawing lives={-1} />
+                            <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
+                            {alreadyGuessed}
+                            <p className='hangmanContentP'>Congratulations! You picked a word the AI could not guess.</p>
+                            <p className='hangmanContentP'>Thanks!</p>
+                        </div>
+                    </div>
+                );
+            }
+        } else if(result == 3){
+            return (
+                <div className='HangmanChoose'>
+                    <h2 className='hangmanTitle'>Hangman</h2>
+                    <div className='hangmanContent'>
+                        <p className='hangmanContentP'>The current word is:</p>
+                        <p className='hangmanContentP'>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
+                        <br></br>
+                        <HangmanDrawing lives={-1} />
+                        <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
+                        {alreadyGuessed}
+                        <p className='hangmanContentP'>The word you picked was not in the dictionary.</p>
                     </div>
                 </div>
             );

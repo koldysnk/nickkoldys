@@ -21,7 +21,8 @@ const initialState = {
     wordToGuess: [],
     numberOfTries: 10,
     guessedLetters: [],
-    guessedCorrect:false,
+    guessedCorrect: false,
+    wordUpdated: false,
 }
 
 export function reducer(state = initialState, action) {
@@ -122,6 +123,11 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 wordToGuess: action.payload,
+            };
+        case Action.SetWordUpdated:
+            return {
+                ...state,
+                wordUpdated: action.payload,
             };
         default:
             return state;

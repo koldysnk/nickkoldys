@@ -19,6 +19,7 @@ export const Action = Object.freeze({
     UpdateNumberOfTries: 'UpdateNumberOfTries',
     SetGuessedCorrect:'SetGuessedCorrect',
     SetWordToGuess: 'SetWordToGuess',
+    SetWordUpdated: 'SetWordUpdated',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -340,6 +341,13 @@ export function setWordToGuess(arr) {
     }
 }
 
+export function setWordUpdated(updated) {
+    return {
+        type: Action.SetWordUpdated,
+        payload: updated,
+    }
+}
+
 export function startHangman(length){
     return dispatch => {
         dispatch(setWordLength(length))
@@ -372,6 +380,25 @@ export function makeGuess(length, regex, guessed){
                 dispatch(setMostRecentLetter(data.guess));
                 dispatch(stopWaiting());
             }
+        })
+        .catch(e=> console.error(e));
+    };
+}
+
+export function wordLost(word){
+    return dispatch => {
+        dispatch(startWaiting())
+        fetch(`${host}/wordLost/${word}`)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            if(data.ok){
+                dispatch(setWordUpdated(true));
+            }else{
+                dispatch(tttUpdateResult(3));
+            }
+            
+            dispatch(stopWaiting());
         })
         .catch(e=> console.error(e));
     };
