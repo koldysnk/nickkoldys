@@ -14,6 +14,11 @@ export const Action = Object.freeze({
     PageLeft: "PageLeft",
     SetWordLength: 'SetWordLength',
     SetHangmanGameStarted: 'SetHangmanGameStarted',
+    SetMostRecentLetter:'SetMostRecentLetter',
+    UpdateGuessedLetters: 'UpdateGuessedLetters',
+    UpdateNumberOfTries: 'UpdateNumberOfTries',
+    SetGuessedCorrect:'SetGuessedCorrect',
+    SetWordToGuess: 'SetWordToGuess',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -247,7 +252,7 @@ export function getTTTRandomMove(availablePositions){
     return availablePositions[random];
 }
 
-/********************************Hangman ***************************/
+/***********************************************************************Hangman ***************************/
 
 export function loadDictionary(dictionary) {
     return {
@@ -300,6 +305,41 @@ export function setHangmanGameStarted(started){
     }
 }
 
+export function setMostRecentLetter(letter){
+    return{
+        type: Action.SetMostRecentLetter,
+        payload:letter,
+    };
+}
+
+export function updateGuessedLetters(letter) {
+    return {
+        type: Action.UpdateGuessedLetters,
+        payload: letter,
+    }
+}
+
+export function updateNumberOfTries(tries) {
+    return {
+        type: Action.UpdateNumberOfTries,
+        payload: tries,
+    }
+}
+
+export function setGuessedCorrect(toF){
+    return {
+        type: Action.SetGuessedCorrect,
+        payload:  toF,
+    }
+}
+
+export function setWordToGuess(arr) {
+    return {
+        type: Action.SetWordToGuess,
+        payload: arr,
+    }
+}
+
 export function startHangman(length){
     return dispatch => {
         dispatch(setWordLength(length))
@@ -315,6 +355,22 @@ export function loadAllWords(offset){
         .then(data => {
             if(data.ok){
                 dispatch(loadDictionary(data.dictionary));
+            }
+        })
+        .catch(e=> console.error(e));
+    };
+}
+
+export function makeGuess(length, regex, guessed){
+    return dispatch => {
+        dispatch(startWaiting());
+        fetch(`${host}/guessLetter/${length}/${regex}/${guessed}`)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            if(data.ok){
+                dispatch(setMostRecentLetter(data.guess));
+                dispatch(stopWaiting());
             }
         })
         .catch(e=> console.error(e));

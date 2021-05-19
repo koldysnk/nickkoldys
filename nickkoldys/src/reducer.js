@@ -2,8 +2,8 @@ import { Action } from './actions';
 
 const initialState = {
     isWaiting: false,
-    error:false,
-    errorMessage:'',
+    error: false,
+    errorMessage: '',
     menuOpen: false,
     gameOver: false,
     gameResult: 0,
@@ -17,10 +17,11 @@ const initialState = {
     currPage: 0,
     hangmanGameStarted: false,
     numLetters: 1,
-    mostRecentLetter:'',
+    mostRecentLetter: '',
     wordToGuess: [],
-    numberOfTries:10,
+    numberOfTries: 10,
     guessedLetters: [],
+    guessedCorrect:false,
 }
 
 export function reducer(state = initialState, action) {
@@ -96,6 +97,31 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 hangmanGameStarted: action.payload,
+            };
+        case Action.SetMostRecentLetter:
+            return {
+                ...state,
+                mostRecentLetter: action.payload,
+            };
+        case Action.UpdateGuessedLetters:
+            return {
+                ...state,
+                guessedLetters: action.payload,
+            };
+        case Action.UpdateNumberOfTries:
+            return {
+                ...state,
+                numberOfTries: action.payload,
+            };
+        case Action.SetGuessedCorrect:
+            return {
+                ...state,
+                guessedCorrect: action.payload,
+            };
+        case Action.SetWordToGuess:
+            return {
+                ...state,
+                wordToGuess: action.payload,
             };
         default:
             return state;
