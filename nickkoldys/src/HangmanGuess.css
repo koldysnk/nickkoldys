@@ -1,0 +1,19 @@
+.HangmanGuess {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 80%;
+    margin: auto;
+}
+
+.hangmanContent{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.hangmanContentP{
+    margin-bottom: 0;
+}

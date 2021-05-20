@@ -25,9 +25,11 @@ export function HangmanChoose(props) {
     const [nL, setNL] = useState(numLetters);
 
     const onConfirmLength = () => {
-        dispatch(startHangman(nL));
-        dispatch(setWordToGuess(createArr(nL)));
-        performGuess()
+        if (nL.length > 0) {
+            dispatch(startHangman(nL));
+            dispatch(setWordToGuess(createArr(nL)));
+            performGuess()
+        }
     }
 
     const performGuess = () => {
@@ -135,7 +137,7 @@ export function HangmanChoose(props) {
                     <p className='hangmanContentP'>What length word are you thinking of?</p>
                     <div className='hangmanInput'>
                         <input className="numberIn" type="number" min="1" max="31"
-                            value={nL} onChange={e => setNL(parseInt(e.target.value))}></input>
+                            value={nL} onChange={e => setNL(e.target.value)}></input>
                         <button onClick={onConfirmLength}>Confirm</button>
                     </div>
                     <br></br>
@@ -145,28 +147,28 @@ export function HangmanChoose(props) {
         );
     }
     if (gameOver) {
-        if (result == 2 ) {
-            if(!wordUpdated){
-            return (
-                <div className='HangmanChoose'>
-                    <h2 className='hangmanTitle'>Hangman</h2>
-                    <div className='hangmanContent'>
-                        <p className='hangmanContentP'>The current word is:</p>
-                        <p className='hangmanContentP'>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
-                        <br></br>
-                        <HangmanDrawing lives={-1} />
-                        <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
-                        {alreadyGuessed}
-                        <p className='hangmanContentP'>Congratulations! You picked a word the AI could not guess.</p>
-                        <p className='hangmanContentP'>What was the word you picked?</p>
-                        <div className='hangmanInput'>
-                            <input placeholder="Enter Here!" onChange={e => setWordToUpdate(e.target.value)}></input>
-                            <button onClick={updateWord}>Confirm</button>
+        if (result == 2) {
+            if (!wordUpdated) {
+                return (
+                    <div className='HangmanChoose'>
+                        <h2 className='hangmanTitle'>Hangman</h2>
+                        <div className='hangmanContent'>
+                            <p className='hangmanContentP'>The current word is:</p>
+                            <p className='hangmanContentP'>{wordToGuess.map((letter, key) => <span key={key}> {letter} </span>)}</p>
+                            <br></br>
+                            <HangmanDrawing lives={-1} />
+                            <p className='hangmanContentP'>Incorrect guesses remaining: {numberOfTries}</p>
+                            {alreadyGuessed}
+                            <p className='hangmanContentP'>Congratulations! You picked a word the AI could not guess.</p>
+                            <p className='hangmanContentP'>What was the word you picked?</p>
+                            <div className='hangmanInput'>
+                                <input placeholder="Enter Here!" onChange={e => setWordToUpdate(e.target.value)}></input>
+                                <button onClick={updateWord}>Confirm</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            );
-            }else{
+                );
+            } else {
                 return (
                     <div className='HangmanChoose'>
                         <h2 className='hangmanTitle'>Hangman</h2>
@@ -183,7 +185,7 @@ export function HangmanChoose(props) {
                     </div>
                 );
             }
-        } else if(result == 3){
+        } else if (result == 3) {
             return (
                 <div className='HangmanChoose'>
                     <h2 className='hangmanTitle'>Hangman</h2>

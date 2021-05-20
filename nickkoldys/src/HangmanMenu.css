@@ -51,3 +51,13 @@
         margin: 15px 0;
     }
 }
+
+@media (orientation:portrait){
+    .hangmanModeSelectBox{
+        flex-direction: column;
+    }
+
+    .hangmanNavBox{
+        margin: 15px 0;
+    }
+}

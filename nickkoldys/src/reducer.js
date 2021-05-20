@@ -23,6 +23,7 @@ const initialState = {
     guessedLetters: [],
     guessedCorrect: false,
     wordUpdated: false,
+    rarnWord: '',
 }
 
 export function reducer(state = initialState, action) {
@@ -46,6 +47,11 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 menuOpen: false,
+            };
+        case Action.SetErrorMessage:
+            return {
+                ...state,
+                errorMessage: action.payload,
             };
         /********************************************Tic Tac Toe **************************/
         case Action.TTTSetTurn:
@@ -128,6 +134,11 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 wordUpdated: action.payload,
+            };
+        case Action.SetRandWord:
+            return {
+                ...state,
+                randWord: action.payload,
             };
         default:
             return state;

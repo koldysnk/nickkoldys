@@ -19,6 +19,7 @@ Link{
 .projectTileText{
     display:none;
     color: black;
+    padding: 0 2em;
 }
 
 .projectTile:hover > .projectTileTitle{

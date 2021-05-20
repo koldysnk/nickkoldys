@@ -3,6 +3,7 @@ export const Action = Object.freeze({
     StopWaiting: 'StopWaiting',
     OpenMenu: 'OpenMenu',
     CloseMenu: 'CloseMenu',
+    SetErrorMessage: 'SetErrorMessage',
     //Tic Tac Toe
     TTTSetTurn: 'TTTSetTurn',
     TTTUpdateResult: 'TTTUpdateResult',
@@ -20,6 +21,7 @@ export const Action = Object.freeze({
     SetGuessedCorrect:'SetGuessedCorrect',
     SetWordToGuess: 'SetWordToGuess',
     SetWordUpdated: 'SetWordUpdated',
+    SetRandWord: 'SetRandWord',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -60,7 +62,14 @@ export function openMenu() {
     }
 }
 
-/********************Tic Tac Toe **************************************/
+export function setErrorMessage(message){
+    return {
+        type: Action.SetErrorMessage,
+        payload: message,
+    }
+}
+
+/*****************************************Tic Tac Toe **************************************/
 
 export function tttSetTurn(board, turn) {
     return {
@@ -348,6 +357,13 @@ export function setWordUpdated(updated) {
     }
 }
 
+export function setRandWord(word){
+    return {
+        type: Action.SetRandWord,
+        payload: word,
+    }
+}
+
 export function startHangman(length){
     return dispatch => {
         dispatch(setWordLength(length))
@@ -399,6 +415,22 @@ export function wordLost(word){
             }
             
             dispatch(stopWaiting());
+        })
+        .catch(e=> console.error(e));
+    };
+}
+
+export function loadRandWord(length, difficulty){
+    return dispatch => {
+        dispatch(startWaiting())
+        fetch(`${host}/randWord/${length}/${difficulty}`)
+        .then(checkForErrors)
+        .then(response => response.json())
+        .then(data => {
+            if(data.ok){
+                dispatch(setRandWord(data.word));
+                dispatch(stopWaiting())
+            }
         })
         .catch(e=> console.error(e));
     };

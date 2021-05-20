@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {useDispatch} from 'react-redux';
 import './HangmanMenu.css';
-import { setHangmanGameStarted, updateGuessedLetters, updateNumberOfTries, setGuessedCorrect, setWordUpdated, tttUpdateResult } from './actions';
+import { setHangmanGameStarted, updateGuessedLetters, updateNumberOfTries, setGuessedCorrect, setWordUpdated, tttUpdateResult, setErrorMessage } from './actions';
 
 export function HangmanMenu(props) {
     const dispatch = useDispatch();
@@ -14,6 +14,7 @@ export function HangmanMenu(props) {
         dispatch(updateGuessedLetters([]));
         dispatch(setWordUpdated(false));
         dispatch(tttUpdateResult(0));
+        dispatch(setErrorMessage(''))
     }
     return (
         <div className='HangmanMenu'>

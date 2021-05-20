@@ -19,6 +19,7 @@ Link{
 .gameTileText{
     display:none;
     color: black;
+    padding: 0 2em;
 }
 
 .gameTile:hover > .gameTileTitle{
