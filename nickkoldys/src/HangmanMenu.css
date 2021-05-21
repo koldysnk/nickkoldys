@@ -42,17 +42,7 @@
     font-weight: bold;
 }
 
-@media (max-width:715px){
-    .hangmanModeSelectBox{
-        flex-direction: column;
-    }
-
-    .hangmanNavBox{
-        margin: 15px 0;
-    }
-}
-
-@media (orientation:portrait){
+@media (max-width:715px), (orientation:portrait){
     .hangmanModeSelectBox{
         flex-direction: column;
     }

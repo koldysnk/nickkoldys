@@ -50,11 +50,11 @@ function App() {
         <Route exact path="/projects">
           <Projects />
         </Route>
+        {/* <Route exact path="/raster_caster">
+          <RasterCaster />
+        </Route> */}
         <Route exact path="/about">
           <About />
-        </Route>
-        <Route exact path="/rastercaster">
-          <RasterCaster />
         </Route>
         <Redirect to="/home"/>
       </Switch>

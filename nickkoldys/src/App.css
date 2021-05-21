@@ -30,7 +30,7 @@
 }
 
 
-@media (orientation:portrait){
+@media (orientation:portrait), (max-width: 715px){
   .App {
     padding-left: 0;
   }
