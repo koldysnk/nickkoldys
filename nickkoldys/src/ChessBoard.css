@@ -1,0 +1,56 @@
+.chessTable{
+    width: 75vh;
+    height: 75vh;
+    border: 1px black;
+    border-style: none;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+
+
+
+
+.chessBoardTile{
+    box-sizing: border-box;
+    width: 12.5%;
+    height: 12.5%;
+    border: .25px black solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(161,217,239);
+}
+
+.chessBoardTile:nth-child(2n+1) + .evenChessRow, .chessBoardTile:nth-child(2n) + .oddChessRow{
+    background: rgb(32,146,191);
+}
+
+.chessSquare{
+    display: flex;
+    width: 80%;
+    height: 80%;
+    justify-content: center;
+    align-items: center;
+}
+
+.chessPiece{
+    font-size: 6vh;
+}
+
+.chessSelectable:hover{
+    border: 1px black;
+    border-style: solid;
+    cursor: pointer;
+}
+
+@media (orientation:portrait){
+    .chessTable{
+        width: 80vw;
+        height: 80vw;
+    }
+
+    .chessPiece{
+        font-size: 7vw;
+    }
+}

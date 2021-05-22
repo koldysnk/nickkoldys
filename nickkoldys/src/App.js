@@ -13,6 +13,8 @@ import { HangmanMenu } from './HangmanMenu';
 import { HangmanDictionary } from './HangmanDictionary';
 import { HangmanChoose } from './HangmanChoose';
 import { HangmanGuess } from './HangmanGuess';
+import { ChessMenu } from './ChessMenu';
+import { ChessMultiplayer } from './ChessMultiplayer';
 
 function App() {
   return (
@@ -46,6 +48,15 @@ function App() {
         </Route>
         <Route exact path="/hangman_dictionary">
           <HangmanDictionary />
+        </Route>
+        <Route exact path="/chess_menu">
+          <ChessMenu />
+        </Route>
+        <Route exact path="/chess_multiplayer">
+          <ChessMultiplayer />
+        </Route>
+        <Route exact path="/chess_singleplayer">
+          <TicTacToeSingleplayer />
         </Route>
         <Route exact path="/projects">
           <Projects />

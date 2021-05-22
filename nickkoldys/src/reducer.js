@@ -10,6 +10,7 @@ const initialState = {
     playerFirst: true,
     turn: 0,
     tttBoard: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    /***********************************************Hangman *****************************************/
     dictionary: [
         /*{id:1, word:'a', length:1, weight:1, difficulty:0, won:0, played:0},
         {id:2, word:'aa', length:2, weight:1, difficulty:0, won:0, played:0},*/
@@ -23,7 +24,17 @@ const initialState = {
     guessedLetters: [],
     guessedCorrect: false,
     wordUpdated: false,
-    rarnWord: '',
+    randWord: '',
+    /*********************************************Chess ***************************************/
+    chessBoard: [['br', 'bkn', 'bb', 'bq', 'bk', 'bb', 'bkn', 'br'],
+    ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
+    ['wr', 'wkn', 'wb', 'wq', 'wk', 'wb', 'wkn', 'wr']],
+    activePiece: {type:'', row:0, col: 0},
 }
 
 export function reducer(state = initialState, action) {
