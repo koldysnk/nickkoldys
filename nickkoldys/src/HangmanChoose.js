@@ -121,7 +121,7 @@ export function HangmanChoose(props) {
     }
 
     const updateWord = () => {
-        dispatch(wordLost(wordToUpdate))
+        dispatch(wordLost(wordToUpdate.toLowerCase()))
     }
 
     let alreadyGuessed = <p className='hangmanContentP'>The computer has no previous guesses.</p>
