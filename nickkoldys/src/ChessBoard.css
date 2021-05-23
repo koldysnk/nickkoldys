@@ -52,6 +52,10 @@
     cursor: pointer;
 }
 
+.chessSelectable:hover > .chessPiece{
+    cursor: pointer;
+}
+
 @media (orientation:portrait){
     .chessTable{
         width: 80vw;

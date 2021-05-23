@@ -35,9 +35,15 @@ const initialState = {
     ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
     ['wr', 'wkn', 'wb', 'wq', 'wk', 'wb', 'wkn', 'wr']],
     activePiece: { type: '', position: { row: -1, col: -1 } },
-    lastMove: { piece: '', startPosition: { row: -1, col: -1 }, endPosition: { row: -1, col: -1 }},
+    lastMove: { piece: '', startPosition: { row: -1, col: -1 }, endPosition: { row: -1, col: -1 } },
     canCastle: true,
     availableMoves: new Map(),
+    leftWhiteRookAvailable: true,
+    leftBlackRookAvailable: true,
+    rightWhiteRookAvailable: true,
+    rightBlackRookAvailable: true,
+    whiteKingAvailable: true,
+    blackKingAvailable: true,
 }
 
 export function reducer(state = initialState, action) {
@@ -184,6 +190,36 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 lastMove: action.payload,
+            };
+        case Action.SetWhiteKingAvailable:
+            return {
+                ...state,
+                whiteKingAvailable: action.payload,
+            };
+        case Action.SetBlackKingAvailable:
+            return {
+                ...state,
+                blackKingAvailable: action.payload,
+            };
+        case Action.SetLeftWhiteRookAvailable:
+            return {
+                ...state,
+                leftWhiteRookAvailable: action.payload,
+            };
+        case Action.SetLeftBlackRookAvailable:
+            return {
+                ...state,
+                leftBlackRookAvailable: action.payload,
+            };
+        case Action.SetRightWhiteRookAvailable:
+            return {
+                ...state,
+                rightWhiteRookAvailable: action.payload,
+            };
+        case Action.SetRightBlackRookAvailable:
+            return {
+                ...state,
+                rightBlackRookAvailable: action.payload,
             };
         default:
             return state;

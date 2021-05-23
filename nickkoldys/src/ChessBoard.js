@@ -10,6 +10,12 @@ export function ChessBoard(props) {
     const activePiece = useSelector(state => state.activePiece);
     const availableMoves = useSelector(state => state.availableMoves);
     const lastMove = useSelector(state => state.lastMove);
+    const leftWhiteRookAvailable = useSelector(state => state.leftWhiteRookAvailable);
+    const leftBlackRookAvailable = useSelector(state => state.leftBlackRookAvailable);
+    const rightWhiteRookAvailable = useSelector(state => state.rightWhiteRookAvailable);
+    const rightBlackRookAvailable = useSelector(state => state.rightBlackRookAvailable);
+    const whiteKingAvailable = useSelector(state => state.whiteKingAvailable);
+    const blackKingAvailable = useSelector(state => state.blackKingAvailable);
     const dispatch = useDispatch();
 
     let pieces = new Map()
@@ -43,7 +49,11 @@ export function ChessBoard(props) {
                                 dispatch(chessResetActivePiece())
                                 dispatch(chessSetAvailableMoves(new Map()))
                             }else if((v[0]=='w' && turn %2 == 0) || (v[0]=='b' && turn %2 == 1)){
-                                dispatch(chessMakePieceActive(board,i,j,v,lastMove))
+                                if(turn%2==0){
+                                    dispatch(chessMakePieceActive(board,i,j,v,lastMove,whiteKingAvailable,leftWhiteRookAvailable,rightWhiteRookAvailable))
+                                }else{
+                                    dispatch(chessMakePieceActive(board,i,j,v,lastMove,blackKingAvailable,leftBlackRookAvailable,rightBlackRookAvailable))
+                                }
                             }else if(availableMoves.has(`${i}-${j}`)){
                                 dispatch(chessMovePiece(board,activePiece,availableMoves.get(`${i}-${j}`), turn))
                             }

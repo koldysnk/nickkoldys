@@ -29,6 +29,12 @@ export const Action = Object.freeze({
     ChessSetAvailableMoves:'ChessSetAvailableMoves',
     ChessSetBoard:'ChessSetBoard',
     ChessSetLastMove:'ChessSetLastMove',
+    SetWhiteKingAvailable:'SetWhiteKingAvailable',
+    SetBlackKingAvailable:'SetBlackKingAvailable',
+    SetLeftWhiteRookAvailable:'SetWhiteKingAvailable',
+    SetLeftBlackRookAvailable:'SetBlackKingAvailable',
+    SetRightWhiteRookAvailable:'SetWhiteKingAvailable',
+    SetRightBlackRookAvailable:'SetBlackKingAvailable',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -487,58 +493,450 @@ export function chessSetLastMove(move){
     }
 }
 
-export function chessMakePieceActive(board, row, col, piece, lastMove) {
+export function setWhiteKingAvailable(bool){
+    return {
+        type: Action.SetWhiteKingAvailable,
+        payload: bool,
+    }
+}
+
+export function setBlackKingAvailable(bool){
+    return {
+        type: Action.SetBlackKingAvailable,
+        payload: bool,
+    }
+}
+
+export function setLeftWhiteRookAvailable(bool){
+    return {
+        type: Action.SetLeftWhiteRookAvailable,
+        payload: bool,
+    }
+}
+
+export function setLeftBlackRookAvailable(bool){
+    return {
+        type: Action.SetLeftBlackRookAvailable,
+        payload: bool,
+    }
+}
+
+export function setRightWhiteRookAvailable(bool){
+    return {
+        type: Action.SetRightWhiteRookAvailable,
+        payload: bool,
+    }
+}
+
+export function setRightBlackRookAvailable(bool){
+    return {
+        type: Action.SetRightBlackRookAvailable,
+        payload: bool,
+    }
+}
+
+export function chessMakePieceActive(board, row, col, piece, lastMove,king,leftRook,rightRook) {
     return dispatch => {
         dispatch(startWaiting())
-        let availableMoves = new Map()
-        if (piece[1] == 'p') {
-            //pawn move
-            if (piece[0] == 'b') {
-                if (board[row + 1][col] == '') {
-                    availableMoves.set(`${row+1}-${col}`,{ row: row + 1, col: col })
-                    if (row == 1 && board[row + 2][col] == '') {
-                        availableMoves.set(`${row+2}-${col}`,{ row: row + 2, col: col })
-                    }
-                }
-                if(col<7 && board[row + 1][col+1][0]=='w'){
-                    availableMoves.set(`${row+1}-${col+1}`,{ row: row + 1, col: col+1 })
-                }
-                if(col>1 && board[row + 1][col-1][0]=='w'){
-                    availableMoves.set(`${row+1}-${col-1}`,{ row: row + 1, col: col -1})
-                }
-                if(lastMove.piece=='wp' && lastMove.startPosition.row==6 && lastMove.endPosition.row==row && row == 4){
-                    if(lastMove.endPosition.col == (col - 1)){
-                        availableMoves.set(`${row+1}-${col-1}`,{ row: row + 1, col: col -1, enPassant:true})
-                    }else if(lastMove.endPosition.col == (col + 1)){
-                        availableMoves.set(`${row+1}-${col+1}`,{ row: row + 1, col: col +1, enPassant:true})
-                    }
-                }
-            } else {
-                if (board[row - 1][col] == '') {
-                    availableMoves.set(`${row-1}-${col}`,{ row: row - 1, col: col })
-                    if (row == 6 && board[row - 2][col] == '') {
-                        availableMoves.set(`${row-2}-${col}`,{ row: row - 2, col: col })
-                    }
-                }
-                if(col<7 && board[row - 1][col+1][0]=='b'){
-                    availableMoves.set(`${row-1}-${col+1}`,{ row: row - 1, col: col + 1 })
-                }
-                if(col>1 && board[row - 1][col-1][0]=='b'){
-                    availableMoves.set(`${row-1}-${col-1}`,{ row: row - 1, col: col - 1})
-                }
-                if(lastMove.piece=='bp' && lastMove.startPosition.row==1 && lastMove.endPosition.row==row && row == 3){
-                    if(lastMove.endPosition.col == (col - 1)){
-                        availableMoves.set(`${row-1}-${col-1}`,{ row: row - 1, col: col -1, enPassant:true})
-                    }else if(lastMove.endPosition.col == (col + 1)){
-                        availableMoves.set(`${row-1}-${col+1}`,{ row: row - 1, col: col +1, enPassant:true})
-                    }
-                }
-            }
-        }
+        let availableMoves = getAvailableChessMoves(board, row, col, piece, lastMove,king,leftRook,rightRook)
         dispatch(chessSetActivePiece({piece: piece, position: {row:row, col:col}}))
         dispatch(chessSetAvailableMoves(availableMoves))
         dispatch(stopWaiting())
     }
+}
+
+function getAvailableChessMoves(board, row, col, piece, lastMove,king,leftRook,rightRook){
+    const color = piece[0]
+    let availableMoves = new Map()
+    
+    if (piece[1] == 'p') { //Pawn move
+        if (color == 'b') {
+            if (board[row + 1][col] == '') {
+                availableMoves.set(`${row+1}-${col}`,{ row: row + 1, col: col })
+                if (row == 1 && board[row + 2][col] == '') {
+                    availableMoves.set(`${row+2}-${col}`,{ row: row + 2, col: col })
+                }
+            }
+            if(col<7 && board[row + 1][col+1][0]=='w'){
+                availableMoves.set(`${row+1}-${col+1}`,{ row: row + 1, col: col+1 })
+            }
+            if(col>0 && board[row + 1][col-1][0]=='w'){
+                availableMoves.set(`${row+1}-${col-1}`,{ row: row + 1, col: col -1})
+            }
+            if(lastMove.piece=='wp' && lastMove.startPosition.row==6 && lastMove.endPosition.row==row && row == 4){
+                if(lastMove.endPosition.col == (col - 1)){
+                    availableMoves.set(`${row+1}-${col-1}`,{ row: row + 1, col: col -1, enPassant:true})
+                }else if(lastMove.endPosition.col == (col + 1)){
+                    availableMoves.set(`${row+1}-${col+1}`,{ row: row + 1, col: col +1, enPassant:true})
+                }
+            }
+        } else {
+            if (board[row - 1][col] == '') {
+                availableMoves.set(`${row-1}-${col}`,{ row: row - 1, col: col })
+                if (row == 6 && board[row - 2][col] == '') {
+                    availableMoves.set(`${row-2}-${col}`,{ row: row - 2, col: col })
+                }
+            }
+            if(col<7 && board[row - 1][col+1][0]=='b'){
+                availableMoves.set(`${row-1}-${col+1}`,{ row: row - 1, col: col + 1 })
+            }
+            if(col>0 && board[row - 1][col-1][0]=='b'){
+                availableMoves.set(`${row-1}-${col-1}`,{ row: row - 1, col: col - 1})
+            }
+            if(lastMove.piece=='bp' && lastMove.startPosition.row==1 && lastMove.endPosition.row==row && row == 3){
+                if(lastMove.endPosition.col == (col - 1)){
+                    availableMoves.set(`${row-1}-${col-1}`,{ row: row - 1, col: col -1, enPassant:true})
+                }else if(lastMove.endPosition.col == (col + 1)){
+                    availableMoves.set(`${row-1}-${col+1}`,{ row: row - 1, col: col +1, enPassant:true})
+                }
+            }
+        }
+    }else if(piece[1] == 'r'){ //Rook move
+        let currRowTop = row - 1
+        let currRowBottom = row + 1
+        let currLeftCol = col - 1
+        let currRightCol = col + 1
+        let intersectTop = false
+        let intersectBottom = false
+        let intersectLeft = false
+        let intersectRight = false
+
+        while(currRowTop>=0 && !intersectTop){
+            if(board[currRowTop][col][0] != color){
+                availableMoves.set(`${currRowTop}-${col}`,{ row: currRowTop, col: col})
+                if(board[currRowTop][col] != ''){
+                    intersectTop = true
+                }
+            }else{
+                intersectTop = true
+            }
+            currRowTop -= 1
+        }
+
+        while(currRowBottom<=7 && !intersectBottom){
+            if(board[currRowBottom][col][0] != color){
+                availableMoves.set(`${currRowBottom}-${col}`,{ row: currRowBottom, col: col})
+                if(board[currRowBottom][col] != ''){
+                    intersectBottom = true
+                }
+            }else{
+                intersectBottom = true
+            }
+            currRowBottom += 1
+        }
+
+        while(currLeftCol>=0 && !intersectLeft){
+            if(board[row][currLeftCol][0] != color){
+                availableMoves.set(`${row}-${currLeftCol}`,{ row: row, col: currLeftCol})
+                if(board[row][currLeftCol] != ''){
+                    intersectLeft = true
+                }
+            }else{
+                intersectLeft = true
+            }
+            currLeftCol -= 1
+        }
+
+        while(currRightCol<=7 && !intersectRight){
+            if(board[row][currRightCol][0] != color){
+                availableMoves.set(`${row}-${currRightCol}`,{ row: row, col: currRightCol})
+                if(board[row][currRightCol] != ''){
+                    intersectRight = true
+                }
+            }else{
+                intersectRight = true
+            }
+            currRightCol += 1
+        }
+    }else if (piece[1] == 'k' && piece[2] == 'n'){ //Knight move
+
+        if(row>1){
+            if(col>0 && board[row-2][col-1][0] != color){
+                availableMoves.set(`${row-2}-${col-1}`,{ row: row - 2, col: col - 1 })
+            }
+            if(col<7 && board[row-2][col+1][0] != color){
+                availableMoves.set(`${row-2}-${col+1}`,{ row: row - 2, col: col + 1 })
+            }
+        }
+        if(row>0){
+            if(col>1 && board[row-1][col-2][0] != color){
+                availableMoves.set(`${row-1}-${col-2}`,{ row: row - 1, col: col - 2 })
+            }
+            if(col<6 && board[row-1][col+2][0] != color){
+                availableMoves.set(`${row-1}-${col+2}`,{ row: row - 1, col: col + 2 })
+            }
+        }
+        if(row<6){
+            if(col>0 && board[row+2][col-1][0] != color){
+                availableMoves.set(`${row+2}-${col-1}`,{ row: row + 2, col: col - 1 })
+            }
+            if(col<7 && board[row+2][col+1][0] != color){
+                availableMoves.set(`${row+2}-${col+1}`,{ row: row + 2, col: col + 1 })
+            }
+        }
+        if(row<7){
+            if(col>1 && board[row+1][col-2][0] != color){
+                availableMoves.set(`${row+1}-${col-2}`,{ row: row + 1, col: col - 2 })
+            }
+            if(col<6 && board[row+1][col+2][0] != color){
+                availableMoves.set(`${row+1}-${col+2}`,{ row: row + 1, col: col + 2 })
+            }
+        }
+    }else if (piece[1] == 'b') { //Bishop move
+        let currRow = row - 1
+        let currLeftCol = col - 1
+        let currRightCol = col + 1
+        let intersectLeft = false
+        let intersectRight = false
+        while(currRow>=0 && (!intersectLeft || !intersectRight)){
+            if(!intersectLeft && currLeftCol >= 0){
+                if(board[currRow][currLeftCol][0] != color){
+                    availableMoves.set(`${currRow}-${currLeftCol}`,{ row: currRow, col: currLeftCol})
+                    if(board[currRow][currLeftCol] != ''){
+                        intersectLeft = true
+                    }else{
+                        currLeftCol-=1
+                    }
+                }else{
+                    intersectLeft = true
+                }
+            }
+            if(!intersectRight && currRightCol <= 7){
+                if(board[currRow][currRightCol][0] != color){
+                    availableMoves.set(`${currRow}-${currRightCol}`,{ row: currRow, col: currRightCol})
+                    if(board[currRow][currRightCol] != ''){
+                        intersectRight = true
+                    }else{
+                        currRightCol+=1
+                    }
+                }else{
+                    intersectRight = true
+                }
+            }
+            currRow-=1
+        }
+        currRow = row + 1
+        currLeftCol = col - 1
+        currRightCol = col + 1
+        intersectLeft = false
+        intersectRight = false
+        while(currRow<=7 && (!intersectLeft || !intersectRight)){
+            if(!intersectLeft && currLeftCol >= 0){
+                if(board[currRow][currLeftCol][0] != color){
+                    availableMoves.set(`${currRow}-${currLeftCol}`,{ row: currRow, col: currLeftCol})
+                    if(board[currRow][currLeftCol] != ''){
+                        intersectLeft = true
+                    }else{
+                        currLeftCol-=1
+                    }
+                }else{
+                    intersectLeft = true
+                }
+            }
+            if(!intersectRight && currRightCol <= 7){
+                if(board[currRow][currRightCol][0] != color){
+                    availableMoves.set(`${currRow}-${currRightCol}`,{ row: currRow, col: currRightCol})
+                    if(board[currRow][currRightCol] != ''){
+                        intersectRight = true
+                    }else{
+                        currRightCol+=1
+                    }
+                }else{
+                    intersectRight = true
+                }
+            }
+            currRow+=1
+        }
+    }else if (piece[1] == 'q') { //Queen move
+        //rook style moves
+        let currRowTop = row - 1
+        let currRowBottom = row + 1
+        let currLeftCol = col - 1
+        let currRightCol = col + 1
+        let intersectTop = false
+        let intersectBottom = false
+        let intersectLeft = false
+        let intersectRight = false
+
+        while(currRowTop>=0 && !intersectTop){
+            if(board[currRowTop][col][0] != color){
+                availableMoves.set(`${currRowTop}-${col}`,{ row: currRowTop, col: col})
+                if(board[currRowTop][col] != ''){
+                    intersectTop = true
+                }
+            }else{
+                intersectTop = true
+            }
+            currRowTop -= 1
+        }
+
+        while(currRowBottom<=7 && !intersectBottom){
+            if(board[currRowBottom][col][0] != color){
+                availableMoves.set(`${currRowBottom}-${col}`,{ row: currRowBottom, col: col})
+                if(board[currRowBottom][col] != ''){
+                    intersectBottom = true
+                }
+            }else{
+                intersectBottom = true
+            }
+            currRowBottom += 1
+        }
+
+        while(currLeftCol>=0 && !intersectLeft){
+            if(board[row][currLeftCol][0] != color){
+                availableMoves.set(`${row}-${currLeftCol}`,{ row: row, col: currLeftCol})
+                if(board[row][currLeftCol] != ''){
+                    intersectLeft = true
+                }
+            }else{
+                intersectLeft = true
+            }
+            currLeftCol -= 1
+        }
+
+        while(currRightCol<=7 && !intersectRight){
+            if(board[row][currRightCol][0] != color){
+                availableMoves.set(`${row}-${currRightCol}`,{ row: row, col: currRightCol})
+                if(board[row][currRightCol] != ''){
+                    intersectRight = true
+                }
+            }else{
+                intersectRight = true
+            }
+            currRightCol += 1
+        }
+
+
+        //Bishop style mvoes
+        let currRow = row - 1
+        currLeftCol = col - 1
+        currRightCol = col + 1
+        intersectLeft = false
+        intersectRight = false
+        while(currRow>=0 && (!intersectLeft || !intersectRight)){
+            if(!intersectLeft && currLeftCol >= 0){
+                if(board[currRow][currLeftCol][0] != color){
+                    availableMoves.set(`${currRow}-${currLeftCol}`,{ row: currRow, col: currLeftCol})
+                    if(board[currRow][currLeftCol] != ''){
+                        intersectLeft = true
+                    }else{
+                        currLeftCol-=1
+                    }
+                }else{
+                    intersectLeft = true
+                }
+            }
+            if(!intersectRight && currRightCol <= 7){
+                if(board[currRow][currRightCol][0] != color){
+                    availableMoves.set(`${currRow}-${currRightCol}`,{ row: currRow, col: currRightCol})
+                    if(board[currRow][currRightCol] != ''){
+                        intersectRight = true
+                    }else{
+                        currRightCol+=1
+                    }
+                }else{
+                    intersectRight = true
+                }
+            }
+            currRow-=1
+        }
+        currRow = row + 1
+        currLeftCol = col - 1
+        currRightCol = col + 1
+        intersectLeft = false
+        intersectRight = false
+        while(currRow<=7 && (!intersectLeft || !intersectRight)){
+            if(!intersectLeft && currLeftCol >= 0){
+                if(board[currRow][currLeftCol][0] != color){
+                    availableMoves.set(`${currRow}-${currLeftCol}`,{ row: currRow, col: currLeftCol})
+                    if(board[currRow][currLeftCol] != ''){
+                        intersectLeft = true
+                    }else{
+                        currLeftCol-=1
+                    }
+                }else{
+                    intersectLeft = true
+                }
+            }
+            if(!intersectRight && currRightCol <= 7){
+                if(board[currRow][currRightCol][0] != color){
+                    availableMoves.set(`${currRow}-${currRightCol}`,{ row: currRow, col: currRightCol})
+                    if(board[currRow][currRightCol] != ''){
+                        intersectRight = true
+                    }else{
+                        currRightCol+=1
+                    }
+                }else{
+                    intersectRight = true
+                }
+            }
+            currRow+=1
+        }
+    }else if (piece[1] == 'k'){ //King move
+        //top row
+        if(row>0){
+            if(col>0){
+                if(board[row-1][col-1][0]!=color){
+                    availableMoves.set(`${row-1}-${col-1}`,{ row: row-1, col: col-1})
+                }
+            }
+            if(board[row-1][col][0]!=color){
+                availableMoves.set(`${row-1}-${col}`,{ row: row-1, col: col})
+            }
+            if(col<7){
+                if(board[row-1][col+1][0]!=color){
+                    availableMoves.set(`${row-1}-${col+1}`,{ row: row-1, col: col+1})
+                }
+            }
+        }
+
+        //Middle row
+        if(col>0){
+            if(board[row][col-1][0]!=color){
+                availableMoves.set(`${row}-${col-1}`,{ row: row, col: col-1})
+            }
+        }
+        if(col<7){
+            if(board[row][col+1][0]!=color){
+                availableMoves.set(`${row}-${col+1}`,{ row: row, col: col+1})
+            }
+        }
+
+        //Bottom row
+        if(row<7){
+            if(col>0){
+                if(board[row+1][col-1][0]!=color){
+                    availableMoves.set(`${row+1}-${col-1}`,{ row: row+1, col: col-1})
+                }
+            }
+            if(board[row+1][col][0]!=color){
+                availableMoves.set(`${row+1}-${col}`,{ row: row+1, col: col})
+            }
+            if(col<7){
+                if(board[row+1][col+1][0]!=color){
+                    availableMoves.set(`${row+1}-${col+1}`,{ row: row+1, col: col+1})
+                }
+            }
+        }
+
+        //Castle
+        if(king){
+            if(leftRook){
+                if(board[row][col-1]=='' && board[row][col-2]=='' && board[row][col-3]==''){
+                    //Check for check only on first two spots and curr
+                    availableMoves.set(`${row}-${col-2}`,{ row: row, col: col-2, castle:true})
+                }
+            }
+            if(rightRook){
+                if(board[row][col+1]=='' && board[row][col+2]==''){
+                    //Check for check on both spots and curr
+                    availableMoves.set(`${row}-${col+2}`,{ row: row, col: col+2, castle:true})
+                }
+            }
+        }
+    }
+
+    return availableMoves
 }
 
 export function chessMovePiece(board, from, to, turn){
@@ -546,6 +944,28 @@ export function chessMovePiece(board, from, to, turn){
         dispatch(startWaiting())
         board[from.position.row][from.position.col] = ''
         board[to.row][to.col] = from.piece
+        if(to.enPassant){
+            board[to.row + (turn%2==0 ? 1 : -1)][to.col] = ''
+        }else if(to.castle){
+            if(from.position.col>to.col){
+                board[to.row][0] = ''
+                board[to.row][to.col+1] = `${from.piece[0]}r`
+            }else{
+                board[to.row][7] = ''
+                board[to.row][to.col-1] = `${from.piece[0]}r`
+            }
+            if(turn%2==0){
+                dispatch(setWhiteKingAvailable(false))
+            }
+        }else if(from.piece == 'wk'){
+            dispatch(setWhiteKingAvailable(false))
+        }else if(from.piece == 'bk'){
+            dispatch(setBlackKingAvailable(false))
+        }else if (from.piece == 'wr' && from.position.row == 7 && from.position.col == 0){
+            dispatch(setLeftWhiteRookAvailable(false))
+        }else if (from.piece == 'wr' && from.position.row == 7 && from.position.col == 7){
+            dispatch(setRightWhiteRookAvailable(false))
+        }
         dispatch(chessSetBoard(board))
         dispatch(chessResetActivePiece())
         dispatch(chessSetAvailableMoves(new Map()))
