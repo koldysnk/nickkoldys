@@ -487,7 +487,7 @@ export function chessSetLastMove(move){
     }
 }
 
-export function chessMakePieceActive(board, row, col, turn, piece) {
+export function chessMakePieceActive(board, row, col, piece, lastMove) {
     return dispatch => {
         dispatch(startWaiting())
         let availableMoves = new Map()
@@ -506,6 +506,13 @@ export function chessMakePieceActive(board, row, col, turn, piece) {
                 if(col>1 && board[row + 1][col-1][0]=='w'){
                     availableMoves.set(`${row+1}-${col-1}`,{ row: row + 1, col: col -1})
                 }
+                if(lastMove.piece=='wp' && lastMove.startPosition.row==6 && lastMove.endPosition.row==row && row == 4){
+                    if(lastMove.endPosition.col == (col - 1)){
+                        availableMoves.set(`${row+1}-${col-1}`,{ row: row + 1, col: col -1, enPassant:true})
+                    }else if(lastMove.endPosition.col == (col + 1)){
+                        availableMoves.set(`${row+1}-${col+1}`,{ row: row + 1, col: col +1, enPassant:true})
+                    }
+                }
             } else {
                 if (board[row - 1][col] == '') {
                     availableMoves.set(`${row-1}-${col}`,{ row: row - 1, col: col })
@@ -518,6 +525,13 @@ export function chessMakePieceActive(board, row, col, turn, piece) {
                 }
                 if(col>1 && board[row - 1][col-1][0]=='b'){
                     availableMoves.set(`${row-1}-${col-1}`,{ row: row - 1, col: col - 1})
+                }
+                if(lastMove.piece=='bp' && lastMove.startPosition.row==1 && lastMove.endPosition.row==row && row == 3){
+                    if(lastMove.endPosition.col == (col - 1)){
+                        availableMoves.set(`${row-1}-${col-1}`,{ row: row - 1, col: col -1, enPassant:true})
+                    }else if(lastMove.endPosition.col == (col + 1)){
+                        availableMoves.set(`${row-1}-${col+1}`,{ row: row - 1, col: col +1, enPassant:true})
+                    }
                 }
             }
         }
@@ -536,6 +550,7 @@ export function chessMovePiece(board, from, to, turn){
         dispatch(chessResetActivePiece())
         dispatch(chessSetAvailableMoves(new Map()))
         dispatch(setTurn(turn+1))
+        dispatch(chessSetLastMove({piece: from.piece, startPosition:{row:from.position.row, col:from.position.col}, endPosition:{row:to.row,col:to.col}}))
         dispatch(stopWaiting())
     }
 }

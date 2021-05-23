@@ -9,6 +9,7 @@ export function ChessBoard(props) {
     const board = useSelector(state => state.chessBoard);
     const activePiece = useSelector(state => state.activePiece);
     const availableMoves = useSelector(state => state.availableMoves);
+    const lastMove = useSelector(state => state.lastMove);
     const dispatch = useDispatch();
 
     let pieces = new Map()
@@ -42,7 +43,7 @@ export function ChessBoard(props) {
                                 dispatch(chessResetActivePiece())
                                 dispatch(chessSetAvailableMoves(new Map()))
                             }else if((v[0]=='w' && turn %2 == 0) || (v[0]=='b' && turn %2 == 1)){
-                                dispatch(chessMakePieceActive(board,i,j,turn,v))
+                                dispatch(chessMakePieceActive(board,i,j,v,lastMove))
                             }else if(availableMoves.has(`${i}-${j}`)){
                                 dispatch(chessMovePiece(board,activePiece,availableMoves.get(`${i}-${j}`), turn))
                             }
