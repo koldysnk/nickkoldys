@@ -31,10 +31,10 @@ export const Action = Object.freeze({
     ChessSetLastMove:'ChessSetLastMove',
     SetWhiteKingAvailable:'SetWhiteKingAvailable',
     SetBlackKingAvailable:'SetBlackKingAvailable',
-    SetLeftWhiteRookAvailable:'SetWhiteKingAvailable',
-    SetLeftBlackRookAvailable:'SetBlackKingAvailable',
-    SetRightWhiteRookAvailable:'SetWhiteKingAvailable',
-    SetRightBlackRookAvailable:'SetBlackKingAvailable',
+    SetLeftWhiteRookAvailable:'SetLeftWhiteRookAvailable',
+    SetLeftBlackRookAvailable:'SetLeftBlackRookAvailable',
+    SetRightWhiteRookAvailable:'SetRightWhiteRookAvailable',
+    SetRightBlackRookAvailable:'SetRightBlackRookAvailable',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
