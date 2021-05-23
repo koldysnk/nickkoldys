@@ -1,11 +1,14 @@
 import React from 'react';
 import {useDispatch, useSelector } from 'react-redux';
+import { chessMakePieceActive, chessResetActivePiece, chessSetAvailableMoves, chessMovePiece } from './actions';
 import './ChessBoard.css';
 
 export function ChessBoard(props) {
     const playable = props.playable;
     const turn = useSelector(state => state.turn);
     const board = useSelector(state => state.chessBoard);
+    const activePiece = useSelector(state => state.activePiece);
+    const availableMoves = useSelector(state => state.availableMoves);
     const dispatch = useDispatch();
 
     let pieces = new Map()
@@ -23,7 +26,6 @@ export function ChessBoard(props) {
     pieces.set('bkn',{piece: <span className='chessPiece'>&#9822;</span>})
     pieces.set('bp',{piece: <span className='chessPiece'>&#9823;</span>})
 
-    console.log(board,pieces)
     const takeTurn = (open,position) => {
         if(open){
             //dispatch(chessTakeTurn(position, board, turn))
@@ -35,10 +37,19 @@ export function ChessBoard(props) {
             <div className="chessTable">
                 {board.map((w, i) => {
                     return w.map((v,j) => {
-                        console.log(v,pieces.get(v))
+                        const actionOnClick = () => {
+                            if(i == activePiece.position.row && j == activePiece.position.col){
+                                dispatch(chessResetActivePiece())
+                                dispatch(chessSetAvailableMoves(new Map()))
+                            }else if((v[0]=='w' && turn %2 == 0) || (v[0]=='b' && turn %2 == 1)){
+                                dispatch(chessMakePieceActive(board,i,j,turn,v))
+                            }else if(availableMoves.has(`${i}-${j}`)){
+                                dispatch(chessMovePiece(board,activePiece,availableMoves.get(`${i}-${j}`), turn))
+                            }
+                        }
                         let image = pieces.get(v).piece
                         return <div key={`${i}-${j}`} className={`chessBoardTile ${(i%2==1) ? "oddChessRow" : 'evenChessRow'} t${i}-${j}`}>
-                            <div className={(((v[0]=='w' && turn % 2 == 0) || (v[0]=='b' && turn % 2 == 1)) && playable)  ? "chessSquare chessSelectable" : "chessSquare"}>
+                            <div className={(((v[0]=='w' && turn % 2 == 0) || (v[0]=='b' && turn % 2 == 1)) && playable)  ? `chessSquare chessSelectable ${availableMoves.has(`${i}-${j}`) ? 'chessSquareAvailable' : ''}` : `chessSquare ${availableMoves.has(`${i}-${j}`) ? 'chessSquareAvailable' : ''}`} onClick={actionOnClick}>
                                 {image}
                             </div>
                         </div>

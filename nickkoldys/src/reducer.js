@@ -34,7 +34,10 @@ const initialState = {
     ['', '', '', '', '', '', '', ''],
     ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
     ['wr', 'wkn', 'wb', 'wq', 'wk', 'wb', 'wkn', 'wr']],
-    activePiece: {type:'', row:0, col: 0},
+    activePiece: { type: '', position: { row: -1, col: -1 } },
+    lastMove: { piece: '', startPosition: { row: -1, col: -1 }, endPosition: { row: -1, col: -1 }, enPassant: false },
+    canCastle: true,
+    availableMoves: new Map(),
 }
 
 export function reducer(state = initialState, action) {
@@ -63,6 +66,11 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 errorMessage: action.payload,
+            };
+        case Action.SetTurn:
+            return {
+                ...state,
+                turn: action.payload,
             };
         /********************************************Tic Tac Toe **************************/
         case Action.TTTSetTurn:
@@ -150,6 +158,32 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 randWord: action.payload,
+            };
+        /*******************************************Chess ********************************/
+        case Action.ChessResetActivePiece:
+            return {
+                ...state,
+                activePiece: action.payload,
+            };
+        case Action.ChessResetActivePiece:
+            return {
+                ...state,
+                activePiece: action.payload,
+            };
+        case Action.ChessSetAvailableMoves:
+            return {
+                ...state,
+                availableMoves: action.payload,
+            };
+        case Action.ChessSetBoard:
+            return {
+                ...state,
+                chessBoard: action.payload,
+            };
+        case Action.ChessSetLastMove:
+            return {
+                ...state,
+                lastMove: action.payload,
             };
         default:
             return state;

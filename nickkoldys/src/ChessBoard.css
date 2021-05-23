@@ -36,6 +36,14 @@
 
 .chessPiece{
     font-size: 6vh;
+    cursor: default;
+}
+
+.chessSquareAvailable{
+    border: 1px red;
+    border-radius: 100px;
+    border-style: solid;
+    cursor: pointer;
 }
 
 .chessSelectable:hover{
