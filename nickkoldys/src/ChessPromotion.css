@@ -1,0 +1,6 @@
+.ChessPromotion{
+    position: absolute;
+    width: 15vh;
+    height: 15vh;
+    background-color: rgba(0,0,0,.5);
+}

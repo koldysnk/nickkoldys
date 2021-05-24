@@ -44,6 +44,7 @@ const initialState = {
     rightBlackRookAvailable: true,
     whiteKingAvailable: true,
     blackKingAvailable: true,
+    promotionActive: false,
 }
 
 export function reducer(state = initialState, action) {
@@ -220,6 +221,11 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 rightBlackRookAvailable: action.payload,
+            };
+        case Action.SetPromotionActive:
+            return {
+                ...state,
+                promotionActive: action.payload,
             };
         default:
             return state;

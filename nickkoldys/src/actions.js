@@ -35,6 +35,7 @@ export const Action = Object.freeze({
     SetLeftBlackRookAvailable:'SetLeftBlackRookAvailable',
     SetRightWhiteRookAvailable:'SetRightWhiteRookAvailable',
     SetRightBlackRookAvailable:'SetRightBlackRookAvailable',
+    SetPromotionActive:'SetPromotionActive',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -535,6 +536,13 @@ export function setRightBlackRookAvailable(bool){
     }
 }
 
+export function setPromotionActive(bool){
+    return {
+        type: Action.SetPromotionActive,
+        payload: bool,
+    }
+}
+
 export function chessMakePieceActive(board, row, col, piece, lastMove,king,leftRook,rightRook) {
     return dispatch => {
         dispatch(startWaiting())
@@ -965,11 +973,29 @@ export function chessMovePiece(board, from, to, turn){
             dispatch(setLeftWhiteRookAvailable(false))
         }else if (from.piece == 'wr' && from.position.row == 7 && from.position.col == 7){
             dispatch(setRightWhiteRookAvailable(false))
+        }else if (from.piece == 'br' && from.position.row == 0 && from.position.col == 0){
+            dispatch(setLeftBlackRookAvailable(false))
+        }else if (from.piece == 'br' && from.position.row == 0 && from.position.col == 7){
+            dispatch(setRightBlackRookAvailable(false))
+        }else if (to.row == 0 && to.col == 0){
+            dispatch(setLeftBlackRookAvailable(false))
+        }else if (to.row == 0 && to.col == 7){
+            dispatch(setRightBlackRookAvailable(false))
+        }else if (to.row == 7 && to.col == 0){
+            dispatch(setLeftWhiteRookAvailable(false))
+        }else if (to.row == 7 && to.col == 7){
+            dispatch(setRightWhiteRookAvailable(false))
         }
+
+        // if(from.piece[1] == 'p' && (to.row == 0 || to.row == 7)){
+        //     dispatch(setPromotionActive(true))
+        // }else{
+        //     dispatch(setTurn(turn+1))
+        // }
+        dispatch(setTurn(turn+1))
         dispatch(chessSetBoard(board))
         dispatch(chessResetActivePiece())
         dispatch(chessSetAvailableMoves(new Map()))
-        dispatch(setTurn(turn+1))
         dispatch(chessSetLastMove({piece: from.piece, startPosition:{row:from.position.row, col:from.position.col}, endPosition:{row:to.row,col:to.col}}))
         dispatch(stopWaiting())
     }
