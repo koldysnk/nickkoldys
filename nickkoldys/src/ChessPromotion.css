@@ -1,6 +1,46 @@
 .ChessPromotion{
     position: absolute;
-    width: 15vh;
-    height: 15vh;
-    background-color: rgba(0,0,0,.5);
+    width: 30vh;
+    height: 30vh;
+    background-color: rgba(255,255,255,.8);
+    top: 50%;
+    left: 50%;
+    transform: translate(-40%,-40%);
+    border-radius: 5%;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.chessPromotionTile{
+    box-sizing: border-box;
+    width: 45%;
+    height: 45%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chessPromotionSquare{
+    display: flex;
+    width: 80%;
+    height: 80%;
+    justify-content: center;
+    align-items: center;
+}
+
+.chessPromotionSquare:hover{
+    border: 1px black solid;
+    border-radius: 5%;
+}
+
+@media(max-width:715px), (orientation:portrait){
+    .ChessPromotion{
+        width: 30vw;
+        height: 30vw;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    }
 }

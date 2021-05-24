@@ -1,10 +1,12 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { chessMakePieceActive, chessResetActivePiece, chessSetAvailableMoves, chessMovePiece } from './actions';
-import './ChessBoard.css';
+import { chessMakePieceActive, chessResetActivePiece, chessSetAvailableMoves, chessMovePiece, chessPromotePiece } from './actions';
+import './ChessPromotion.css';
 
 export function ChessPromotion(props) {
-    
+    const turn = useSelector(state => state.turn);
+    const board = useSelector(state => state.chessBoard);
+    const lastMove = useSelector(state => state.lastMove);
     const dispatch = useDispatch();
 
     let pieces = new Map()
@@ -22,9 +24,27 @@ export function ChessPromotion(props) {
     pieces.set('bkn', { piece: <span className='chessPiece'>&#9822;</span> })
     pieces.set('bp', { piece: <span className='chessPiece'>&#9823;</span> })
 
+    let promoBoard = []
+    if(turn%2==0){
+        promoBoard = [['wq','wkn'],['wr','wb']]
+    }else{
+        promoBoard = [['bq','bkn'],['br','bb']]
+    }
+
 
     return (
         <div className='ChessPromotion'>
+            {promoBoard.map((w,i) => {
+                return w.map((v,j) => {
+                    const onSelectPiece = () => {
+                        dispatch(chessPromotePiece(board, lastMove, v, turn))
+                    }
+                    const image = pieces.get(v).piece
+                    const square = <div className='chessPromotionSquare' onClick={onSelectPiece}>{image}</div>
+                    const tile = <div key={`${i}-${j}-pb`} className='chessPromotionTile'>{square}</div>
+                    return tile
+                })
+            })}
         </div>
     );
 }

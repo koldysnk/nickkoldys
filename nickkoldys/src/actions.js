@@ -987,16 +987,27 @@ export function chessMovePiece(board, from, to, turn){
             dispatch(setRightWhiteRookAvailable(false))
         }
 
-        // if(from.piece[1] == 'p' && (to.row == 0 || to.row == 7)){
-        //     dispatch(setPromotionActive(true))
-        // }else{
-        //     dispatch(setTurn(turn+1))
-        // }
-        dispatch(setTurn(turn+1))
+        if(from.piece[1] == 'p' && (to.row == 0 || to.row == 7)){
+            dispatch(setPromotionActive(true))
+        }else{
+            dispatch(setTurn(turn+1))
+        }
+        // dispatch(setTurn(turn+1))
         dispatch(chessSetBoard(board))
         dispatch(chessResetActivePiece())
         dispatch(chessSetAvailableMoves(new Map()))
         dispatch(chessSetLastMove({piece: from.piece, startPosition:{row:from.position.row, col:from.position.col}, endPosition:{row:to.row,col:to.col}}))
+        dispatch(stopWaiting())
+    }
+}
+
+export function chessPromotePiece(board, lastMove, newPiece, turn){
+    return dispatch => {
+        dispatch(startWaiting())
+        board[lastMove.endPosition.row][lastMove.endPosition.col] = newPiece
+        dispatch(setTurn(turn+1))
+        dispatch(chessSetBoard(board))
+        dispatch(setPromotionActive(false))
         dispatch(stopWaiting())
     }
 }
