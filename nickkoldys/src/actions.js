@@ -1171,6 +1171,7 @@ export function chessCheckForMate(board, kingPosition, color) {
         currRow += 1
     }
 
+    //check knights
     if (row > 1) {
         if (col > 0 && board[row - 2][col - 1] == `${opositeColor}kn`) {
             return true
@@ -1204,7 +1205,24 @@ export function chessCheckForMate(board, kingPosition, color) {
         }
     }
 
+    //check pawns
+    if(color=='w' && row>0){
+        if(col>0 && board[row - 1][col - 1] == `${opositeColor}p`){
+            return true
+        }
+        if(col<7 && board[row - 1][col + 1] == `${opositeColor}p`){
+            return true
+        }
+    }
 
+    if(color=='b' && row<7){
+        if(col>0 && board[row + 1][col - 1] == `${opositeColor}p`){
+            return true
+        }
+        if(col<7 && board[row + 1][col + 1] == `${opositeColor}p`){
+            return true
+        }
+    }
 
     return false
 }
