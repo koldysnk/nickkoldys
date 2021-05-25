@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { TicTacToeBoard } from './TicTacToeBoard';
 import {tttResetGame, tttAITurn, tttSetPlayerFirstAndReset} from './actions';
@@ -16,7 +16,6 @@ export function TicTacToeSingleplayer(props) {
     let turnText = "Analyzing..."
     let playerActive = turn%2 == 0;
     let playable = playerActive;
-
     if(!isWaiting){
         if(playerFirst){
             turnText = (playerActive) ? "Player 1's Turn" : "AI Nick's Turn";
@@ -33,13 +32,18 @@ export function TicTacToeSingleplayer(props) {
             }else{
                 turnText = `Game Over: AI Nick Wins`
             }
-        }else if((!playerActive && playerFirst) || (playerActive && !playerFirst)){
-            dispatch(tttAITurn(board, turn))
-        }
+        } 
         
     }else{
         playable = false;
     }
+
+    
+    useEffect(() => {
+        if(!gameOver && ((!playerActive && playerFirst) || (playerActive && !playerFirst))){
+            dispatch(tttAITurn(board, turn))
+        }
+    }, [dispatch,turn])
 
     const reset = () => {
         dispatch(tttResetGame())

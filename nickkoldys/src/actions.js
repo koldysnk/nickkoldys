@@ -38,6 +38,8 @@ export const Action = Object.freeze({
     SetPromotionActive: 'SetPromotionActive',
     SetWhiteKingPosition: 'SetWhiteKingPosition',
     SetBlackKingPosition: 'SetBlackKingPosition',
+    SetAllAvailableMoves: 'SetAllAvailableMoves',
+    SetAllAvailableMovesGenerated: 'SetAllAvailableMovesGenerated',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -559,13 +561,25 @@ export function setBlackKingPosition(position) {
     }
 }
 
-export function chessMakePieceActive(board, row, col, piece, lastMove, king, leftRook, rightRook, kingPosition) {
+export function setAllAvailableMoves(moves) {
+    return {
+        type: Action.SetAllAvailableMoves,
+        payload: moves,
+    }
+}
+
+export function setAllAvailableMovesGenerated(bool) {
+    return {
+        type: Action.SetAllAvailableMovesGenerated,
+        payload: bool,
+    }
+}
+
+export function chessMakePieceActive(availableMoves, row, col, piece) {
     return dispatch => {
-        dispatch(startWaiting())
-        let availableMoves = getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook, rightRook, kingPosition)
+        //let availableMoves = getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook, rightRook, kingPosition)
         dispatch(chessSetActivePiece({ piece: piece, position: { row: row, col: col } }))
         dispatch(chessSetAvailableMoves(availableMoves))
-        dispatch(stopWaiting())
     }
 }
 
@@ -1296,8 +1310,8 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
 }
 
 export function chessMovePiece(board, from, to, turn) {
+    ///add castle king check
     return dispatch => {
-        dispatch(startWaiting())
         board[from.position.row][from.position.col] = ''
         board[to.row][to.col] = from.piece
         if (to.enPassant) {
@@ -1312,6 +1326,10 @@ export function chessMovePiece(board, from, to, turn) {
             }
             if (turn % 2 == 0) {
                 dispatch(setWhiteKingAvailable(false))
+                dispatch(setWhiteKingPosition({ row: to.row, col: to.col }))
+            }else{
+                dispatch(setBlackKingAvailable(false))
+                dispatch(setBlackKingPosition({ row: to.row, col: to.col }))
             }
         } else if (from.piece == 'wk') {
             dispatch(setWhiteKingAvailable(false))
@@ -1341,24 +1359,23 @@ export function chessMovePiece(board, from, to, turn) {
             dispatch(setPromotionActive(true))
         } else {
             dispatch(setTurn(turn + 1))
+            dispatch(setAllAvailableMovesGenerated(false))
         }
         // dispatch(setTurn(turn+1))
         dispatch(chessSetBoard(board))
         dispatch(chessResetActivePiece())
         dispatch(chessSetAvailableMoves(new Map()))
         dispatch(chessSetLastMove({ piece: from.piece, startPosition: { row: from.position.row, col: from.position.col }, endPosition: { row: to.row, col: to.col } }))
-        dispatch(stopWaiting())
     }
 }
 
 export function chessPromotePiece(board, lastMove, newPiece, turn) {
     return dispatch => {
-        dispatch(startWaiting())
         board[lastMove.endPosition.row][lastMove.endPosition.col] = newPiece
         dispatch(setTurn(turn + 1))
         dispatch(chessSetBoard(board))
         dispatch(setPromotionActive(false))
-        dispatch(stopWaiting())
+        dispatch(setAllAvailableMovesGenerated(false))
     }
 }
 
@@ -1563,4 +1580,52 @@ export function chessCheckForMate(board, kingPosition, color) {
     }
 
     return false
+}
+
+export function chessGetAllAvailableMoves(board, lastMove, king, leftRook, rightRook, kingPosition, turn){
+    return dispatch => {
+        let color = turn%2==0 ? 'w' : 'b'
+        let allAvailableChessMoves = new Map()
+        board.forEach((w,i) => {
+            w.forEach((v,j) => {
+                if(v[0]==color){
+                    let availableMoves = getAvailableChessMoves(board, i, j, v, lastMove, king, leftRook, rightRook, kingPosition)
+                    if(availableMoves.size>0){
+                        allAvailableChessMoves.set(`${i}-${j}`,availableMoves)
+                    }
+                }
+            })
+        })
+        dispatch(setAllAvailableMoves(allAvailableChessMoves))
+        dispatch(setAllAvailableMovesGenerated(true))
+    }
+}
+
+export function chessResetGame(){
+    return dispatch => {
+        dispatch(chessResetActivePiece())
+        dispatch(chessSetAvailableMoves(new Map()))
+        dispatch(tttUpdateResult(false,0))
+        dispatch(setTurn(0))
+        dispatch(setAllAvailableMoves(new Map()))
+        dispatch(setAllAvailableMovesGenerated(false))
+        dispatch(chessSetBoard([['br', 'bkn', 'bb', 'bq', 'bk', 'bb', 'bkn', 'br'],
+        ['bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp', 'bp'],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['', '', '', '', '', '', '', ''],
+        ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
+        ['wr', 'wkn', 'wb', 'wq', 'wk', 'wb', 'wkn', 'wr']]))
+        dispatch(chessSetLastMove({ piece: '', startPosition: { row: -1, col: -1 }, endPosition: { row: -1, col: -1 } }))
+        dispatch(setWhiteKingAvailable(true))
+        dispatch(setBlackKingAvailable(true))
+        dispatch(setLeftWhiteRookAvailable(true))
+        dispatch(setLeftBlackRookAvailable(true))
+        dispatch(setRightWhiteRookAvailable(true))
+        dispatch(setRightBlackRookAvailable(true))
+        dispatch(setPromotionActive(false))
+        dispatch(setWhiteKingPosition({ row: 7, col: 4 }))
+        dispatch(setBlackKingPosition({ row: 0, col: 4 }))
+    }
 }

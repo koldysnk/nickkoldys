@@ -10,20 +10,14 @@ export function TicTacToeBoard(props) {
     const dispatch = useDispatch();
 
 
-    
-    const takeTurn = (open,position) => {
-        if(open){
-            dispatch(tttTakeTurn(position, board, turn))
-        }
-    }
 
     return (
         <div className='TicTacToeBoard'>
             <div className="tttTable">
                 {board.map((v, i) => {
                     const turnOnClick= () => {
-                        if(playable){
-                            takeTurn((v == 0) ? true : false,i)
+                        if(playable && v == 0){
+                            dispatch(tttTakeTurn(i, board, turn))
                         }
                     }
                     let image = <div></div>

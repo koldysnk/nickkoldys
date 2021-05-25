@@ -1,5 +1,6 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import { chessResetGame, startWaiting, stopWaiting } from './actions';
 import { ChessBoard } from './ChessBoard';
 //import {chessResetGame} from './actions';
 import './ChessMultiplayer.css';
@@ -34,7 +35,9 @@ export function ChessMultiplayer(props) {
     turnText = turnText.concat(" (Work in Progress)")
 
     const reset = () => {
-        
+        dispatch(startWaiting())
+        dispatch(chessResetGame())
+        dispatch(stopWaiting())
     }
 
     
