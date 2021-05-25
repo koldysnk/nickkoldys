@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { chessMakePieceActive, chessResetActivePiece, chessSetAvailableMoves, chessMovePiece } from './actions';
+import { chessMakePieceActive, chessResetActivePiece, chessSetAvailableMoves, chessMovePiece, chessCheckForMate } from './actions';
 import './ChessBoard.css';
 
 export function ChessBoard(props) {
@@ -16,6 +16,8 @@ export function ChessBoard(props) {
     const rightBlackRookAvailable = useSelector(state => state.rightBlackRookAvailable);
     const whiteKingAvailable = useSelector(state => state.whiteKingAvailable);
     const blackKingAvailable = useSelector(state => state.blackKingAvailable);
+    const whiteKingPosition = useSelector(state => state.whiteKingPosition);
+    const blackKingPosition = useSelector(state => state.blackKingPosition);
     const dispatch = useDispatch();
 
     let pieces = new Map()
@@ -32,6 +34,19 @@ export function ChessBoard(props) {
     pieces.set('bb', { piece: <span className='chessPiece'>&#9821;</span> })
     pieces.set('bkn', { piece: <span className='chessPiece'>&#9822;</span> })
     pieces.set('bp', { piece: <span className='chessPiece'>&#9823;</span> })
+    
+    console.log('*********************')
+    if (chessCheckForMate(board, whiteKingPosition, 'w')) {
+        console.log('White in check')
+    } else {
+        console.log('White not in check')
+    }
+    if (chessCheckForMate(board, blackKingPosition, 'b')) {
+        console.log('Black in check')
+    } else {
+        console.log('Black not in check')
+    }
+
 
     return (
         <div className='ChessBoard'>

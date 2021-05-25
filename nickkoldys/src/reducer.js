@@ -45,6 +45,8 @@ const initialState = {
     whiteKingAvailable: true,
     blackKingAvailable: true,
     promotionActive: false,
+    whiteKingPosition: { row: 7, col: 4 },
+    blackKingPosition: { row: 0, col: 4 },
 }
 
 export function reducer(state = initialState, action) {
@@ -226,6 +228,16 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 promotionActive: action.payload,
+            };
+        case Action.SetWhiteKingPosition:
+            return {
+                ...state,
+                whiteKingPosition: action.payload,
+            };
+        case Action.SetBlackKingPosition:
+            return {
+                ...state,
+                blackKingPosition: action.payload,
             };
         default:
             return state;

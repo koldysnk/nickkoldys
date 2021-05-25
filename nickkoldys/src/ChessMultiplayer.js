@@ -34,8 +34,10 @@ export function ChessMultiplayer(props) {
     turnText = turnText.concat(" (Work in Progress)")
 
     const reset = () => {
-        //dispatch(chessResetGame())
+        
     }
+
+    
 
     let board = <ChessBoard playable={playable}/>
     if(promotionActive){

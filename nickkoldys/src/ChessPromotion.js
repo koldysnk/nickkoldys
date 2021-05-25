@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { chessMakePieceActive, chessResetActivePiece, chessSetAvailableMoves, chessMovePiece, chessPromotePiece } from './actions';
+import { chessPromotePiece } from './actions';
 import './ChessPromotion.css';
 
 export function ChessPromotion(props) {
