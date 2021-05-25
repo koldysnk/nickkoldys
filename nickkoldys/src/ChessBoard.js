@@ -34,7 +34,7 @@ export function ChessBoard(props) {
     pieces.set('bb', { piece: <span className='chessPiece'>&#9821;</span> })
     pieces.set('bkn', { piece: <span className='chessPiece'>&#9822;</span> })
     pieces.set('bp', { piece: <span className='chessPiece'>&#9823;</span> })
-    
+
     console.log('*********************')
     if (chessCheckForMate(board, whiteKingPosition, 'w')) {
         console.log('White in check')
@@ -60,9 +60,9 @@ export function ChessBoard(props) {
                                     dispatch(chessSetAvailableMoves(new Map()))
                                 } else if ((v[0] == 'w' && turn % 2 == 0) || (v[0] == 'b' && turn % 2 == 1)) {
                                     if (turn % 2 == 0) {
-                                        dispatch(chessMakePieceActive(board, i, j, v, lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable))
+                                        dispatch(chessMakePieceActive(board, i, j, v, lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition))
                                     } else {
-                                        dispatch(chessMakePieceActive(board, i, j, v, lastMove, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable))
+                                        dispatch(chessMakePieceActive(board, i, j, v, lastMove, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
                                     }
                                 } else if (availableMoves.has(`${i}-${j}`)) {
                                     dispatch(chessMovePiece(board, activePiece, availableMoves.get(`${i}-${j}`), turn))
