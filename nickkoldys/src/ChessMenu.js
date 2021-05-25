@@ -1,14 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {useDispatch} from 'react-redux';
-//import {chessResetGame} from './actions';
 import './ChessMenu.css';
+import { chessResetGame, startWaiting, stopWaiting } from './actions';
 
 export function ChessMenu(props) {
     const dispatch = useDispatch();
 
     const reset = () => {
-        //dispatch(chessResetGame())
+        dispatch(startWaiting())
+        dispatch(chessResetGame())
+        dispatch(stopWaiting())
     }
     return (
         <div className='ChessMenu'>

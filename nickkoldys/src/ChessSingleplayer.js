@@ -2,10 +2,11 @@ import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { chessResetGame, startWaiting, stopWaiting } from './actions';
 import { ChessBoard } from './ChessBoard';
-import './ChessSingleplayer.css';
+//import {chessResetGame} from './actions';
+import './ChessMultiplayer.css';
 import { ChessPromotion } from './ChessPromotion';
 
-export function ChessMultiplayer(props) {
+export function ChessSingleplayer(props) {
     const turn = useSelector(state => state.turn);
     const gameOver = useSelector(state => state.gameOver);
     const result = useSelector(state => state.gameResult);
@@ -41,7 +42,7 @@ export function ChessMultiplayer(props) {
 
     
 
-    let board = <ChessBoard playable={playable}/>
+    let board = <ChessBoard playable={false}/>
     if(promotionActive){
         board = <div className='chessBoardBox'>
         <ChessBoard playable={false}/>
@@ -50,9 +51,9 @@ export function ChessMultiplayer(props) {
     }
 
     return (
-        <div className='ChessMultiplayer'>
+        <div className='ChessSingleplayer'>
             <h2 className='chessTitle'>Chess</h2>
-            <p>{turnText}</p>
+            <p>{'Comming Soon'}</p>
             {board}
             <button className='chessSingleplayerButton chessButton' onClick={reset}>Reset</button>
         </div>

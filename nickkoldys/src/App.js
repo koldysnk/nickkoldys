@@ -15,6 +15,7 @@ import { HangmanChoose } from './HangmanChoose';
 import { HangmanGuess } from './HangmanGuess';
 import { ChessMenu } from './ChessMenu';
 import { ChessMultiplayer } from './ChessMultiplayer';
+import { ChessSingleplayer } from './ChessSingleplayer';
 
 function App() {
   return (
@@ -56,7 +57,7 @@ function App() {
           <ChessMultiplayer />
         </Route>
         <Route exact path="/chess_singleplayer">
-          <TicTacToeSingleplayer />
+          <ChessSingleplayer />
         </Route>
         <Route exact path="/projects">
           <Projects />
