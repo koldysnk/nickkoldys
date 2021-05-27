@@ -9,10 +9,19 @@
 
 .chessTitle{
     margin: 0;
-    padding: 5vh;
     padding: 0;
 }
 
 .chessButton{
     margin: 5px;
+}
+
+@media (orientation:portrait){
+    .ChessMSingleplayer{
+        justify-content: flex-start;
+    }
+
+    .chessTitle{
+        padding-top: 2.5vh;
+    }
 }
