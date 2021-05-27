@@ -1449,7 +1449,7 @@ export function chessCheckForMate(board, kingPosition, color) {
                 if (board[row][currLeftCol] == `${opositeColor}q` || board[row][currLeftCol] == `${opositeColor}r`) {
                     return true
                 } else {
-                    intersectMiddle = true
+                    intersectLeft = true
                 }
             }
         } else {
@@ -1464,7 +1464,7 @@ export function chessCheckForMate(board, kingPosition, color) {
                 if (board[row][currRightCol] == `${opositeColor}q` || board[row][currRightCol] == `${opositeColor}r`) {
                     return true
                 } else {
-                    intersectMiddle = true
+                    intersectRight = true
                 }
             }
         } else {
