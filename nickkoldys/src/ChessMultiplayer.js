@@ -31,7 +31,7 @@ export function ChessMultiplayer(props) {
         playable = false;
     }
 
-    turnText = turnText.concat(" (Work in Progress)")
+    
 
     const reset = () => {
         dispatch(startWaiting())

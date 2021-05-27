@@ -1629,3 +1629,49 @@ export function chessResetGame(){
         dispatch(setBlackKingPosition({ row: 0, col: 4 }))
     }
 }
+
+export function chessRandAITurn(board, turn,lastMove, king, leftRook, rightRook, kingPosition){
+    return dispatch => {
+        dispatch(startWaiting())
+        let color = turn%2==0 ? 'w' : 'b'
+        let allAvailableChessMoves = new Map()
+        board.forEach((w,i) => {
+            w.forEach((v,j) => {
+                if(v[0]==color){
+                    let availableMoves = getAvailableChessMoves(board, i, j, v, lastMove, king, leftRook, rightRook, kingPosition)
+                    if(availableMoves.size>0){
+                        allAvailableChessMoves.set(`${i}-${j}`,availableMoves)
+                    }
+                }
+            })
+        })
+        if(allAvailableChessMoves.size==0){
+            if(turn%2==0){
+                if(chessCheckForMate(board,kingPosition,'w')){
+                    dispatch(tttUpdateResult(true,2))
+                }else{
+                    dispatch(tttUpdateResult(true,0))
+                }
+            }else{
+                if(chessCheckForMate(board,kingPosition,'b')){
+                    dispatch(tttUpdateResult(true,1))
+                }else{
+                    dispatch(tttUpdateResult(true,0))
+                }
+            }
+        }else{
+            let randPiece = getRandomItem(allAvailableChessMoves)
+            let row = randPiece[0][0]
+            let col = randPiece[0][2]
+            let from = {piece:board[row][col], position:{row:row,col:col}}
+            let to = getRandomItem(randPiece[1])[1]
+            dispatch(chessMovePiece(board, from, to, turn))
+        }
+        dispatch(stopWaiting())
+    }
+}
+
+function getRandomItem(map) {
+    let items = Array.from(map);
+    return items[Math.floor(Math.random() * items.length)];
+}

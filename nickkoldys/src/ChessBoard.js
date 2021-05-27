@@ -38,24 +38,24 @@ export function ChessBoard(props) {
     pieces.set('bkn', { piece: <span className='chessPiece'>&#9822;</span> })
     pieces.set('bp', { piece: <span className='chessPiece'>&#9823;</span> })
 
-    console.log('*********************')
-    if (chessCheckForMate(board, whiteKingPosition, 'w')) {
-        console.log('White in check')
-    } else {
-        console.log('White not in check')
-    }
-    if (chessCheckForMate(board, blackKingPosition, 'b')) {
-        console.log('Black in check')
-    } else {
-        console.log('Black not in check')
-    }
-    console.log(allAvailableMoves)
+    // console.log('*********************')
+    // if (chessCheckForMate(board, whiteKingPosition, 'w')) {
+    //     console.log('White in check')
+    // } else {
+    //     console.log('White not in check')
+    // }
+    // if (chessCheckForMate(board, blackKingPosition, 'b')) {
+    //     console.log('Black in check')
+    // } else {
+    //     console.log('Black not in check')
+    // }
+    // console.log(allAvailableMoves)
 
     
 
     useEffect(() => {
         if(!allAvailableMovesGenerated){
-            console.log('New turns generated')
+            //console.log('New turns generated')
             if(turn%2==0){
                 dispatch(startWaiting())
                 dispatch(chessGetAllAvailableMoves(board, lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, turn))
@@ -85,7 +85,7 @@ export function ChessBoard(props) {
     }, [dispatch, turn]);
 
     useEffect(() => {
-        console.log('check end')
+        //console.log('check end')
         if(allAvailableMoves.size==0 && turn > 0){
             if(turn%2==0){
                 if(chessCheckForMate(board,whiteKingPosition,'w')){
