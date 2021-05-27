@@ -17,7 +17,7 @@
 }
 
 @media (orientation:portrait){
-    .ChessMSingleplayer{
+    .ChessSingleplayer{
         justify-content: flex-start;
     }
 
