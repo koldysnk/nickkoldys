@@ -62,9 +62,9 @@ function App() {
         <Route exact path="/projects">
           <Projects />
         </Route>
-        {/* <Route exact path="/raster_caster">
+        <Route exact path="/raster_caster">
           <RasterCaster />
-        </Route> */}
+        </Route>
         <Route exact path="/about">
           <About />
         </Route>

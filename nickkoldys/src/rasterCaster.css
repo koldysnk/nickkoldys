@@ -1,24 +1,50 @@
 .RasterCaster {
     margin: 2.5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #rasterCasterCanvas {
-    position: fixed;
-    left: 0;
-    right: 0;
-    width: 80%;
-    height: 80%;
+    width: 80vw;
+    height: 80vh;
+    border: solid 1px black;
 }
 
-.controls {
+.rasterCasterControls {
     display: grid;
-    grid-template-columns: auto auto;
+    box-sizing: border-box;
+    min-width: 80vw;
+    grid-template-columns: min-content auto;
     grid-gap: 5px;
-    justify-items: end;
-    position: fixed;
-    left: 10px;
-    top: 10px;
+    justify-items: start;
     background-color: rgba(230, 230, 230, 0.8);
     padding: 10px;
     border-radius: 10px;
+}
+
+.rasterCasterButtonBox{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+#input-function{
+    width: 100%;
+    height: 25vh;
+    resize: vertical;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.rasterCasterButtonLabel{
+    display: flex;
+    flex-wrap: nowrap;
+    padding-right: 3px;
+    white-space: nowrap;
+    align-items: center;
+}
+
+input[type="radio" i] {
+    margin: 5px;
 }

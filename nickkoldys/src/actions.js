@@ -40,6 +40,10 @@ export const Action = Object.freeze({
     SetBlackKingPosition: 'SetBlackKingPosition',
     SetAllAvailableMoves: 'SetAllAvailableMoves',
     SetAllAvailableMovesGenerated: 'SetAllAvailableMovesGenerated',
+    //RasterCaster
+    SetRasterCasterSelection:'SetRasterCasterSelection',
+    SetRasterCasterCustomFunction:'SetRasterCasterCustomFunction',
+    SetRasterCasterExample1Function:'SetRasterCasterExample1Function',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -1674,4 +1678,27 @@ export function chessRandAITurn(board, turn,lastMove, king, leftRook, rightRook,
 function getRandomItem(map) {
     let items = Array.from(map);
     return items[Math.floor(Math.random() * items.length)];
+}
+
+/*********************************************************Raster Caster ***************************/
+
+export function setRasterCasterSelection(selection) {
+    return {
+        type: Action.SetRasterCasterSelection,
+        payload: selection,
+    }
+}
+
+export function setRasterCasterCustomFunction(fnc) {
+    return {
+        type: Action.SetRasterCasterCustomFunction,
+        payload: fnc,
+    }
+}
+
+export function setRasterCasterExample1Function(fnc) {
+    return {
+        type: Action.SetRasterCasterExample1Function,
+        payload: fnc,
+    }
 }
