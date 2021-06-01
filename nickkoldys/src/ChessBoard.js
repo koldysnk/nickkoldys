@@ -4,7 +4,7 @@ import { chessMakePieceActive, chessResetActivePiece, chessSetAvailableMoves, ch
 import './ChessBoard.css';
 
 export function ChessBoard(props) {
-    const playable = props.playable;
+    const playable = props.playerActive;
     const turn = useSelector(state => state.turn);
     const isWaiting = useSelector(state => state.isWaiting);
     const board = useSelector(state => state.chessBoard);
@@ -55,7 +55,7 @@ export function ChessBoard(props) {
 
     useEffect(() => {
         if(!allAvailableMovesGenerated){
-            //console.log('New turns generated')
+            console.log('New turns generated')
             if(turn%2==0){
                 dispatch(startWaiting())
                 dispatch(chessGetAllAvailableMoves(board, lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, turn))

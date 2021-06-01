@@ -27,14 +27,13 @@ export function ChessSingleplayer(props) {
     const dispatch = useDispatch();
 
     let turnText = "Analyzing..."
-    let playerActive = turn%2 == 0;
-    let playable = playerActive;
+    let playerActive = (turn%2 == 0 && playerFirst) || (turn%2 == 1 && !playerFirst);
 
     if(!isWaiting){
-        turnText = (playable) ? "Player 1's Turn" : "AI Nick's Turn";
+        turnText = (playerActive) ? "Player 1's Turn" : "AI Nick's Turn";
 
         if (gameOver){
-            playable = false;
+            playerActive = false;
             if (result==0){
                 turnText = "Game Over: Tie"
             }else if((result == 1 && playerFirst) || (result == 2 && !playerFirst)){
@@ -44,18 +43,18 @@ export function ChessSingleplayer(props) {
             }
         }
     }else{
-        playable = false;
+        playerActive = false;
     }
 
     useEffect(() => {
-        if(!gameOver){
-            if(!playerActive && playerFirst){
+        if(!gameOver && !playerActive){
+            if(playerFirst){
                 dispatch(chessRandAITurn(chessBoard, turn,lastMove, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
-            }else if(playerActive && !playerFirst){
+            }else if(true){
                 dispatch(chessRandAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition))
             }
         }
-    }, [dispatch,turn])
+    }, [dispatch,turn,playerFirst])
 
     turnText = turnText.concat(" (Work in Progress)")
 
@@ -73,11 +72,13 @@ export function ChessSingleplayer(props) {
     }
 
     
-
-    let board = <ChessBoard playable={((playerFirst ? playable : !playable)  && !gameOver)}/>
+    if(!(playerActive  && !gameOver)){
+        console.log('eh')
+    }
+    let board = <ChessBoard playerActive={playerActive  && !gameOver}/>
     if(promotionActive){
         board = <div className='chessBoardBox'>
-        <ChessBoard playable={false}/>
+        <ChessBoard playerActive={false}/>
         <ChessPromotion />
         </div>
     }
