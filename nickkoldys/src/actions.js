@@ -1669,6 +1669,13 @@ export function chessRandAITurn(board, turn,lastMove, king, leftRook, rightRook,
             let col = randPiece[0][2]
             let from = {piece:board[row][col], position:{row:row,col:col}}
             let to = getRandomItem(randPiece[1])[1]
+            if(from.piece=='bp' && to.row==7){
+                let items = ['bq','bb','br','bkn',];
+                from.piece = items[Math.floor(Math.random() * items.length)];
+            }else if(from.piece=='wp' && to.row==0){
+                let items = ['wq','wb','wr','wkn',];
+                from.piece = items[Math.floor(Math.random() * items.length)];
+            }
             dispatch(chessMovePiece(board, from, to, turn))
         }
         dispatch(stopWaiting())
