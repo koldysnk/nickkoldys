@@ -1583,6 +1583,36 @@ export function chessCheckForMate(board, kingPosition, color) {
         }
     }
 
+    //check kings
+    if (row > 0) {
+        if (col > 0 && board[row - 1][col - 1] == `${opositeColor}k`) {
+            return true
+        }
+        if (board[row - 1][col] == `${opositeColor}k`) {
+            return true
+        }
+        if (col < 7 && board[row - 1][col + 1] == `${opositeColor}k`) {
+            return true
+        }
+    }
+    if (col > 0 && board[row][col - 1] == `${opositeColor}k`) {
+        return true
+    }
+    if (col < 7 && board[row][col + 1] == `${opositeColor}k`) {
+        return true
+    }
+    if (row < 7) {
+        if (col > 0 && board[row + 1][col - 1] == `${opositeColor}k`) {
+            return true
+        }
+        if (board[row + 1][col] == `${opositeColor}k`) {
+            return true
+        }
+        if (col < 7 && board[row + 1][col + 1] == `${opositeColor}k`) {
+            return true
+        }
+    }
+
     return false
 }
 
