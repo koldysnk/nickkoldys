@@ -6,7 +6,7 @@ import { VertexArray } from './VertexArray';
 import { VertexAttributes } from './VertexAttributes';
 import { ShaderProgram } from './ShaderProgram';
 import { Matrix4 } from './Matrix4';
-import { setRasterCasterCustomFunction, setRasterCasterExample1Function, setRasterCasterSelection } from './actions';
+import { setRasterCasterCustomFunction, setRasterCasterDisclaimerActive, setRasterCasterExample1Function, setRasterCasterSelection } from './actions';
 
 export function RasterCaster(props) {
     const custom = 'return vec3(1.0,1.0,1.0);';
@@ -149,6 +149,7 @@ if(x>=-0.4 && x<=0.4 && y >=0.0){
 return vec3(0,0,0);`
     //const [functionValue, setFunctionValue] = useState(custom);
     let functionValue = custom
+    const disclaimer = useSelector(state => state.rasterCasterDisclaimerActive)
     const [selection, setSelection] = useState(0);
     const [errorValue, setErrorValue] = useState('');
     const dispatch = useDispatch()
@@ -195,12 +196,12 @@ return vec3(0,0,0);`
         }
 
         async function initialize() {
-            try{
-            const inputF = document.getElementById('input-function');
-            let func = !defaultFunc ? inputF.value : defaultFunc
-            defaultFunc = null
+            try {
+                const inputF = document.getElementById('input-function');
+                let func = !defaultFunc ? inputF.value : defaultFunc
+                defaultFunc = null
 
-            const vertexSource = `
+                const vertexSource = `
         in vec3 position;
         
         void main() {
@@ -209,7 +210,7 @@ return vec3(0,0,0);`
         }
         `;
 
-            const fragmentSource = `
+                const fragmentSource = `
         uniform float width;
         uniform float height;
         out vec4 fragmentColor;
@@ -223,34 +224,34 @@ return vec3(0,0,0);`
         }
         `;
 
-            shaderProgram = new ShaderProgram(vertexSource, fragmentSource, gl);
+                shaderProgram = new ShaderProgram(vertexSource, fragmentSource, gl);
 
-            const positions = [
-                -1, 1, 0.0,
-                -1, -1, 0.0,
-                1, -1, 0.0,
-                -1, 1, 0.0,
-                1, -1, 0.0,
-                1, 1, 0.0
-            ];
+                const positions = [
+                    -1, 1, 0.0,
+                    -1, -1, 0.0,
+                    1, -1, 0.0,
+                    -1, 1, 0.0,
+                    1, -1, 0.0,
+                    1, 1, 0.0
+                ];
 
-            const attributes = new VertexAttributes(gl);
-            attributes.addAttribute('position', 6, 3, positions);
-            vertexArray = new VertexArray(shaderProgram, attributes, gl);
+                const attributes = new VertexAttributes(gl);
+                attributes.addAttribute('position', 6, 3, positions);
+                vertexArray = new VertexArray(shaderProgram, attributes, gl);
 
-            inputF.addEventListener('input', initialize);
-            window.addEventListener('resize', onSizeChanged);
-            onSizeChanged();
-            setErrorValue('')
-        }catch(e){
-            console.log(e)
-            setErrorValue(e)
+                inputF.addEventListener('input', initialize);
+                window.addEventListener('resize', onSizeChanged);
+                onSizeChanged();
+                setErrorValue('')
+            } catch (e) {
+                console.log(e)
+                setErrorValue(e)
+            }
         }
-        }
 
-        
+
         initialize()
-        
+
     }
 
     const selectButton0 = () => {
@@ -318,6 +319,10 @@ return vec3(0,0,0);`
         }
     }
 
+    const removeDisclaimer = () => {
+        dispatch(setRasterCasterDisclaimerActive(!disclaimer))
+    }
+
     useEffect(() => {
         start()
     }, [dispatch])
@@ -325,46 +330,60 @@ return vec3(0,0,0);`
     return (
         <div className='RasterCaster'>
             <h2>Raster Caster</h2>
-            <div className="rasterCasterControls">
-                <div className='rasterCasterButtonBox'>
-                    <label className='rasterCasterButtonLabel'>
-                        <input id='rasterCasterButton_Custom' name='rasterCasterButtons' type='radio' defaultChecked onClick={selectButton0}></input>
+            <div className={`rasterCasterDisclaimer ${!disclaimer ? 'rasterCasterHidden' : ''}`}>
+                <p>
+                    This page is not optimized for small screens or mobile devices.
+                </p>
+                <button onClick={removeDisclaimer}>Continue</button>
+            </div>
+            <div className={`rasterCasterBox ${disclaimer ? 'rasterCasterHidden' : ''}`}>
+                <div className="rasterCasterControls">
+                    <div className='rasterCasterButtonBox'>
+                        <label className='rasterCasterButtonLabel'>
+                            <input id='rasterCasterButton_Custom' name='rasterCasterButtons' type='radio' defaultChecked onClick={selectButton0}></input>
                         Blank
                     </label>
-                    <label className='rasterCasterButtonLabel'>
-                        <input id='rasterCasterButton_Example1' name='rasterCasterButtons' type='radio' onClick={selectButton1}></input>
+                        <label className='rasterCasterButtonLabel'>
+                            <input id='rasterCasterButton_Example1' name='rasterCasterButtons' type='radio' onClick={selectButton1}></input>
                         Example 1
                     </label>
-                    <label className='rasterCasterButtonLabel'>
-                        <input id='rasterCasterButton_Example2' name='rasterCasterButtons' type='radio' onClick={selectButton2}></input>
+                        <label className='rasterCasterButtonLabel'>
+                            <input id='rasterCasterButton_Example2' name='rasterCasterButtons' type='radio' onClick={selectButton2}></input>
                         Example 2
                     </label>
-                    <label className='rasterCasterButtonLabel'>
-                        <input id='rasterCasterButton_Example3' name='rasterCasterButtons' type='radio' onClick={selectButton3}></input>
+                        <label className='rasterCasterButtonLabel'>
+                            <input id='rasterCasterButton_Example3' name='rasterCasterButtons' type='radio' onClick={selectButton3}></input>
                         Example 3
                     </label>
-                    <label className='rasterCasterButtonLabel'>
-                        <input id='rasterCasterButton_Example4' name='rasterCasterButtons' type='radio' onClick={selectButton4}></input>
+                        <label className='rasterCasterButtonLabel'>
+                            <input id='rasterCasterButton_Example4' name='rasterCasterButtons' type='radio' onClick={selectButton4}></input>
                         Example 4
                     </label>
-                    <label className='rasterCasterButtonLabel'>
-                        <input id='rasterCasterButton_Example5' name='rasterCasterButtons' type='radio' onClick={selectButton5}></input>
+                        <label className='rasterCasterButtonLabel'>
+                            <input id='rasterCasterButton_Example5' name='rasterCasterButtons' type='radio' onClick={selectButton5}></input>
                         Horizon
                     </label>
-                    <label className='rasterCasterButtonLabel'>
-                        <input id='rasterCasterButton_Example6' name='rasterCasterButtons' type='radio' onClick={selectButton6}></input>
+                        <label className='rasterCasterButtonLabel'>
+                            <input id='rasterCasterButton_Example6' name='rasterCasterButtons' type='radio' onClick={selectButton6}></input>
                         Rose
                     </label>
-                    <label className='rasterCasterButtonLabel'>
-                        <input id='rasterCasterButton_Example7' name='rasterCasterButtons' type='radio' onClick={selectButton7}></input>
+                        <label className='rasterCasterButtonLabel'>
+                            <input id='rasterCasterButton_Example7' name='rasterCasterButtons' type='radio' onClick={selectButton7}></input>
                         Batman
                     </label>
+                    </div>
+                    <textarea type="text" id="input-function" defaultValue={functionValue} spellCheck="false"></textarea>
                 </div>
-                <textarea type="text" id="input-function" defaultValue={functionValue}  spellCheck="false"></textarea>
+                <p>{errorValue}</p>
+                <canvas id='rasterCasterCanvas'></canvas>
+                <h3 className='descriptionTitle'>Description</h3>
+                <p className='descriptionText'>
+                    By editing the text area above, you can use OpenGL Shading Language (GLSL) to manipulate the fragment shader and 
+                    write directly to the GPU. If the canvas is not rendering anything in the above box (the canvas is the 
+                    same color as the background), you may need to turn on WebGl in your browser settings. This is especially
+                    true if you are using an IOS device. 
+                </p>
             </div>
-            <p>{errorValue}</p>
-            <p className='rasterCasterDisclaimer'></p>
-            <canvas id='rasterCasterCanvas'></canvas>
             <script defer src="dist/bundle.js"></script>
         </div>
     );

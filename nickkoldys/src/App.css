@@ -21,7 +21,11 @@
 }
 
 
-
+.descriptionText{
+  width: 50%;
+  align-self: center;
+  text-align: left;
+}
 
 
 
@@ -38,5 +42,9 @@
   .Shifted{
     transition-duration: 1s;
     transform: translateX(100vw);
+  }
+
+  .descriptionText{
+    width: 80%;
   }
 }

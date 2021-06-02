@@ -51,6 +51,7 @@ const initialState = {
     allAvailableMovesGenerated: false,
     /*************************RasterCaster ********************/
     rasterCasterSelection: 0,
+    rasterCasterDisclaimerActive: true,
 }
 
 export function reducer(state = initialState, action) {
@@ -268,6 +269,11 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 rasterCasterExample1Function: action.payload,
+            };
+        case Action.SetRasterCasterDisclaimerActive:
+            return {
+                ...state,
+                rasterCasterDisclaimerActive: action.payload,
             };
         default:
             return state;

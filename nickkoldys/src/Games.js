@@ -21,7 +21,7 @@ export function Games(props) {
             <Link to='/chess_menu'>
                 <div className="gameTile chessTile">
                     <h2 className='gameTileTitle chessTileTitle'>Chess</h2>
-                    <p className='gameTileText chessTileText'>Play Chess against an AI or local multiplayer. (Coming Soon)</p>
+                    <p className='gameTileText chessTileText'>Play Chess against an AI or local multiplayer.</p>
                 </div>
             </Link>
         </div>

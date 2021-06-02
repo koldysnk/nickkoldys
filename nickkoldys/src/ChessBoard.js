@@ -102,7 +102,6 @@ export function ChessBoard(props) {
             }
         }
     }, [dispatch, allAvailableMovesGenerated])
-    console.log('********************')
     return (
         <div className='ChessBoard'>
             <div className="chessTable">

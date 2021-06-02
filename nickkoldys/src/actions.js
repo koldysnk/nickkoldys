@@ -44,6 +44,7 @@ export const Action = Object.freeze({
     SetRasterCasterSelection:'SetRasterCasterSelection',
     SetRasterCasterCustomFunction:'SetRasterCasterCustomFunction',
     SetRasterCasterExample1Function:'SetRasterCasterExample1Function',
+    SetRasterCasterDisclaimerActive:'SetRasterCasterDisclaimerActive',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -213,7 +214,7 @@ export function tttStartMinMax(board, turn) {
 function tttMaxAnalysis(board, turn) {
     const playerTurn = (turn % 2) + 1;
     const availablePositions = getTTTAvailablePositions(board);
-    let maxPos = -1;
+    let maxPos = [];
     let maxScore = -2
 
     for (let i = 0; i < availablePositions.length; i++) {
@@ -221,25 +222,33 @@ function tttMaxAnalysis(board, turn) {
         board[pos] = playerTurn;
         let win = tttCheckWinNoPush(pos, board)
         if (win) {
-            board[pos] = 0;
-            maxPos = pos
-            maxScore = 1
-            return { maxPos, maxScore };
-        } else if (turn == 8) {
-            if (0 >= maxScore) {
-                maxScore = 0;
-                maxPos = pos;
+            if(maxScore == 1){
+                maxPos.push(pos)
+            }else{
+                maxScore = 1
+                maxPos = [pos]
             }
-        } else {
-            let { minPos, minScore } = tttMinAnalysis(board, turn + 1)
-            if (minScore >= maxScore) {
-                maxScore = minScore;
-                maxPos = pos;
+        } else{
+            if (turn == 8) {
+                if (0 == maxScore) {
+                    maxPos.push(pos)
+                }else if(0>maxScore){
+                    maxPos = [pos]
+                    maxScore = 0
+                }
+            } else {
+                let { minPos, minScore } = tttMinAnalysis(board, turn + 1)
+                if (minScore > maxScore) {
+                    maxScore = minScore;
+                    maxPos = [pos];
+                }else if(minScore==maxScore){
+                    maxPos.push(pos)
+                }
             }
-        }
+        } 
         board[pos] = 0;
     }
-
+    maxPos = maxPos[Math.floor(Math.random() * maxPos.length)]
     return { maxPos, maxScore };
 }
 
@@ -1737,5 +1746,12 @@ export function setRasterCasterExample1Function(fnc) {
     return {
         type: Action.SetRasterCasterExample1Function,
         payload: fnc,
+    }
+}
+
+export function setRasterCasterDisclaimerActive(b) {
+    return {
+        type: Action.SetRasterCasterDisclaimerActive,
+        payload: b,
     }
 }

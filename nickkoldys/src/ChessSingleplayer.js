@@ -72,9 +72,7 @@ export function ChessSingleplayer(props) {
     }
 
     
-    if(!(playerActive  && !gameOver)){
-        console.log('eh')
-    }
+
     let board = <ChessBoard playerActive={playerActive  && !gameOver}/>
     if(promotionActive){
         board = <div className='chessBoardBox'>

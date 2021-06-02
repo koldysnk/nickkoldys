@@ -9,7 +9,7 @@ export function Projects(props) {
             <Link to='/raster_caster'>
             <div className="projectTile rasterCasterTile">
                 <h2 className='projectTileTitle rasterCasterTileTitle'>Raster Caster</h2>
-                <p className='projectTileText rasterCasterTileText'>Write code in OpenGL Shading Language (GLSL) to manipulate a canvas. (Coming Soon)</p>
+                <p className='projectTileText rasterCasterTileText'>Write code in OpenGL Shading Language (GLSL) to manipulate a canvas.</p>
             </div>
             </Link>
             <div className="projectTile mazeSolverTile">
