@@ -41,10 +41,10 @@ export function ChessMultiplayer(props) {
 
     
 
-    let board = <ChessBoard playable={playable}/>
+    let board = <ChessBoard playerActive={playable}/>
     if(promotionActive){
         board = <div className='chessBoardBox'>
-        <ChessBoard playable={false}/>
+        <ChessBoard playerActive={false}/>
         <ChessPromotion />
         </div>
     }

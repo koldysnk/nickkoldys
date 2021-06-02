@@ -51,8 +51,6 @@ const initialState = {
     allAvailableMovesGenerated: false,
     /*************************RasterCaster ********************/
     rasterCasterSelection: 0,
-    rasterCasterCustomFunction: 'return vec3(1,0,0);',
-    rasterCasterExample1Function: 'return vec3(sin(gl_FragCoord.x/gl_FragCoord.y), cos(gl_FragCoord.y*gl_FragCoord.x),tan(gl_FragCoord.x*gl_FragCoord.y));',
 }
 
 export function reducer(state = initialState, action) {

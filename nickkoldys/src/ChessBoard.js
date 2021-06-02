@@ -1,6 +1,6 @@
-import React,{useEffect} from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { chessMakePieceActive, chessResetActivePiece, chessSetAvailableMoves, chessMovePiece, chessCheckForMate, chessGetAllAvailableMoves, startWaiting, stopWaiting, tttUpdateResult} from './actions';
+import { chessMakePieceActive, chessResetActivePiece, chessSetAvailableMoves, chessMovePiece, chessCheckForMate, chessGetAllAvailableMoves, startWaiting, stopWaiting, tttUpdateResult } from './actions';
 import './ChessBoard.css';
 
 export function ChessBoard(props) {
@@ -51,33 +51,33 @@ export function ChessBoard(props) {
     // }
     // console.log(allAvailableMoves)
 
-    
+
 
     useEffect(() => {
-        if(!allAvailableMovesGenerated){
+        if (!allAvailableMovesGenerated) {
             console.log('New turns generated')
-            if(turn%2==0){
+            if (turn % 2 == 0) {
                 dispatch(startWaiting())
                 dispatch(chessGetAllAvailableMoves(board, lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, turn))
                 dispatch(stopWaiting())
-            }else{
+            } else {
                 dispatch(startWaiting())
                 dispatch(chessGetAllAvailableMoves(board, lastMove, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition, turn))
                 dispatch(stopWaiting())
             }
-        }else{
-            if(allAvailableMoves.size==0){
-                if(turn%2==0){
-                    if(chessCheckForMate(board,whiteKingPosition,'w')){
-                        tttUpdateResult(true,2)
-                    }else{
-                        tttUpdateResult(true,0)
+        } else {
+            if (allAvailableMoves.size == 0) {
+                if (turn % 2 == 0) {
+                    if (chessCheckForMate(board, whiteKingPosition, 'w')) {
+                        tttUpdateResult(true, 2)
+                    } else {
+                        tttUpdateResult(true, 0)
                     }
-                }else{
-                    if(chessCheckForMate(board,blackKingPosition,'b')){
-                        tttUpdateResult(true,1)
-                    }else{
-                        tttUpdateResult(true,0)
+                } else {
+                    if (chessCheckForMate(board, blackKingPosition, 'b')) {
+                        tttUpdateResult(true, 1)
+                    } else {
+                        tttUpdateResult(true, 0)
                     }
                 }
             }
@@ -86,23 +86,23 @@ export function ChessBoard(props) {
 
     useEffect(() => {
         //console.log('check end')
-        if(allAvailableMoves.size==0 && turn > 0){
-            if(turn%2==0){
-                if(chessCheckForMate(board,whiteKingPosition,'w')){
-                    dispatch(tttUpdateResult(true,2))
-                }else{
-                    dispatch(tttUpdateResult(true,0))
+        if (allAvailableMoves.size == 0 && turn > 0) {
+            if (turn % 2 == 0) {
+                if (chessCheckForMate(board, whiteKingPosition, 'w')) {
+                    dispatch(tttUpdateResult(true, 2))
+                } else {
+                    dispatch(tttUpdateResult(true, 0))
                 }
-            }else{
-                if(chessCheckForMate(board,blackKingPosition,'b')){
-                    dispatch(tttUpdateResult(true,1))
-                }else{
-                    dispatch(tttUpdateResult(true,0))
+            } else {
+                if (chessCheckForMate(board, blackKingPosition, 'b')) {
+                    dispatch(tttUpdateResult(true, 1))
+                } else {
+                    dispatch(tttUpdateResult(true, 0))
                 }
             }
         }
-    }, [dispatch,allAvailableMovesGenerated])
-
+    }, [dispatch, allAvailableMovesGenerated])
+    console.log('********************')
     return (
         <div className='ChessBoard'>
             <div className="chessTable">
@@ -115,7 +115,7 @@ export function ChessBoard(props) {
                                     dispatch(chessResetActivePiece())
                                     dispatch(chessSetAvailableMoves(new Map()))
                                     dispatch(stopWaiting())
-                                } else if (allAvailableMoves.has(`${i}-${j}`) ){
+                                } else if (allAvailableMoves.has(`${i}-${j}`)) {
                                     dispatch(startWaiting())
                                     dispatch(chessMakePieceActive(allAvailableMoves.get(`${i}-${j}`), i, j, v))
                                     dispatch(stopWaiting())
@@ -127,6 +127,15 @@ export function ChessBoard(props) {
                             }
                         }
                         let image = pieces.get(v).piece
+                        if ((i == lastMove.startPosition.row && j == lastMove.startPosition.col) || (i == lastMove.endPosition.row && j == lastMove.endPosition.col)) {
+                            return <div key={`${i}-${j}`} className={`chessBoardTile ${(i % 2 == 1) ? "oddChessRow" : 'evenChessRow'} t${i}-${j}`}>
+                                <div className='chessLastMove'>
+                                    <div className={(((v[0] == 'w' && turn % 2 == 0) || (v[0] == 'b' && turn % 2 == 1)) && playable) ? `chessSquare ${allAvailableMoves.has(`${i}-${j}`) ? 'chessSelectable' : ''} ${availableMoves.has(`${i}-${j}`) ? 'chessSquareAvailable' : ''}` : `chessSquare ${availableMoves.has(`${i}-${j}`) ? 'chessSquareAvailable' : ''}`} onClick={actionOnClick}>
+                                        {image}
+                                    </div>
+                                </div>
+                            </div>
+                        }
                         return <div key={`${i}-${j}`} className={`chessBoardTile ${(i % 2 == 1) ? "oddChessRow" : 'evenChessRow'} t${i}-${j}`}>
                             <div className={(((v[0] == 'w' && turn % 2 == 0) || (v[0] == 'b' && turn % 2 == 1)) && playable) ? `chessSquare ${allAvailableMoves.has(`${i}-${j}`) ? 'chessSelectable' : ''} ${availableMoves.has(`${i}-${j}`) ? 'chessSquareAvailable' : ''}` : `chessSquare ${availableMoves.has(`${i}-${j}`) ? 'chessSquareAvailable' : ''}`} onClick={actionOnClick}>
                                 {image}
