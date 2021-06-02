@@ -65,7 +65,7 @@ export function TicTacToeSingleplayer(props) {
             </div>
             <h3 className='descriptionTitle'>Description</h3>
             <p className='descriptionText'>
-                The Tic-Tac-Toe computer uses a redementary MinMax algorithm to decide where to place it's piece.
+                The Tic-Tac-Toe computer uses a rudementary MinMax algorithm to decide where to place it's piece.
                 Because there is a relatively low number of game states in Tic-Tac-Toe the computer is able to 
                 analyze all possible moves at an arbitrary depth to an end state without any optimization strategies.
             </p>
