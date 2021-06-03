@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { chessResetGame,chessRandAITurn, startWaiting, stopWaiting, tttSetPlayerFirst } from './actions';
+import { chessResetGame,chessRandAITurn, startWaiting, stopWaiting, tttSetPlayerFirst, chessBasicAITurn, chessBasicWeightedAITurn } from './actions';
 import { ChessBoard } from './ChessBoard';
 import './ChessMultiplayer.css';
 import { ChessPromotion } from './ChessPromotion';
@@ -49,9 +49,9 @@ export function ChessSingleplayer(props) {
     useEffect(() => {
         if(!gameOver && !playerActive){
             if(playerFirst){
-                dispatch(chessRandAITurn(chessBoard, turn,lastMove, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
+                dispatch(chessBasicWeightedAITurn(chessBoard, turn,lastMove, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
             }else if(true){
-                dispatch(chessRandAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition))
+                dispatch(chessBasicWeightedAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition))
             }
         }
     }, [dispatch,turn,playerFirst])

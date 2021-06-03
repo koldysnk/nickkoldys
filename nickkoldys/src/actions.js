@@ -41,10 +41,10 @@ export const Action = Object.freeze({
     SetAllAvailableMoves: 'SetAllAvailableMoves',
     SetAllAvailableMovesGenerated: 'SetAllAvailableMovesGenerated',
     //RasterCaster
-    SetRasterCasterSelection:'SetRasterCasterSelection',
-    SetRasterCasterCustomFunction:'SetRasterCasterCustomFunction',
-    SetRasterCasterExample1Function:'SetRasterCasterExample1Function',
-    SetRasterCasterDisclaimerActive:'SetRasterCasterDisclaimerActive',
+    SetRasterCasterSelection: 'SetRasterCasterSelection',
+    SetRasterCasterCustomFunction: 'SetRasterCasterCustomFunction',
+    SetRasterCasterExample1Function: 'SetRasterCasterExample1Function',
+    SetRasterCasterDisclaimerActive: 'SetRasterCasterDisclaimerActive',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -222,17 +222,17 @@ function tttMaxAnalysis(board, turn) {
         board[pos] = playerTurn;
         let win = tttCheckWinNoPush(pos, board)
         if (win) {
-            if(maxScore == 1){
+            if (maxScore == 1) {
                 maxPos.push(pos)
-            }else{
+            } else {
                 maxScore = 1
                 maxPos = [pos]
             }
-        } else{
+        } else {
             if (turn == 8) {
                 if (0 == maxScore) {
                     maxPos.push(pos)
-                }else if(0>maxScore){
+                } else if (0 > maxScore) {
                     maxPos = [pos]
                     maxScore = 0
                 }
@@ -241,11 +241,11 @@ function tttMaxAnalysis(board, turn) {
                 if (minScore > maxScore) {
                     maxScore = minScore;
                     maxPos = [pos];
-                }else if(minScore==maxScore){
+                } else if (minScore == maxScore) {
                     maxPos.push(pos)
                 }
             }
-        } 
+        }
         board[pos] = 0;
     }
     maxPos = maxPos[Math.floor(Math.random() * maxPos.length)]
@@ -1340,7 +1340,7 @@ export function chessMovePiece(board, from, to, turn) {
             if (turn % 2 == 0) {
                 dispatch(setWhiteKingAvailable(false))
                 dispatch(setWhiteKingPosition({ row: to.row, col: to.col }))
-            }else{
+            } else {
                 dispatch(setBlackKingAvailable(false))
                 dispatch(setBlackKingPosition({ row: to.row, col: to.col }))
             }
@@ -1625,16 +1625,16 @@ export function chessCheckForMate(board, kingPosition, color) {
     return false
 }
 
-export function chessGetAllAvailableMoves(board, lastMove, king, leftRook, rightRook, kingPosition, turn){
+export function chessGetAllAvailableMoves(board, lastMove, king, leftRook, rightRook, kingPosition, turn) {
     return dispatch => {
-        let color = turn%2==0 ? 'w' : 'b'
+        let color = turn % 2 == 0 ? 'w' : 'b'
         let allAvailableChessMoves = new Map()
-        board.forEach((w,i) => {
-            w.forEach((v,j) => {
-                if(v[0]==color){
+        board.forEach((w, i) => {
+            w.forEach((v, j) => {
+                if (v[0] == color) {
                     let availableMoves = getAvailableChessMoves(board, i, j, v, lastMove, king, leftRook, rightRook, kingPosition)
-                    if(availableMoves.size>0){
-                        allAvailableChessMoves.set(`${i}-${j}`,availableMoves)
+                    if (availableMoves.size > 0) {
+                        allAvailableChessMoves.set(`${i}-${j}`, availableMoves)
                     }
                 }
             })
@@ -1644,11 +1644,11 @@ export function chessGetAllAvailableMoves(board, lastMove, king, leftRook, right
     }
 }
 
-export function chessResetGame(){
+export function chessResetGame() {
     return dispatch => {
         dispatch(chessResetActivePiece())
         dispatch(chessSetAvailableMoves(new Map()))
-        dispatch(tttUpdateResult(false,0))
+        dispatch(tttUpdateResult(false, 0))
         dispatch(setTurn(0))
         dispatch(setAllAvailableMoves(new Map()))
         dispatch(setAllAvailableMovesGenerated(false))
@@ -1673,48 +1673,86 @@ export function chessResetGame(){
     }
 }
 
-export function chessRandAITurn(board, turn,lastMove, king, leftRook, rightRook, kingPosition){
+export function chessRandAITurn(board, turn, lastMove, king, leftRook, rightRook, kingPosition) {
     return dispatch => {
         dispatch(startWaiting())
-        let color = turn%2==0 ? 'w' : 'b'
+        let color = turn % 2 == 0 ? 'w' : 'b'
         let allAvailableChessMoves = new Map()
-        board.forEach((w,i) => {
-            w.forEach((v,j) => {
-                if(v[0]==color){
+        board.forEach((w, i) => {
+            w.forEach((v, j) => {
+                if (v[0] == color) {
                     let availableMoves = getAvailableChessMoves(board, i, j, v, lastMove, king, leftRook, rightRook, kingPosition)
-                    if(availableMoves.size>0){
-                        allAvailableChessMoves.set(`${i}-${j}`,availableMoves)
+                    if (availableMoves.size > 0) {
+                        allAvailableChessMoves.set(`${i}-${j}`, availableMoves)
                     }
                 }
             })
         })
-        if(allAvailableChessMoves.size==0){
-            if(turn%2==0){
-                if(chessCheckForMate(board,kingPosition,'w')){
-                    dispatch(tttUpdateResult(true,2))
-                }else{
-                    dispatch(tttUpdateResult(true,0))
+        console.log(allAvailableChessMoves)
+        if (allAvailableChessMoves.size == 0) {
+            if (turn % 2 == 0) {
+                if (chessCheckForMate(board, kingPosition, 'w')) {
+                    dispatch(tttUpdateResult(true, 2))
+                } else {
+                    dispatch(tttUpdateResult(true, 0))
                 }
-            }else{
-                if(chessCheckForMate(board,kingPosition,'b')){
-                    dispatch(tttUpdateResult(true,1))
-                }else{
-                    dispatch(tttUpdateResult(true,0))
+            } else {
+                if (chessCheckForMate(board, kingPosition, 'b')) {
+                    dispatch(tttUpdateResult(true, 1))
+                } else {
+                    dispatch(tttUpdateResult(true, 0))
                 }
             }
-        }else{
+        } else {
             let randPiece = getRandomItem(allAvailableChessMoves)
             let row = randPiece[0][0]
             let col = randPiece[0][2]
-            let from = {piece:board[row][col], position:{row:row,col:col}}
+            let from = { piece: board[row][col], position: { row: row, col: col } }
             let to = getRandomItem(randPiece[1])[1]
-            if(from.piece=='bp' && to.row==7){
-                let items = ['bq','bb','br','bkn',];
+            if (from.piece == 'bp' && to.row == 7) {
+                let items = ['bq', 'bb', 'br', 'bkn',];
                 from.piece = items[Math.floor(Math.random() * items.length)];
-            }else if(from.piece=='wp' && to.row==0){
-                let items = ['wq','wb','wr','wkn',];
+            } else if (from.piece == 'wp' && to.row == 0) {
+                let items = ['wq', 'wb', 'wr', 'wkn',];
                 from.piece = items[Math.floor(Math.random() * items.length)];
             }
+            dispatch(chessMovePiece(board, from, to, turn))
+        }
+        dispatch(stopWaiting())
+    }
+}
+
+export function chessBasicAITurn(board, turn, lastMove, king, leftRook, rightRook, kingPosition) {
+    return dispatch => {
+        dispatch(startWaiting())
+        let color = turn % 2 == 0 ? 'w' : 'b'
+        let allAvailableChessMoves = new Map()
+        board.forEach((w, i) => {
+            w.forEach((v, j) => {
+                if (v[0] == color) {
+                    let availableMoves = getAvailableChessMoves(board, i, j, v, lastMove, king, leftRook, rightRook, kingPosition)
+                    if (availableMoves.size > 0) {
+                        allAvailableChessMoves.set(`${i}-${j}`, availableMoves)
+                    }
+                }
+            })
+        })
+        if (allAvailableChessMoves.size == 0) {
+            if (turn % 2 == 0) {
+                if (chessCheckForMate(board, kingPosition, 'w')) {
+                    dispatch(tttUpdateResult(true, 2))
+                } else {
+                    dispatch(tttUpdateResult(true, 0))
+                }
+            } else {
+                if (chessCheckForMate(board, kingPosition, 'b')) {
+                    dispatch(tttUpdateResult(true, 1))
+                } else {
+                    dispatch(tttUpdateResult(true, 0))
+                }
+            }
+        } else {
+            let { from, to } = getMoveUsingBasicPositionEvaluation(board, allAvailableChessMoves, color)
             dispatch(chessMovePiece(board, from, to, turn))
         }
         dispatch(stopWaiting())
@@ -1724,6 +1762,259 @@ export function chessRandAITurn(board, turn,lastMove, king, leftRook, rightRook,
 function getRandomItem(map) {
     let items = Array.from(map);
     return items[Math.floor(Math.random() * items.length)];
+}
+
+function getMoveUsingBasicPositionEvaluation(board, allAvailableChessMoves, color) {
+    let maxMove = []
+    let score = 0
+    let boardScore = getBasicPositionEvaluation(board)
+    let started = false
+    allAvailableChessMoves.forEach((piece, i) => {
+        let from = { piece: board[i[0]][i[2]], position: { row: i[0], col: i[2] } }
+        piece.forEach((move, j) => {
+            let currScore = boardScore - basicPieceValue.get(board[move.row][move.col])
+            if (!started) {
+                score = currScore
+                maxMove = [{ from: from, to: move }]
+                started = true
+            } else {
+                if (color == 'w') {
+                    if (currScore > score) {
+                        score = currScore
+                        maxMove = [{ from: from, to: move }]
+                    } else if (currScore == score) {
+                        maxMove.push({ from: from, to: move })
+                    }
+                } else {
+                    if (currScore < score) {
+                        score = currScore
+                        maxMove = [{ from: from, to: move }]
+                    } else if (currScore == score) {
+                        maxMove.push({ from: from, to: move })
+                    }
+                }
+            }
+        })
+    })
+
+    return maxMove[Math.floor(Math.random() * maxMove.length)]
+}
+
+const basicPieceValue = new Map()
+basicPieceValue.set('', 0)
+basicPieceValue.set('wp', 10)
+basicPieceValue.set('wr', 30)
+basicPieceValue.set('wb', 30)
+basicPieceValue.set('wkn', 50)
+basicPieceValue.set('wq', 90)
+basicPieceValue.set('wk', 900)
+basicPieceValue.set('bp', -10)
+basicPieceValue.set('br', -30)
+basicPieceValue.set('bb', -30)
+basicPieceValue.set('bkn', -50)
+basicPieceValue.set('bq', -90)
+basicPieceValue.set('bk', -900)
+
+function getBasicPositionEvaluation(board) {
+    let score = 0
+    board.forEach((row) => {
+        row.forEach((piece) => {
+            if (piece != '') {
+                score += basicPieceValue.get(piece)
+            }
+        })
+    })
+
+    return score
+}
+
+const pieceMultiplier = new Map()
+pieceMultiplier.set('', 0)
+pieceMultiplier.set('wp',
+    [[0, 0, 0, 0, 0, 0, 0, 0],
+    [5, 5, 5, 5, 5, 5, 5, 5],
+    [1, 1, 2, 3, 3, 2, 1, 1],
+    [.5, .5, 1, 2.5, 2.5, 1, .5, .5],
+    [0, 0, 0, 2, 2, 0, 0, 0],
+    [.5, -.5, -1, 0, 0, -1, -.5, .5],
+    [.5, 1, 1, 1, -2, -2, 1, 1, .5],
+    [0, 0, 0, 0, 0, 0, 0, 0]])
+pieceMultiplier.set('wr',
+    [[0, 0, 0, 0, 0, 0, 0, 0],
+    [.5, 1, 1, 1, 1, 1, 1, .5],
+    [-.5, 0, 0, 0, 0, 0, 0, -.5],
+    [-.5, 0, 0, 0, 0, 0, 0, -.5],
+    [-.5, 0, 0, 0, 0, 0, 0, -.5],
+    [-.5, 0, 0, 0, 0, 0, 0, -.5],
+    [-.5, 0, 0, 0, 0, 0, 0, -.5],
+    [0, 0, 0, .5, .5, 0, 0, 0]])
+pieceMultiplier.set('wb',
+    [[-2, -1, -1, -1, -1, -1, -1, -2],
+    [-1, 0, 0, 0, 0, 0, 0, -1],
+    [-1, 0, .5, 1, 1, .5, 0, -1],
+    [-1, .5, .5, 1, 1, .5, .5, -1],
+    [-1, 0, 1, 1, 1, 1, 0, -1],
+    [-1, 1, 1, 1, 1, 1, 1, -1],
+    [-1, .5, 0, 0, 0, 0, .5, -1],
+    [-2, -1, -1, -1, -1, -1, -1, -2]])
+pieceMultiplier.set('wkn',
+    [[-5, -4, -3, -3, -3, -3, -4, -5],
+    [-4, -2, 0, 0, 0, 0, -2, -4],
+    [-3, 0, 1, 1.5, 1.5, 1, 0, -3],
+    [-3, .5, 1.5, 2, 2, 1.5, .5, -3],
+    [-3, 0, 1.5, 2, 2, 1.5, 0, -3],
+    [-3, .5, 1, 1.5, 1.5, 1, .5, -3],
+    [-4, -2, 0, .5, .5, 0, -2, -4],
+    [-5, -4, -3, -3, -3, -3, -4, -5]])
+pieceMultiplier.set('wq',
+    [[-2, -1, -1, -.5, -.5, -1, -1, -2],
+    [-1, 0, 0, 0, 0, 0, 0, -1],
+    [-1, 0, .5, .5, .5, .5, 0, -1],
+    [-.5, 0, .5, .5, .5, .5, 0, -.5],
+    [0, 0, .5, .5, .5, .5, 0, -.5],
+    [-1, .5, .5, .5, .5, .5, 0, -1],
+    [-1, 0, .5, 0, 0, 0, 0, -1],
+    [-2, -1, -1, -.5, -.5, -1, -1, -2]])
+pieceMultiplier.set('wk',
+    [[-3, -4, -4, -5, -5, -4, -4, -3],
+    [-3, -4, -4, -5, -5, -4, -4, -3],
+    [-3, -4, -4, -5, -5, -4, -4, -3],
+    [-3, -4, -4, -5, -5, -4, -4, -3],
+    [-2, -3, -3, -4, -4, -3, -3, -2],
+    [-1, -2, -2, -2, -2, -2, -2, -1],
+    [2, 2, 0, 0, 0, 0, 2, 2],
+    [2, 3, 1, 0, 0, 1, 3, 2]])
+
+function reverseArray(array) {
+    return array.slice().reverse();
+};
+
+function make2DArrayNegative(array){
+    return array.map((x) => {
+        return x.map((y) => {
+            return -1*y
+        })
+    })
+}
+
+pieceMultiplier.set('bp', make2DArrayNegative(reverseArray(pieceMultiplier.get('wp'))))
+pieceMultiplier.set('br', make2DArrayNegative(reverseArray(pieceMultiplier.get('wr'))))
+pieceMultiplier.set('bb', make2DArrayNegative(reverseArray(pieceMultiplier.get('wb'))))
+pieceMultiplier.set('bkn', make2DArrayNegative(reverseArray(pieceMultiplier.get('wkn'))))
+pieceMultiplier.set('bq', make2DArrayNegative(pieceMultiplier.get('wq')))
+pieceMultiplier.set('bk', make2DArrayNegative(reverseArray(pieceMultiplier.get('wk'))))
+
+
+
+export function chessBasicWeightedAITurn(board, turn, lastMove, king, leftRook, rightRook, kingPosition) {
+    return dispatch => {
+        dispatch(startWaiting())
+        let color = turn % 2 == 0 ? 'w' : 'b'
+        let allAvailableChessMoves = new Map()
+        board.forEach((w, i) => {
+            w.forEach((v, j) => {
+                if (v[0] == color) {
+                    let availableMoves = getAvailableChessMoves(board, i, j, v, lastMove, king, leftRook, rightRook, kingPosition)
+                    if (availableMoves.size > 0) {
+                        allAvailableChessMoves.set(`${i}-${j}`, availableMoves)
+                    }
+                }
+            })
+        })
+        if (allAvailableChessMoves.size == 0) {
+            if (turn % 2 == 0) {
+                if (chessCheckForMate(board, kingPosition, 'w')) {
+                    dispatch(tttUpdateResult(true, 2))
+                } else {
+                    dispatch(tttUpdateResult(true, 0))
+                }
+            } else {
+                if (chessCheckForMate(board, kingPosition, 'b')) {
+                    dispatch(tttUpdateResult(true, 1))
+                } else {
+                    dispatch(tttUpdateResult(true, 0))
+                }
+            }
+        } else {
+            let { from, to } = getMoveUsingBasicWeightedPositionEvaluation(board, allAvailableChessMoves, color)
+            dispatch(chessMovePiece(board, from, to, turn))
+        }
+        dispatch(stopWaiting())
+    }
+}
+
+function getMoveUsingBasicWeightedPositionEvaluation(board, allAvailableChessMoves, color) {
+    let maxMove = []
+    let score = 0
+    let boardScore = getBasicWeightedPositionEvaluation(board)
+    let started = false
+    allAvailableChessMoves.forEach((piece, i) => {
+        let from = { piece: board[i[0]][i[2]], position: { row: i[0], col: i[2] } }
+        piece.forEach((move, j) => {
+            let currScore = boardScore
+            currScore -= (basicPieceValue.get(from.piece) + pieceMultiplier.get(from.piece)[from.position.row][from.position.col])
+            if(from.piece=='wp' && move.row==0){
+                currScore += (basicPieceValue.get('wq') + pieceMultiplier.get('wq')[move.row][move.col])
+                from.piece = 'wq'
+            } else if (from.piece=='bp' && move.row==7){
+                currScore += (basicPieceValue.get('bq') + pieceMultiplier.get('bq')[move.row][move.col])
+                from.piece = 'bq'
+            }else{
+                currScore += (basicPieceValue.get(from.piece) + pieceMultiplier.get(from.piece)[move.row][move.col])
+            }
+                
+            let oldPiece = board[move.row][move.col]
+            if (oldPiece != '') {
+                currScore -= (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[move.row][move.col])
+            }
+            if(move.castle ==true){
+                if(move.col==6){
+                    currScore += (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][move.col-1])
+                    currScore -= (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][7])
+                }else{
+                    currScore += (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][move.col+1])
+                    currScore -= (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][0])
+                }
+            }
+
+            if (!started) {
+                score = currScore
+                maxMove = [{ from: from, to: move }]
+                started = true
+            } else {
+                if (color == 'w') {
+                    if (currScore > score) {
+                        score = currScore
+                        maxMove = [{ from: from, to: move }]
+                    } else if (currScore == score) {
+                        maxMove.push({ from: from, to: move })
+                    }
+                } else {
+                    if (currScore < score) {
+                        score = currScore
+                        maxMove = [{ from: from, to: move }]
+                    } else if (currScore == score) {
+                        maxMove.push({ from: from, to: move })
+                    }
+                }
+            }
+        })
+    })
+
+    return maxMove[Math.floor(Math.random() * maxMove.length)]
+}
+
+function getBasicWeightedPositionEvaluation(board) {
+    let score = 0
+    board.forEach((row,i) => {
+        row.forEach((piece,j) => {
+            if (piece != '') {
+                score += basicPieceValue.get(piece) + pieceMultiplier.get(piece)[i][j]
+            }
+        })
+    })
+
+    return score
 }
 
 /*********************************************************Raster Caster ***************************/

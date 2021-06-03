@@ -55,7 +55,7 @@ export function ChessBoard(props) {
 
     useEffect(() => {
         if (!allAvailableMovesGenerated) {
-            console.log('New turns generated')
+            // console.log('New turns generated')
             if (turn % 2 == 0) {
                 dispatch(startWaiting())
                 dispatch(chessGetAllAvailableMoves(board, lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, turn))

@@ -43,7 +43,7 @@ export function TicTacToeSingleplayer(props) {
         if(!gameOver && ((!playerActive && playerFirst) || (playerActive && !playerFirst))){
             dispatch(tttAITurn(board, turn))
         }
-    }, [dispatch,turn])
+    }, [dispatch,turn,playerFirst])
 
     const reset = () => {
         dispatch(tttResetGame())
