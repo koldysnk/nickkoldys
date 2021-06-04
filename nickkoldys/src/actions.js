@@ -600,131 +600,152 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
     const color = piece[0]
     let availableMoves = new Map()
     let oldPiece = ''
+    let newRow = row
+    let newCol = col
 
     if (piece[1] == 'p') { //Pawn move
         if (color == 'b') {
             if (board[row + 1][col] == '') {
-                oldPiece = board[row + 1][col]
+                newRow = row + 1
+                oldPiece = board[newRow][col]
                 board[row][col] = ''
-                board[row + 1][col] = piece
+                board[newRow][col] = piece
                 if (!chessCheckForMate(board, kingPosition, color)) {
-                    availableMoves.set(`${row + 1}-${col}`, { row: row + 1, col: col })
+                    availableMoves.set(`${newRow}-${col}`, { row: newRow, col: col })
                 }
                 board[row][col] = piece
-                board[row + 1][col] = oldPiece
+                board[newRow][col] = oldPiece
                 if (row == 1 && board[row + 2][col] == '') {
-
-                    oldPiece = board[row + 2][col]
+                    newRow = row + 2
+                    oldPiece = board[newRow][col]
                     board[row][col] = ''
-                    board[row + 2][col] = piece
+                    board[newRow][col] = piece
                     if (!chessCheckForMate(board, kingPosition, color)) {
-                        availableMoves.set(`${row + 2}-${col}`, { row: row + 2, col: col })
+                        availableMoves.set(`${newRow}-${col}`, { row: newRow, col: col })
                     }
                     board[row][col] = piece
-                    board[row + 2][col] = oldPiece
+                    board[newRow][col] = oldPiece
                 }
             }
             if (col < 7 && board[row + 1][col + 1][0] == 'w') {
-                oldPiece = board[row + 1][col + 1]
+                newRow = row+1
+                newCol = col+1
+                oldPiece = board[newRow][newCol]
                 board[row][col] = ''
-                board[row + 1][col + 1] = piece
+                board[newRow][newCol] = piece
                 if (!chessCheckForMate(board, kingPosition, color)) {
-                    availableMoves.set(`${row + 1}-${col + 1}`, { row: row + 1, col: col + 1 })
+                    availableMoves.set(`${newRow}-${newCol}`, { row: newRow, col: newCol })
                 }
                 board[row][col] = piece
-                board[row + 1][col + 1] = oldPiece
+                board[newRow][newCol] = oldPiece
             }
             if (col > 0 && board[row + 1][col - 1][0] == 'w') {
-                oldPiece = board[row + 1][col - 1]
+                newRow = row+1
+                newCol = col-1
+                oldPiece = board[newRow][newCol]
                 board[row][col] = ''
-                board[row + 1][col - 1] = piece
+                board[newRow][newCol] = piece
                 if (!chessCheckForMate(board, kingPosition, color)) {
-                    availableMoves.set(`${row + 1}-${col - 1}`, { row: row + 1, col: col - 1 })
+                    availableMoves.set(`${newRow}-${newCol}`, { row: newRow, col: newCol })
                 }
                 board[row][col] = piece
-                board[row + 1][col - 1] = oldPiece
+                board[newRow][newCol] = oldPiece
             }
             if (lastMove.piece == 'wp' && lastMove.startPosition.row == 6 && lastMove.endPosition.row == row && row == 4) {
                 if (lastMove.endPosition.col == (col - 1)) {
-                    oldPiece = board[row + 1][col - 1]
+                    newRow = row + 1
+                    newCol = col -1
+                    oldPiece = board[newRow][newCol]
                     board[row][col] = ''
-                    board[row + 1][col - 1] = piece
+                    board[newRow][newCol] = piece
                     if (!chessCheckForMate(board, kingPosition, color)) {
-                        availableMoves.set(`${row + 1}-${col - 1}`, { row: row + 1, col: col - 1, enPassant: true })
+                        availableMoves.set(`${newRow}-${newCol}`, { row: newRow, col: newCol, enPassant: true })
                     }
                     board[row][col] = piece
-                    board[row + 1][col - 1] = oldPiece
+                    board[newRow][newCol] = oldPiece
                 } else if (lastMove.endPosition.col == (col + 1)) {
-                    oldPiece = board[row + 1][col + 1]
+                    newRow = row + 1
+                    newCol = col +1
+                    oldPiece = board[newRow][newCol]
                     board[row][col] = ''
-                    board[row + 1][col + 1] = piece
+                    board[newRow][newCol] = piece
                     if (!chessCheckForMate(board, kingPosition, color)) {
-                        availableMoves.set(`${row + 1}-${col + 1}`, { row: row + 1, col: col + 1, enPassant: true })
+                        availableMoves.set(`${newRow}-${newCol}`, { row: newRow, col: newCol, enPassant: true })
                     }
                     board[row][col] = piece
-                    board[row + 1][col + 1] = oldPiece
+                    board[newRow][newCol] = oldPiece
                 }
             }
         } else {
             if (board[row - 1][col] == '') {
-                oldPiece = board[row - 1][col]
+                newRow = row -1
+                oldPiece = board[newRow][col]
                 board[row][col] = ''
-                board[row - 1][col] = piece
+                board[newRow][col] = piece
                 if (!chessCheckForMate(board, kingPosition, color)) {
-                    availableMoves.set(`${row - 1}-${col}`, { row: row - 1, col: col })
+                    availableMoves.set(`${newRow}-${col}`, { row: newRow, col: col })
                 }
                 board[row][col] = piece
-                board[row - 1][col] = oldPiece
+                board[newRow][col] = oldPiece
                 if (row == 6 && board[row - 2][col] == '') {
-                    oldPiece = board[row - 2][col]
+                    newRow = row-2
+                    oldPiece = board[newRow][col]
                     board[row][col] = ''
-                    board[row - 2][col] = piece
+                    board[newRow][col] = piece
                     if (!chessCheckForMate(board, kingPosition, color)) {
-                        availableMoves.set(`${row - 2}-${col}`, { row: row - 2, col: col })
+                        availableMoves.set(`${newRow}-${col}`, { row: newRow, col: col })
                     }
                     board[row][col] = piece
-                    board[row - 2][col] = oldPiece
+                    board[newRow][col] = oldPiece
                 }
             }
             if (col < 7 && board[row - 1][col + 1][0] == 'b') {
-                oldPiece = board[row - 1][col + 1]
+                newRow = row - 1
+                newCol = col +1
+                oldPiece = board[newRow][newCol]
                 board[row][col] = ''
-                board[row - 1][col + 1] = piece
+                board[newRow][newCol] = piece
                 if (!chessCheckForMate(board, kingPosition, color)) {
-                    availableMoves.set(`${row - 1}-${col + 1}`, { row: row - 1, col: col + 1 })
+                    availableMoves.set(`${newRow}-${newCol}`, { row: newRow, col: newCol })
                 }
                 board[row][col] = piece
-                board[row - 1][col + 1] = oldPiece
+                board[newRow][newCol] = oldPiece
             }
             if (col > 0 && board[row - 1][col - 1][0] == 'b') {
-                oldPiece = board[row - 1][col - 1]
+                newRow = row - 1
+                newCol = col -1
+                oldPiece = board[newRow][newCol]
                 board[row][col] = ''
-                board[row - 1][col - 1] = piece
+                board[newRow][newCol] = piece
                 if (!chessCheckForMate(board, kingPosition, color)) {
-                    availableMoves.set(`${row - 1}-${col - 1}`, { row: row - 1, col: col - 1 })
+                    availableMoves.set(`${newRow}-${newCol}`, { row: newRow, col: newCol })
                 }
                 board[row][col] = piece
-                board[row - 1][col - 1] = oldPiece
+                board[newRow][newCol] = oldPiece
             }
             if (lastMove.piece == 'bp' && lastMove.startPosition.row == 1 && lastMove.endPosition.row == row && row == 3) {
                 if (lastMove.endPosition.col == (col - 1)) {
-                    oldPiece = board[row - 1][col - 1]
+                    newRow = row - 1
+                    newCol = col -1
+                    oldPiece = board[newRow][newCol]
                     board[row][col] = ''
-                    board[row - 1][col - 1] = piece
+                    board[newRow][newCol] = piece
                     if (!chessCheckForMate(board, kingPosition, color)) {
-                        availableMoves.set(`${row - 1}-${col - 1}`, { row: row - 1, col: col - 1, enPassant: true })
+                        availableMoves.set(`${newRow}-${newCol}`, { row: newRow, col: newCol, enPassant: true })
                     }
                     board[row][col] = piece
-                    board[row - 1][col - 1] = oldPiece
+                    board[newRow][newCol] = oldPiece
                 } else if (lastMove.endPosition.col == (col + 1)) {
-                    oldPiece = board[row - 1][col + 1]
+                    newRow = row - 1
+                    newCol = col + 1
+                    oldPiece = board[newRow][newCol]
                     board[row][col] = ''
-                    board[row - 1][col + 1] = piece
+                    board[newRow][newCol] = piece
                     if (!chessCheckForMate(board, kingPosition, color)) {
-                        availableMoves.set(`${row - 1}-${col + 1}`, { row: row - 1, col: col + 1, enPassant: true })
+                        availableMoves.set(`${newRow}-${newCol}`, { row: newRow, col: newCol, enPassant: true })
                     }
                     board[row][col] = piece
-                    board[row - 1][col + 1] = oldPiece
+                    board[newRow][newCol] = oldPiece
                 }
             }
         }
