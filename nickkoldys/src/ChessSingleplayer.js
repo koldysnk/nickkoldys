@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { chessResetGame,chessRandAITurn, startWaiting, stopWaiting, tttSetPlayerFirst, chessBasicAITurn, chessBasicWeightedAITurn } from './actions';
+import { chessResetGame,chessRandAITurn, startWaiting, stopWaiting, tttSetPlayerFirst, chessBasicAITurn, chessBasicWeightedAITurn,chessBasicMinMaxAITurn } from './actions';
 import { ChessBoard } from './ChessBoard';
 import './ChessMultiplayer.css';
 import { ChessPromotion } from './ChessPromotion';
@@ -48,11 +48,12 @@ export function ChessSingleplayer(props) {
 
     useEffect(() => {
         if(!gameOver && !playerActive){
-            if(playerFirst){
-                dispatch(chessBasicWeightedAITurn(chessBoard, turn,lastMove, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
-            }else if(true){
-                dispatch(chessBasicWeightedAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition))
-            }
+            // if(playerFirst){
+            //     dispatch(chessBasicWeightedAITurn(chessBoard, turn,lastMove, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
+            // }else{
+            //     dispatch(chessBasicWeightedAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition))
+            // }
+            dispatch(chessBasicMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
         }
     }, [dispatch,turn,playerFirst])
 

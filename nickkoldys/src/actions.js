@@ -615,7 +615,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                 }
                 board[row][col] = piece
                 board[newRow][col] = oldPiece
-                if (row == 1 && board[row+2][col] == '') {
+                if (row == 1 && board[row + 2][col] == '') {
                     newRow = row + 2
                     oldPiece = board[newRow][col]
                     board[row][col] = ''
@@ -627,8 +627,8 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                     board[newRow][col] = oldPiece
                 }
             }
-            newRow = row+1
-            newCol = col+1
+            newRow = row + 1
+            newCol = col + 1
             if (col < 7 && board[newRow][newCol][0] == 'w') {
                 oldPiece = board[newRow][newCol]
                 board[row][col] = ''
@@ -639,8 +639,8 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                 board[row][col] = piece
                 board[newRow][newCol] = oldPiece
             }
-            newRow = row+1
-            newCol = col-1
+            newRow = row + 1
+            newCol = col - 1
             if (col > 0 && board[newRow][newCol][0] == 'w') {
                 oldPiece = board[newRow][newCol]
                 board[row][col] = ''
@@ -654,7 +654,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
             if (lastMove.piece == 'wp' && lastMove.startPosition.row == 6 && lastMove.endPosition.row == row && row == 4) {
                 newRow = row + 1
                 if (lastMove.endPosition.col == (col - 1)) {
-                    newCol = col -1
+                    newCol = col - 1
                     oldPiece = board[newRow][newCol]
                     board[row][col] = ''
                     board[newRow][newCol] = piece
@@ -664,7 +664,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                     board[row][col] = piece
                     board[newRow][newCol] = oldPiece
                 } else if (lastMove.endPosition.col == (col + 1)) {
-                    newCol = col +1
+                    newCol = col + 1
                     oldPiece = board[newRow][newCol]
                     board[row][col] = ''
                     board[newRow][newCol] = piece
@@ -676,7 +676,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                 }
             }
         } else {
-            newRow = row -1
+            newRow = row - 1
             if (board[newRow][col] == '') {
                 oldPiece = board[newRow][col]
                 board[row][col] = ''
@@ -687,7 +687,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                 board[row][col] = piece
                 board[newRow][col] = oldPiece
                 if (row == 6 && board[row - 2][col] == '') {
-                    newRow = row-2
+                    newRow = row - 2
                     oldPiece = board[newRow][col]
                     board[row][col] = ''
                     board[newRow][col] = piece
@@ -699,7 +699,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                 }
             }
             newRow = row - 1
-            newCol = col +1
+            newCol = col + 1
             if (col < 7 && board[newRow][newCol][0] == 'b') {
                 oldPiece = board[newRow][newCol]
                 board[row][col] = ''
@@ -710,7 +710,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                 board[row][col] = piece
                 board[newRow][newCol] = oldPiece
             }
-            newCol = col -1
+            newCol = col - 1
             if (col > 0 && board[newRow][newCol][0] == 'b') {
                 oldPiece = board[newRow][newCol]
                 board[row][col] = ''
@@ -724,7 +724,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
             if (lastMove.piece == 'bp' && lastMove.startPosition.row == 1 && lastMove.endPosition.row == row && row == 3) {
                 newRow = row - 1
                 if (lastMove.endPosition.col == (col - 1)) {
-                    newCol = col -1
+                    newCol = col - 1
                     oldPiece = board[newRow][newCol]
                     board[row][col] = ''
                     board[newRow][newCol] = piece
@@ -834,8 +834,8 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
     } else if (piece[1] == 'k' && piece[2] == 'n') { //Knight move
 
         if (row > 1) {
-            newRow = row -2
-            newCol = col -1
+            newRow = row - 2
+            newCol = col - 1
             if (col > 0 && board[newRow][newCol][0] != color) {
                 oldPiece = board[newRow][newCol]
                 board[row][col] = ''
@@ -860,7 +860,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
             }
         }
         if (row > 0) {
-            newRow = row -1 
+            newRow = row - 1
             newCol = col - 2
             if (col > 1 && board[newRow][newCol][0] != color) {
                 oldPiece = board[newRow][newCol]
@@ -872,7 +872,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                 board[row][col] = piece
                 board[newRow][newCol] = oldPiece
             }
-            newRow = row -1 
+            newRow = row - 1
             newCol = col + 2
             if (col < 6 && board[newRow][newCol][0] != color) {
                 oldPiece = board[newRow][newCol]
@@ -1210,7 +1210,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
         if (row > 0) {
             if (col > 0) {
                 newRow = row - 1
-                newCol = col -1
+                newCol = col - 1
                 if (board[newRow][newCol][0] != color) {
                     oldPiece = board[newRow][newCol]
                     board[row][col] = ''
@@ -1222,7 +1222,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                     board[newRow][newCol] = oldPiece
                 }
             }
-            newRow = row -1
+            newRow = row - 1
             if (board[newRow][col][0] != color) {
                 oldPiece = board[newRow][col]
                 board[row][col] = ''
@@ -1251,7 +1251,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
 
         //Middle row
         if (col > 0) {
-            newCol = col -1
+            newCol = col - 1
             if (board[row][newCol][0] != color) {
                 oldPiece = board[row][newCol]
                 board[row][col] = ''
@@ -1281,7 +1281,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
         if (row < 7) {
             newRow = row + 1
             if (col > 0) {
-                newCol = col -1
+                newCol = col - 1
                 if (board[newRow][newCol][0] != color) {
                     oldPiece = board[newRow][newCol]
                     board[row][col] = ''
@@ -1933,10 +1933,10 @@ function reverseArray(array) {
     return array.slice().reverse();
 };
 
-function make2DArrayNegative(array){
+function make2DArrayNegative(array) {
     return array.map((x) => {
         return x.map((y) => {
-            return -1*y
+            return -1 * y
         })
     })
 }
@@ -1997,26 +1997,26 @@ function getMoveUsingBasicWeightedPositionEvaluation(board, allAvailableChessMov
         piece.forEach((move, j) => {
             let currScore = boardScore
             currScore -= (basicPieceValue.get(from.piece) + pieceMultiplier.get(from.piece)[from.position.row][from.position.col])
-            if(from.piece=='wp' && move.row==0){
+            if (from.piece == 'wp' && move.row == 0) {
                 currScore += (basicPieceValue.get('wq') + pieceMultiplier.get('wq')[move.row][move.col])
                 from.piece = 'wq'
-            } else if (from.piece=='bp' && move.row==7){
+            } else if (from.piece == 'bp' && move.row == 7) {
                 currScore += (basicPieceValue.get('bq') + pieceMultiplier.get('bq')[move.row][move.col])
                 from.piece = 'bq'
-            }else{
+            } else {
                 currScore += (basicPieceValue.get(from.piece) + pieceMultiplier.get(from.piece)[move.row][move.col])
             }
-                
+
             let oldPiece = board[move.row][move.col]
             if (oldPiece != '') {
                 currScore -= (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[move.row][move.col])
             }
-            if(move.castle ==true){
-                if(move.col==6){
-                    currScore += (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][move.col-1])
+            if (move.castle) {
+                if (move.col == 6) {
+                    currScore += (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][move.col - 1])
                     currScore -= (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][7])
-                }else{
-                    currScore += (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][move.col+1])
+                } else {
+                    currScore += (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][move.col + 1])
                     currScore -= (basicPieceValue.get(`${from.piece[0]}r`) + pieceMultiplier.get(`${from.piece[0]}r`)[move.row][0])
                 }
             }
@@ -2050,8 +2050,8 @@ function getMoveUsingBasicWeightedPositionEvaluation(board, allAvailableChessMov
 
 function getBasicWeightedPositionEvaluation(board) {
     let score = 0
-    board.forEach((row,i) => {
-        row.forEach((piece,j) => {
+    board.forEach((row, i) => {
+        row.forEach((piece, j) => {
             if (piece != '') {
                 score += basicPieceValue.get(piece) + pieceMultiplier.get(piece)[i][j]
             }
@@ -2059,6 +2059,985 @@ function getBasicWeightedPositionEvaluation(board) {
     })
 
     return score
+}
+
+export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition) {
+    return dispatch => {
+        dispatch(startWaiting())
+        let score = getBasicWeightedPositionEvaluation(board)
+        let { from, to, result, moveScore } = getMoveUsingBasicMinMaxNoOptimization(0, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+        if (result == 1) {
+            dispatch(tttUpdateResult(true, 1))
+        } else if (result == 2) {
+            dispatch(tttUpdateResult(true, 2))
+        } else if (result == 3) {
+            dispatch(tttUpdateResult(true, 2))
+        } else {
+            dispatch(chessMovePiece(board, from, to, turn))
+        }
+        dispatch(stopWaiting())
+    }
+}
+
+function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition) {
+    let maxLevel = 2
+    let { color, isWhite } = turn % 2 == 0 ? { color: 'w', isWhite: true } : { color: 'b', isWhite: false }
+    let allAvailableChessMoves = []
+
+    //generate moves
+    if (isWhite) {
+        allAvailableChessMoves = getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition)
+    } else {
+        allAvailableChessMoves = getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+    }
+
+    //end game 
+    if (allAvailableChessMoves.length == 0) {
+        if (isWhite) {
+            if (chessCheckForMate(board, whiteKingPosition, color)) {
+                return { from: undefined, to: undefined, result: 2, moveScore: -10000 }
+            } else {
+                return { from: undefined, to: undefined, result: 3, moveScore: 0 }
+            }
+        } else {
+            if (chessCheckForMate(board, blackKingPosition, color)) {
+                return { from: undefined, to: undefined, result: 1, moveScore: 10000 }
+            } else {
+                return { from: undefined, to: undefined, result: 3, moveScore: 0 }
+            }
+        }
+    }
+
+    if(level>=maxLevel){
+        return { from: undefined, to: undefined, result: 0, moveScore: score }
+    }
+
+    let maxMove = []
+    let maxScore = 0
+    let started = false
+
+    allAvailableChessMoves.forEach((move,i) => {
+        let currScore = score
+        let piece = board[move.from.row][move.from.col]
+        let oldPiece = board[move.to.row][move.to.col]
+
+        //Adjust score
+        currScore -= (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[move.from.row][move.from.col])
+            + (basicPieceValue.get(move.piece) + pieceMultiplier.get(move.piece)[move.to.row][move.to.col])
+        
+        if(move.enPassant){
+            currScore -= (basicPieceValue.get(`${color}p`) + pieceMultiplier.get(`${color}p`)[move.from.row][move.to.col])
+        }else if(move.castle){
+            if(move.to.col>move.from.col){
+                currScore -= (basicPieceValue.get(`${color}r`) + pieceMultiplier.get(`${color}r`)[isWhite ? 7 : 0][7])
+                currScore += (basicPieceValue.get(`${color}r`) + pieceMultiplier.get(`${color}r`)[isWhite ? 7 : 0][5])
+            }else{
+                currScore -= (basicPieceValue.get(`${color}r`) + pieceMultiplier.get(`${color}r`)[isWhite ? 7 : 0][0])
+                currScore += (basicPieceValue.get(`${color}r`) + pieceMultiplier.get(`${color}r`)[isWhite ? 7 : 0][3])
+            }
+        }
+
+        if (oldPiece != '') {
+            currScore -= (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[move.to.row][move.to.col])
+        }
+        
+        //Simulate move
+        board[move.from.row][move.from.col] = ''
+        board[move.to.row][move.to.col] = move.piece
+        let enPassantPiece = board[move.from.row][move.to.col]
+
+        if(move.enPassant){
+            board[move.from.row][move.to.col] = ''
+        }else if(move.castle){
+            if(move.to.col>move.from.col){
+                board[isWhite ? 7 : 0][7] = ''
+                board[isWhite ? 7 : 0][5] = `${color}r`
+            }else{
+                board[isWhite ? 7 : 0][0] = ''
+                board[isWhite ? 7 : 0][3] = `${color}r`
+            }
+        }
+
+        const goDeeper = () => {
+            if(isWhite){
+                let {newKing,newKingPosition} = piece == 'wk' ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:whiteKing,newKingPosition:whiteKingPosition}
+                let newLeftRook = whiteLeftRook && board[7][0]=='wr'
+                let newRightRook = whiteLeftRook && board[7][7]=='wr'
+    
+                let { from, to, result, moveScore } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, startPosition:move.from, endPosition:move.to}, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+                return { from, to, result, moveScore }
+            }else{
+                let {newKing,newKingPosition} = piece == 'bk' ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:blackKing,newKingPosition:blackKingPosition}
+                let newLeftRook = whiteLeftRook && board[7][0]=='br'
+                let newRightRook = whiteLeftRook && board[7][7]=='br'
+    
+                let { from, to, result, moveScore } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, startPosition:move.from, endPosition:move.to},whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition )
+                return { from, to, result, moveScore }
+            }
+        }
+
+        let { from, to, result, moveScore } = goDeeper()
+
+        //Undo simulated move
+        board[move.from.row][move.from.col] = piece
+        board[move.to.row][move.to.col] = oldPiece
+
+        if(move.enPassant){
+            board[move.from.row][move.to.col] = enPassantPiece
+        }else if(move.castle){
+            if(move.to.col>move.from.col){
+                board[isWhite ? 7 : 0][5] = ''
+                board[isWhite ? 7 : 0][7] = `${color}r`
+            }else{
+                board[isWhite ? 7 : 0][3] = ''
+                board[isWhite ? 7 : 0][0] = `${color}r`
+            }
+        }
+
+
+        if (!started) {
+            maxScore = moveScore
+            maxMove = [move]
+            started = true
+        } else {
+            if (isWhite) {
+                if (moveScore > maxScore) {
+                    maxScore = moveScore
+                    maxMove = [move]
+                } else if (moveScore == maxScore) {
+                    maxMove.push(move)
+                }
+            } else {
+                if (moveScore < maxScore) {
+                    maxScore = moveScore
+                    maxMove = [move]
+                } else if (moveScore == maxScore) {
+                    maxMove.push(move)
+                }
+            }
+        }
+    })
+
+    let chosenMove = maxMove[Math.floor(Math.random() * maxMove.length)]
+
+    return {from:{piece:chosenMove.piece, position:chosenMove.from},to:chosenMove.to,result:0,score:maxScore}
+}
+
+function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, king, leftRook, rightRook, kingPosition) {
+    let allAvailableChessMoves = []
+    board.forEach((w, row) => {
+        w.forEach((piece, col) => {
+            if (piece[0] == color) {
+                let oldPiece = ''
+                let newRow = row
+                let newCol = col
+
+                if (piece[1] == 'p') { //Pawn move
+                    if (isWhite) {
+                        newRow = row - 1
+                        if (board[newRow][col] == '') {
+                            oldPiece = board[newRow][col]
+                            board[row][col] = ''
+                            board[newRow][col] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                if(newRow==0){
+                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                }else{
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                }
+                            }
+                            board[row][col] = piece
+                            board[newRow][col] = oldPiece
+                            if (row == 6 && board[row - 2][col] == '') {
+                                newRow = row - 2
+                                oldPiece = board[newRow][col]
+                                board[row][col] = ''
+                                board[newRow][col] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                }
+                                board[row][col] = piece
+                                board[newRow][col] = oldPiece
+                            }
+                        }
+                        newRow = row - 1
+                        newCol = col + 1
+                        if (col < 7 && board[newRow][newCol][0] == 'b') {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                if(newRow==0){
+                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }else{
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                        newCol = col - 1
+                        if (col > 0 && board[newRow][newCol][0] == 'b') {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                if(newRow==0){
+                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }else{
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                        if (lastMove.piece == 'bp' && lastMove.startPosition.row == 1 && lastMove.endPosition.row == row && row == 3) {
+                            newRow = row - 1
+                            if (lastMove.endPosition.col == (col - 1)) {
+                                newCol = col - 1
+                                oldPiece = board[newRow][newCol]
+                                board[row][col] = ''
+                                board[newRow][newCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, enPassant:true})
+                                }
+                                board[row][col] = piece
+                                board[newRow][newCol] = oldPiece
+                            } else if (lastMove.endPosition.col == (col + 1)) {
+                                newCol = col + 1
+                                oldPiece = board[newRow][newCol]
+                                board[row][col] = ''
+                                board[newRow][newCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, enPassant:true})
+                                }
+                                board[row][col] = piece
+                                board[newRow][newCol] = oldPiece
+                            }
+                        }
+                    } else {
+                        newRow = row + 1
+                        if (board[newRow][col] == '') {
+                            oldPiece = board[newRow][col]
+                            board[row][col] = ''
+                            board[newRow][col] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                if(newRow==7){
+                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                }else{
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                }
+                            }
+                            board[row][col] = piece
+                            board[newRow][col] = oldPiece
+                            if (row == 1 && board[row + 2][col] == '') {
+                                newRow = row + 2
+                                oldPiece = board[newRow][col]
+                                board[row][col] = ''
+                                board[newRow][col] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                }
+                                board[row][col] = piece
+                                board[newRow][col] = oldPiece
+                            }
+                        }
+                        newRow = row + 1
+                        newCol = col + 1
+                        if (col < 7 && board[newRow][newCol][0] == 'w') {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                if(newRow==7){
+                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }else{
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                        newRow = row + 1
+                        newCol = col - 1
+                        if (col > 0 && board[newRow][newCol][0] == 'w') {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                if(newRow==7){
+                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }else{
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                        if (lastMove.piece == 'wp' && lastMove.startPosition.row == 6 && lastMove.endPosition.row == row && row == 4) {
+                            newRow = row + 1
+                            if (lastMove.endPosition.col == (col - 1)) {
+                                newCol = col - 1
+                                oldPiece = board[newRow][newCol]
+                                board[row][col] = ''
+                                board[newRow][newCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, enPassant:true})
+                                }
+                                board[row][col] = piece
+                                board[newRow][newCol] = oldPiece
+                            } else if (lastMove.endPosition.col == (col + 1)) {
+                                newCol = col + 1
+                                oldPiece = board[newRow][newCol]
+                                board[row][col] = ''
+                                board[newRow][newCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, enPassant:true})
+                                }
+                                board[row][col] = piece
+                                board[newRow][newCol] = oldPiece
+                            }
+                        }                      
+                    }
+                } else if (piece[1] == 'r') { //Rook move
+                    let currRowTop = row - 1
+                    let currRowBottom = row + 1
+                    let currLeftCol = col - 1
+                    let currRightCol = col + 1
+                    let intersectTop = false
+                    let intersectBottom = false
+                    let intersectLeft = false
+                    let intersectRight = false
+
+                    while (currRowTop >= 0 && !intersectTop) {
+                        if (board[currRowTop][col][0] != color) {
+                            oldPiece = board[currRowTop][col]
+                            board[row][col] = ''
+                            board[currRowTop][col] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRowTop, col:col}})
+                            }
+                            board[row][col] = piece
+                            board[currRowTop][col] = oldPiece
+                            if (board[currRowTop][col] != '') {
+                                intersectTop = true
+                            }
+                        } else {
+                            intersectTop = true
+                        }
+                        currRowTop -= 1
+                    }
+
+                    while (currRowBottom <= 7 && !intersectBottom) {
+                        if (board[currRowBottom][col][0] != color) {
+                            oldPiece = board[currRowBottom][col]
+                            board[row][col] = ''
+                            board[currRowBottom][col] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRowBottom, col:col}})
+                            }
+                            board[row][col] = piece
+                            board[currRowBottom][col] = oldPiece
+                            if (board[currRowBottom][col] != '') {
+                                intersectBottom = true
+                            }
+                        } else {
+                            intersectBottom = true
+                        }
+                        currRowBottom += 1
+                    }
+
+                    while (currLeftCol >= 0 && !intersectLeft) {
+                        if (board[row][currLeftCol][0] != color) {
+                            oldPiece = board[row][currLeftCol]
+                            board[row][col] = ''
+                            board[row][currLeftCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currLeftCol}})
+                            }
+                            board[row][col] = piece
+                            board[row][currLeftCol] = oldPiece
+                            if (board[row][currLeftCol] != '') {
+                                intersectLeft = true
+                            }
+                        } else {
+                            intersectLeft = true
+                        }
+                        currLeftCol -= 1
+                    }
+
+                    while (currRightCol <= 7 && !intersectRight) {
+                        if (board[row][currRightCol][0] != color) {
+                            oldPiece = board[row][currRightCol]
+                            board[row][col] = ''
+                            board[row][currRightCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currRightCol}})
+                            }
+                            board[row][col] = piece
+                            board[row][currRightCol] = oldPiece
+                            if (board[row][currRightCol] != '') {
+                                intersectRight = true
+                            }
+                        } else {
+                            intersectRight = true
+                        }
+                        currRightCol += 1
+                    }
+                } else if (piece[1] == 'k' && piece[2] == 'n') { //Knight move
+
+                    if (row > 1) {
+                        newRow = row - 2
+                        newCol = col - 1
+                        if (col > 0 && board[newRow][newCol][0] != color) {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                        newRow = row - 2
+                        newCol = col + 1
+                        if (col < 7 && board[newRow][newCol][0] != color) {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                    }
+                    if (row > 0) {
+                        newRow = row - 1
+                        newCol = col - 2
+                        if (col > 1 && board[newRow][newCol][0] != color) {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                        newRow = row - 1
+                        newCol = col + 2
+                        if (col < 6 && board[newRow][newCol][0] != color) {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                    }
+                    if (row < 6) {
+                        newRow = row + 2
+                        newCol = col - 1
+                        if (col > 0 && board[newRow][newCol][0] != color) {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                        newRow = row + 2
+                        newCol = col + 1
+                        if (col < 7 && board[newRow][newCol][0] != color) {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                    }
+                    if (row < 7) {
+                        newRow = row + 1
+                        newCol = col - 2
+                        if (col > 1 && board[newRow][newCol][0] != color) {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                        newRow = row + 1
+                        newCol = col + 2
+                        if (col < 6 && board[newRow][newCol][0] != color) {
+                            oldPiece = board[newRow][newCol]
+                            board[row][col] = ''
+                            board[newRow][newCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][newCol] = oldPiece
+                        }
+                    }
+                } else if (piece[1] == 'b') { //Bishop move
+                    let currRow = row - 1
+                    let currLeftCol = col - 1
+                    let currRightCol = col + 1
+                    let intersectLeft = false
+                    let intersectRight = false
+                    while (currRow >= 0 && (!intersectLeft || !intersectRight)) {
+                        if (!intersectLeft && currLeftCol >= 0) {
+                            if (board[currRow][currLeftCol][0] != color) {
+                                oldPiece = board[currRow][currLeftCol]
+                                board[row][col] = ''
+                                board[currRow][currLeftCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][currLeftCol] = oldPiece
+                                if (board[currRow][currLeftCol] != '') {
+                                    intersectLeft = true
+                                } else {
+                                    currLeftCol -= 1
+                                }
+                            } else {
+                                intersectLeft = true
+                            }
+                        }
+                        if (!intersectRight && currRightCol <= 7) {
+                            if (board[currRow][currRightCol][0] != color) {
+                                oldPiece = board[currRow][currRightCol]
+                                board[row][col] = ''
+                                board[currRow][currRightCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][currRightCol] = oldPiece
+                                if (board[currRow][currRightCol] != '') {
+                                    intersectRight = true
+                                } else {
+                                    currRightCol += 1
+                                }
+                            } else {
+                                intersectRight = true
+                            }
+                        }
+                        currRow -= 1
+                    }
+                    currRow = row + 1
+                    currLeftCol = col - 1
+                    currRightCol = col + 1
+                    intersectLeft = false
+                    intersectRight = false
+                    while (currRow <= 7 && (!intersectLeft || !intersectRight)) {
+                        if (!intersectLeft && currLeftCol >= 0) {
+                            if (board[currRow][currLeftCol][0] != color) {
+                                oldPiece = board[currRow][currLeftCol]
+                                board[row][col] = ''
+                                board[currRow][currLeftCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][currLeftCol] = oldPiece
+                                if (board[currRow][currLeftCol] != '') {
+                                    intersectLeft = true
+                                } else {
+                                    currLeftCol -= 1
+                                }
+                            } else {
+                                intersectLeft = true
+                            }
+                        }
+                        if (!intersectRight && currRightCol <= 7) {
+                            if (board[currRow][currRightCol][0] != color) {
+                                oldPiece = board[currRow][currRightCol]
+                                board[row][col] = ''
+                                board[currRow][currRightCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][currRightCol] = oldPiece
+                                if (board[currRow][currRightCol] != '') {
+                                    intersectRight = true
+                                } else {
+                                    currRightCol += 1
+                                }
+                            } else {
+                                intersectRight = true
+                            }
+                        }
+                        currRow += 1
+                    }
+                } else if (piece[1] == 'q') { //Queen move
+                    //rook left and right moves
+                    let currLeftCol = col - 1
+                    let currRightCol = col + 1
+                    let intersectLeft = false
+                    let intersectRight = false
+
+                    while (currLeftCol >= 0 && !intersectLeft) {
+                        if (board[row][currLeftCol][0] != color) {
+                            oldPiece = board[row][currLeftCol]
+                            board[row][col] = ''
+                            board[row][currLeftCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currLeftCol}})
+                            }
+                            board[row][col] = piece
+                            board[row][currLeftCol] = oldPiece
+                            if (board[row][currLeftCol] != '') {
+                                intersectLeft = true
+                            }
+                        } else {
+                            intersectLeft = true
+                        }
+                        currLeftCol -= 1
+                    }
+
+                    while (currRightCol <= 7 && !intersectRight) {
+                        if (board[row][currRightCol][0] != color) {
+                            oldPiece = board[row][currRightCol]
+                            board[row][col] = ''
+                            board[row][currRightCol] = piece
+                            if (!chessCheckForMate(board, kingPosition, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currRightCol}})
+                            }
+                            board[row][col] = piece
+                            board[row][currRightCol] = oldPiece
+                            if (board[row][currRightCol] != '') {
+                                intersectRight = true
+                            }
+                        } else {
+                            intersectRight = true
+                        }
+                        currRightCol += 1
+                    }
+
+
+                    //Bishop style mvoes
+                    let currRow = row - 1
+                    currLeftCol = col - 1
+                    currRightCol = col + 1
+                    intersectLeft = false
+                    let intersectMiddle = false
+                    intersectRight = false
+                    while (currRow >= 0 && (!intersectLeft || !intersectMiddle || !intersectRight)) {
+                        if (!intersectLeft && currLeftCol >= 0) {
+                            if (board[currRow][currLeftCol][0] != color) {
+                                oldPiece = board[currRow][currLeftCol]
+                                board[row][col] = ''
+                                board[currRow][currLeftCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][currLeftCol] = oldPiece
+                                if (board[currRow][currLeftCol] != '') {
+                                    intersectLeft = true
+                                } else {
+                                    currLeftCol -= 1
+                                }
+                            } else {
+                                intersectLeft = true
+                            }
+                        }
+                        if (!intersectMiddle) {
+                            if (board[currRow][col][0] != color) {
+                                oldPiece = board[currRow][col]
+                                board[row][col] = ''
+                                board[currRow][col] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:col}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][col] = oldPiece
+                                if (board[currRow][col] != '') {
+                                    intersectMiddle = true
+                                }
+                            } else {
+                                intersectMiddle = true
+                            }
+                        }
+                        if (!intersectRight && currRightCol <= 7) {
+                            if (board[currRow][currRightCol][0] != color) {
+                                oldPiece = board[currRow][currRightCol]
+                                board[row][col] = ''
+                                board[currRow][currRightCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][currRightCol] = oldPiece
+                                if (board[currRow][currRightCol] != '') {
+                                    intersectRight = true
+                                } else {
+                                    currRightCol += 1
+                                }
+                            } else {
+                                intersectRight = true
+                            }
+                        }
+                        currRow -= 1
+                    }
+                    currRow = row + 1
+                    currLeftCol = col - 1
+                    currRightCol = col + 1
+                    intersectLeft = false
+                    intersectMiddle = false
+                    intersectRight = false
+                    while (currRow <= 7 && (!intersectLeft || !intersectMiddle || !intersectRight)) {
+                        if (!intersectLeft && currLeftCol >= 0) {
+                            if (board[currRow][currLeftCol][0] != color) {
+                                oldPiece = board[currRow][currLeftCol]
+                                board[row][col] = ''
+                                board[currRow][currLeftCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][currLeftCol] = oldPiece
+                                if (board[currRow][currLeftCol] != '') {
+                                    intersectLeft = true
+                                } else {
+                                    currLeftCol -= 1
+                                }
+                            } else {
+                                intersectLeft = true
+                            }
+                        }
+                        if (!intersectMiddle) {
+                            if (board[currRow][col][0] != color) {
+                                oldPiece = board[currRow][col]
+                                board[row][col] = ''
+                                board[currRow][col] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:col}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][col] = oldPiece
+                                if (board[currRow][col] != '') {
+                                    intersectMiddle = true
+                                }
+                            } else {
+                                intersectMiddle = true
+                            }
+                        }
+                        if (!intersectRight && currRightCol <= 7) {
+                            if (board[currRow][currRightCol][0] != color) {
+                                oldPiece = board[currRow][currRightCol]
+                                board[row][col] = ''
+                                board[currRow][currRightCol] = piece
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}})
+                                }
+                                board[row][col] = piece
+                                board[currRow][currRightCol] = oldPiece
+                                if (board[currRow][currRightCol] != '') {
+                                    intersectRight = true
+                                } else {
+                                    currRightCol += 1
+                                }
+                            } else {
+                                intersectRight = true
+                            }
+                        }
+                        currRow += 1
+                    }
+                } else if (piece[1] == 'k') { //King move
+                    //top row
+                    if (row > 0) {
+                        if (col > 0) {
+                            newRow = row - 1
+                            newCol = col - 1
+                            if (board[newRow][newCol][0] != color) {
+                                oldPiece = board[newRow][newCol]
+                                board[row][col] = ''
+                                board[newRow][newCol] = piece
+                                if (!chessCheckForMate(board, { row: newRow, col: newCol }, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }
+                                board[row][col] = piece
+                                board[newRow][newCol] = oldPiece
+                            }
+                        }
+                        newRow = row - 1
+                        if (board[newRow][col][0] != color) {
+                            oldPiece = board[newRow][col]
+                            board[row][col] = ''
+                            board[newRow][col] = piece
+                            if (!chessCheckForMate(board, { row: newRow, col: col }, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][col] = oldPiece
+                        }
+                        if (col < 7) {
+                            newRow = row - 1
+                            newCol = col + 1
+                            if (board[newRow][newCol][0] != color) {
+                                oldPiece = board[newRow][newCol]
+                                board[row][col] = ''
+                                board[newRow][newCol] = piece
+                                if (!chessCheckForMate(board, { row: newRow, col: newCol }, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }
+                                board[row][col] = piece
+                                board[newRow][newCol] = oldPiece
+                            }
+                        }
+                    }
+
+                    //Middle row
+                    if (col > 0) {
+                        newCol = col - 1
+                        if (board[row][newCol][0] != color) {
+                            oldPiece = board[row][newCol]
+                            board[row][col] = ''
+                            board[row][newCol] = piece
+                            if (!chessCheckForMate(board, { row: row, col: newCol }, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[row][newCol] = oldPiece
+                        }
+                    }
+                    if (col < 7) {
+                        newCol = col + 1
+                        if (board[row][newCol][0] != color) {
+                            oldPiece = board[row][newCol]
+                            board[row][col] = ''
+                            board[row][newCol] = piece
+                            if (!chessCheckForMate(board, { row: row, col: newCol }, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[row][newCol] = oldPiece
+                        }
+                    }
+
+                    //Bottom row
+                    if (row < 7) {
+                        newRow = row + 1
+                        if (col > 0) {
+                            newCol = col - 1
+                            if (board[newRow][newCol][0] != color) {
+                                oldPiece = board[newRow][newCol]
+                                board[row][col] = ''
+                                board[newRow][newCol] = piece
+                                if (!chessCheckForMate(board, { row: newRow, col: newCol }, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }
+                                board[row][col] = piece
+                                board[newRow][newCol] = oldPiece
+                            }
+                        }
+                        if (board[newRow][col][0] != color) {
+                            oldPiece = board[newRow][col]
+                            board[row][col] = ''
+                            board[newRow][col] = piece
+                            if (!chessCheckForMate(board, { row: newRow, col: col }, color)) {
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                            }
+                            board[row][col] = piece
+                            board[newRow][col] = oldPiece
+                        }
+                        if (col < 7) {
+                            newCol = col + 1
+                            if (board[newRow][newCol][0] != color) {
+                                oldPiece = board[newRow][newCol]
+                                board[row][col] = ''
+                                board[newRow][newCol] = piece
+                                if (!chessCheckForMate(board, { row: newRow, col: newCol }, color)) {
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                }
+                                board[row][col] = piece
+                                board[newRow][newCol] = oldPiece
+                            }
+                        }
+                    }
+
+                    //Castle
+                    if (king) {
+                        if (leftRook) {
+                            if (board[row][col - 1] == '' && board[row][col - 2] == '' && board[row][col - 3] == '') {
+                                //Check for check only on first two spots and curr
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    oldPiece = board[row][col - 1]
+                                    board[row][col] = ''
+                                    board[row][col - 1] = piece
+                                    if (!chessCheckForMate(board, { row: row, col: col - 1 }, color)) {
+                                        board[row][col - 1] = ''
+                                        board[row][col - 2] = piece
+                                        if (!chessCheckForMate(board, { row: row, col: col - 2 }, color)) {
+                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, castle:true})
+                                        }
+                                    }
+                                    board[row][col] = piece
+                                    board[row][col - 1] = oldPiece
+                                    board[row][col - 2] = ''
+                                }
+                            }
+                        }
+                        if (rightRook) {
+                            if (board[row][col + 1] == '' && board[row][col + 2] == '') {
+                                //Check for check on both spots and curr
+                                if (!chessCheckForMate(board, kingPosition, color)) {
+                                    oldPiece = board[row][col + 1]
+                                    board[row][col] = ''
+                                    board[row][col + 1] = piece
+                                    if (!chessCheckForMate(board, { row: row, col: col + 1 }, color)) {
+                                        board[row][col + 1] = ''
+                                        board[row][col + 2] = piece
+                                        if (!chessCheckForMate(board, { row: row, col: col + 2 }, color)) {
+                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, castle:true})
+                                        }
+                                    }
+                                    board[row][col] = piece
+                                    board[row][col + 1] = oldPiece
+                                    board[row][col + 2] = ''
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+    })
+
+    return allAvailableChessMoves
 }
 
 /*********************************************************Raster Caster ***************************/
