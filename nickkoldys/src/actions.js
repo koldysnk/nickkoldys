@@ -2080,7 +2080,7 @@ export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLe
 }
 
 function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition) {
-    let maxLevel = 1
+    let maxLevel = 3
     let { color, isWhite } = turn % 2 == 0 ? { color: 'w', isWhite: true } : { color: 'b', isWhite: false }
     let allAvailableChessMoves = []
 
@@ -2224,7 +2224,7 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
 
     let chosenMove = maxMove[Math.floor(Math.random() * maxMove.length)]
 
-    return {from:{piece:chosenMove.piece, position:chosenMove.from},to:chosenMove.to,result:0,score:maxScore}
+    return {from:{piece:chosenMove.piece, position:chosenMove.from},to:{row:chosenMove.to.row, col:chosenMove.to.col,enPassant:chosenMove.enPassant,castle:chosenMove.castle},result:0,moveScore:maxScore}
 }
 
 function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, king, leftRook, rightRook, kingPosition) {
