@@ -2080,7 +2080,7 @@ export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLe
 }
 
 function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition) {
-    let maxLevel = 2
+    let maxLevel = 1
     let { color, isWhite } = turn % 2 == 0 ? { color: 'w', isWhite: true } : { color: 'b', isWhite: false }
     let allAvailableChessMoves = []
 
@@ -2122,8 +2122,12 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
         let oldPiece = board[move.to.row][move.to.col]
 
         //Adjust score
-        currScore -= (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[move.from.row][move.from.col])
-            + (basicPieceValue.get(move.piece) + pieceMultiplier.get(move.piece)[move.to.row][move.to.col])
+        let a = basicPieceValue.get(piece)
+        let b = pieceMultiplier.get(piece)[move.from.row][move.from.col]
+        currScore -= (a + b)
+        let c = basicPieceValue.get(move.piece)
+        let d = pieceMultiplier.get(move.piece)[move.to.row][move.to.col]
+        currScore += (c + d)
         
         if(move.enPassant){
             currScore -= (basicPieceValue.get(`${color}p`) + pieceMultiplier.get(`${color}p`)[move.from.row][move.to.col])
@@ -2160,14 +2164,14 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
 
         const goDeeper = () => {
             if(isWhite){
-                let {newKing,newKingPosition} = piece == 'wk' ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:whiteKing,newKingPosition:whiteKingPosition}
+                let {newKing,newKingPosition} = (piece == 'wk') ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:whiteKing,newKingPosition:whiteKingPosition}
                 let newLeftRook = whiteLeftRook && board[7][0]=='wr'
                 let newRightRook = whiteLeftRook && board[7][7]=='wr'
     
                 let { from, to, result, moveScore } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, startPosition:move.from, endPosition:move.to}, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
                 return { from, to, result, moveScore }
             }else{
-                let {newKing,newKingPosition} = piece == 'bk' ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:blackKing,newKingPosition:blackKingPosition}
+                let {newKing,newKingPosition} = (piece == 'bk') ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:blackKing,newKingPosition:blackKingPosition}
                 let newLeftRook = whiteLeftRook && board[7][0]=='br'
                 let newRightRook = whiteLeftRook && board[7][7]=='br'
     
@@ -2332,10 +2336,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[newRow][col] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
                                 if(newRow==7){
-                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:col}})
-                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:col}})
-                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:col}})
-                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'bq',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'br',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'bb',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    allAvailableChessMoves.push({piece:'bkn',from:{row:row, col:col}, to:{row:newRow, col:col}})
                                 }else{
                                     allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
                                 }
@@ -2362,10 +2366,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
                                 if(newRow==7){
-                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'bq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'br',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'bb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'bkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
                                 }else{
                                     allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
                                 }
@@ -2381,10 +2385,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
                                 if(newRow==7){
-                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'bq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'br',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'bb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    allAvailableChessMoves.push({piece:'bkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
                                 }else{
                                     allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
                                 }
@@ -2879,8 +2883,8 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                 } else if (piece[1] == 'k') { //King move
                     //top row
                     if (row > 0) {
+                        newRow = row - 1
                         if (col > 0) {
-                            newRow = row - 1
                             newCol = col - 1
                             if (board[newRow][newCol][0] != color) {
                                 oldPiece = board[newRow][newCol]
@@ -2893,19 +2897,17 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[newRow][newCol] = oldPiece
                             }
                         }
-                        newRow = row - 1
                         if (board[newRow][col][0] != color) {
                             oldPiece = board[newRow][col]
                             board[row][col] = ''
                             board[newRow][col] = piece
                             if (!chessCheckForMate(board, { row: newRow, col: col }, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
                             }
                             board[row][col] = piece
                             board[newRow][col] = oldPiece
                         }
                         if (col < 7) {
-                            newRow = row - 1
                             newCol = col + 1
                             if (board[newRow][newCol][0] != color) {
                                 oldPiece = board[newRow][newCol]
@@ -2928,7 +2930,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[row][newCol] = piece
                             if (!chessCheckForMate(board, { row: row, col: newCol }, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:newCol}})
                             }
                             board[row][col] = piece
                             board[row][newCol] = oldPiece
@@ -2941,7 +2943,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[row][newCol] = piece
                             if (!chessCheckForMate(board, { row: row, col: newCol }, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:newCol}})
                             }
                             board[row][col] = piece
                             board[row][newCol] = oldPiece
@@ -2969,7 +2971,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][col] = piece
                             if (!chessCheckForMate(board, { row: newRow, col: col }, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
                             }
                             board[row][col] = piece
                             board[newRow][col] = oldPiece
@@ -3002,7 +3004,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                         board[row][col - 1] = ''
                                         board[row][col - 2] = piece
                                         if (!chessCheckForMate(board, { row: row, col: col - 2 }, color)) {
-                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, castle:true})
+                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:col-2}, castle:true})
                                         }
                                     }
                                     board[row][col] = piece
@@ -3022,7 +3024,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                         board[row][col + 1] = ''
                                         board[row][col + 2] = piece
                                         if (!chessCheckForMate(board, { row: row, col: col + 2 }, color)) {
-                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, castle:true})
+                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:col+2}, castle:true})
                                         }
                                     }
                                     board[row][col] = piece
