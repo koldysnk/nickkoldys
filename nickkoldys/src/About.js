@@ -15,6 +15,7 @@ export function About(props) {
             <p>Loading icon by <a href="https://freeicons.io/profile/2257">www.wishforge.games</a> on <a href="https://freeicons.io">freeicons.io</a> </p>
             <p>Dictionary icon by <a href="https://freeicons.io/profile/2257">www.wishforge.games</a> on <a href="https://freeicons.io">freeicons.io</a></p>
             <p>Robot icon by <a href="https://freeicons.io/profile/726">Free Preloaders</a> on <a href="https://freeicons.io">freeicons.io</a></p>
+            <p><a href='https://trello.com/b/CHd5DDcg/nick-koldys-personal-site'>View Trello</a></p>
         </div>                     
     );
 }
