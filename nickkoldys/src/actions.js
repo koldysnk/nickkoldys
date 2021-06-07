@@ -2172,8 +2172,8 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
                 return { from, to, result, moveScore }
             }else{
                 let {newKing,newKingPosition} = (piece == 'bk') ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:blackKing,newKingPosition:blackKingPosition}
-                let newLeftRook = whiteLeftRook && board[7][0]=='br'
-                let newRightRook = whiteLeftRook && board[7][7]=='br'
+                let newLeftRook = blackLeftRook && board[7][0]=='br'
+                let newRightRook = blackLeftRook && board[7][7]=='br'
     
                 let { from, to, result, moveScore } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, startPosition:move.from, endPosition:move.to},whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition )
                 return { from, to, result, moveScore }
