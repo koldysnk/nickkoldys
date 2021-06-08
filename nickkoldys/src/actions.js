@@ -651,9 +651,9 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                 board[row][col] = piece
                 board[newRow][newCol] = oldPiece
             }
-            if (lastMove.piece == 'wp' && lastMove.startPosition.row == 6 && lastMove.endPosition.row == row && row == 4) {
+            if (lastMove.piece == 'wp' && lastMove.from.row == 6 && lastMove.to.row == row && row == 4) {
                 newRow = row + 1
-                if (lastMove.endPosition.col == (col - 1)) {
+                if (lastMove.to.col == (col - 1)) {
                     newCol = col - 1
                     oldPiece = board[newRow][newCol]
                     board[row][col] = ''
@@ -663,7 +663,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                     }
                     board[row][col] = piece
                     board[newRow][newCol] = oldPiece
-                } else if (lastMove.endPosition.col == (col + 1)) {
+                } else if (lastMove.to.col == (col + 1)) {
                     newCol = col + 1
                     oldPiece = board[newRow][newCol]
                     board[row][col] = ''
@@ -721,9 +721,9 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                 board[row][col] = piece
                 board[newRow][newCol] = oldPiece
             }
-            if (lastMove.piece == 'bp' && lastMove.startPosition.row == 1 && lastMove.endPosition.row == row && row == 3) {
+            if (lastMove.piece == 'bp' && lastMove.from.row == 1 && lastMove.to.row == row && row == 3) {
                 newRow = row - 1
-                if (lastMove.endPosition.col == (col - 1)) {
+                if (lastMove.to.col == (col - 1)) {
                     newCol = col - 1
                     oldPiece = board[newRow][newCol]
                     board[row][col] = ''
@@ -733,7 +733,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
                     }
                     board[row][col] = piece
                     board[newRow][newCol] = oldPiece
-                } else if (lastMove.endPosition.col == (col + 1)) {
+                } else if (lastMove.to.col == (col + 1)) {
                     newCol = col + 1
                     oldPiece = board[newRow][newCol]
                     board[row][col] = ''
@@ -1422,13 +1422,13 @@ export function chessMovePiece(board, from, to, turn) {
         dispatch(chessSetBoard(board))
         dispatch(chessResetActivePiece())
         dispatch(chessSetAvailableMoves(new Map()))
-        dispatch(chessSetLastMove({ piece: from.piece, startPosition: { row: from.position.row, col: from.position.col }, endPosition: { row: to.row, col: to.col } }))
+        dispatch(chessSetLastMove({ piece: from.piece, from: { row: from.position.row, col: from.position.col }, to: { row: to.row, col: to.col } }))
     }
 }
 
 export function chessPromotePiece(board, lastMove, newPiece, turn) {
     return dispatch => {
-        board[lastMove.endPosition.row][lastMove.endPosition.col] = newPiece
+        board[lastMove.to.row][lastMove.to.col] = newPiece
         dispatch(setTurn(turn + 1))
         dispatch(chessSetBoard(board))
         dispatch(setPromotionActive(false))
@@ -1704,7 +1704,7 @@ export function chessResetGame() {
         ['', '', '', '', '', '', '', ''],
         ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
         ['wr', 'wkn', 'wb', 'wq', 'wk', 'wb', 'wkn', 'wr']]))
-        dispatch(chessSetLastMove({ piece: '', startPosition: { row: -1, col: -1 }, endPosition: { row: -1, col: -1 } }))
+        dispatch(chessSetLastMove({ piece: '', from: { row: -1, col: -1 }, to: { row: -1, col: -1 } }))
         dispatch(setWhiteKingAvailable(true))
         dispatch(setBlackKingAvailable(true))
         dispatch(setLeftWhiteRookAvailable(true))
@@ -1873,7 +1873,15 @@ function getBasicPositionEvaluation(board) {
 }
 
 const pieceMultiplier = new Map()
-pieceMultiplier.set('', 0)
+pieceMultiplier.set('',
+    [[0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0]])
 pieceMultiplier.set('wp',
     [[0, 0, 0, 0, 0, 0, 0, 0],
     [5, 5, 5, 5, 5, 5, 5, 5],
@@ -2065,7 +2073,8 @@ export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLe
     return dispatch => {
         dispatch(startWaiting())
         let score = getBasicWeightedPositionEvaluation(board)
-        let { from, to, result, moveScore } = getMoveUsingBasicMinMaxNoOptimization(0, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+        let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxNoOptimization(0, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+        console.log(`Visited ${nodeCount} nodes`)
         if (result == 1) {
             dispatch(tttUpdateResult(true, 1))
         } else if (result == 2) {
@@ -2078,6 +2087,7 @@ export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLe
         dispatch(stopWaiting())
     }
 }
+
 
 function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition) {
     let maxLevel = 3
@@ -2095,26 +2105,54 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
     if (allAvailableChessMoves.length == 0) {
         if (isWhite) {
             if (chessCheckForMate(board, whiteKingPosition, color)) {
-                return { from: undefined, to: undefined, result: 2, moveScore: -10000 }
+                return { from: undefined, to: undefined, result: 2, moveScore: -10000, nodeCount:0 }
             } else {
-                return { from: undefined, to: undefined, result: 3, moveScore: 0 }
+                return { from: undefined, to: undefined, result: 3, moveScore: 0 , nodeCount:0 }
             }
         } else {
             if (chessCheckForMate(board, blackKingPosition, color)) {
-                return { from: undefined, to: undefined, result: 1, moveScore: 10000 }
+                return { from: undefined, to: undefined, result: 1, moveScore: 10000 , nodeCount:0 }
             } else {
-                return { from: undefined, to: undefined, result: 3, moveScore: 0 }
+                return { from: undefined, to: undefined, result: 3, moveScore: 0, nodeCount:0  }
             }
         }
     }
 
     if(level>=maxLevel){
-        return { from: undefined, to: undefined, result: 0, moveScore: score }
+        return { from: undefined, to: undefined, result: 0, moveScore: score, nodeCount:0  }
     }
 
     let maxMove = []
     let maxScore = 0
     let started = false
+    let nodesVisited=0
+
+    //least impact to greatest
+    // allAvailableChessMoves.sort((a,b) => { 
+    //     return Math.abs(a.scoreDelta)-Math.abs(b.scoreDelta)
+    // })
+
+    //complex sort least impact to greatest with takes at start
+    allAvailableChessMoves.sort((a,b) => {
+        let aD = Math.abs(a.scoreDelta)
+        let bD = Math.abs(b.scoreDelta)
+        if(aD>5){
+            if(bD>5){
+                return aD-bD
+            }else{
+                return bD-aD
+            }
+        }
+        if(bD>5){
+            return bD-aD
+        }
+        return aD-bD
+    })
+
+    //greatest impact to least
+    // allAvailableChessMoves.sort((a,b) => { 
+    //     return Math.abs(b.scoreDelta)-Math.abs(a.scoreDelta)
+    // })
 
     allAvailableChessMoves.forEach((move,i) => {
         let currScore = score
@@ -2130,7 +2168,7 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
         currScore += (c + d)
         
         if(move.enPassant){
-            currScore -= (basicPieceValue.get(`${color}p`) + pieceMultiplier.get(`${color}p`)[move.from.row][move.to.col])
+            currScore -= (basicPieceValue.get(`${isWhite? 'b' : 'w'}p`) + pieceMultiplier.get(`${isWhite? 'b' : 'w'}p`)[move.from.row][move.to.col])
         }else if(move.castle){
             if(move.to.col>move.from.col){
                 currScore -= (basicPieceValue.get(`${color}r`) + pieceMultiplier.get(`${color}r`)[isWhite ? 7 : 0][7])
@@ -2143,6 +2181,13 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
 
         if (oldPiece != '') {
             currScore -= (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[move.to.row][move.to.col])
+        }
+
+        let currScore2 = score + move.scoreDelta
+
+        if(currScore2 != currScore){
+            console.log('Uh Oh. Updated score does not match original on move:')
+            console.log(move)
         }
         
         //Simulate move
@@ -2166,21 +2211,23 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
             if(isWhite){
                 let {newKing,newKingPosition} = (piece == 'wk') ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:whiteKing,newKingPosition:whiteKingPosition}
                 let newLeftRook = whiteLeftRook && board[7][0]=='wr'
-                let newRightRook = whiteLeftRook && board[7][7]=='wr'
+                let newRightRook = whiteRightRook && board[7][7]=='wr'
     
-                let { from, to, result, moveScore } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, startPosition:move.from, endPosition:move.to}, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
-                return { from, to, result, moveScore }
+                let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, from:move.from, to:move.to}, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+                return { from, to, result, moveScore, nodeCount  }
             }else{
                 let {newKing,newKingPosition} = (piece == 'bk') ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:blackKing,newKingPosition:blackKingPosition}
                 let newLeftRook = blackLeftRook && board[7][0]=='br'
-                let newRightRook = blackLeftRook && board[7][7]=='br'
+                let newRightRook = blackRightRook && board[7][7]=='br'
     
-                let { from, to, result, moveScore } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, startPosition:move.from, endPosition:move.to},whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition )
-                return { from, to, result, moveScore }
+                let { from, to, result, moveScore, nodeCount  } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, from:move.from, to:move.to},whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition )
+                return { from, to, result, moveScore, nodeCount  }
             }
         }
 
-        let { from, to, result, moveScore } = goDeeper()
+        let { from, to, result, moveScore, nodeCount } = goDeeper()
+
+        nodesVisited += 1 + nodeCount
 
         //Undo simulated move
         board[move.from.row][move.from.col] = piece
@@ -2224,7 +2271,7 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
 
     let chosenMove = maxMove[Math.floor(Math.random() * maxMove.length)]
 
-    return {from:{piece:chosenMove.piece, position:chosenMove.from},to:{row:chosenMove.to.row, col:chosenMove.to.col,enPassant:chosenMove.enPassant,castle:chosenMove.castle},result:0,moveScore:maxScore}
+    return {from:{piece:chosenMove.piece, position:chosenMove.from},to:{row:chosenMove.to.row, col:chosenMove.to.col,enPassant:chosenMove.enPassant,castle:chosenMove.castle},result:0,moveScore:maxScore, nodeCount:nodesVisited}
 }
 
 function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, king, leftRook, rightRook, kingPosition) {
@@ -2235,6 +2282,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                 let oldPiece = ''
                 let newRow = row
                 let newCol = col
+                let scoreDelta = 0
 
                 if (piece[1] == 'p') { //Pawn move
                     if (isWhite) {
@@ -2245,12 +2293,25 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[newRow][col] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
                                 if(newRow==0){
-                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:col}})
-                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:col}})
-                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:col}})
-                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    scoreDelta = (basicPieceValue.get('wq')+pieceMultiplier.get('wq')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
+                        
+                                    scoreDelta = (basicPieceValue.get('wr')+pieceMultiplier.get('wr')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('wb')+pieceMultiplier.get('wb')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('wkn')+pieceMultiplier.get('wkn')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
                                 }else{
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
                                 }
                             }
                             board[row][col] = piece
@@ -2261,7 +2322,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[newRow][col] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][col])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[newRow][col] = oldPiece
@@ -2275,12 +2339,30 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
                                 if(newRow==0){
-                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (basicPieceValue.get('wq')+pieceMultiplier.get('wq')[newRow][newCol])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                        
+                                    scoreDelta = (basicPieceValue.get('wr')+pieceMultiplier.get('wr')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('wb')+pieceMultiplier.get('wb')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('wkn')+pieceMultiplier.get('wkn')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }else{
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }
                             }
                             board[row][col] = piece
@@ -2293,37 +2375,60 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
                                 if(newRow==0){
-                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (basicPieceValue.get('wq')+pieceMultiplier.get('wq')[newRow][newCol])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'wq',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                        
+                                    scoreDelta = (basicPieceValue.get('wr')+pieceMultiplier.get('wr')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'wr',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('wb')+pieceMultiplier.get('wb')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'wb',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('wkn')+pieceMultiplier.get('wkn')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'wkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }else{
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
                         }
-                        if (lastMove.piece == 'bp' && lastMove.startPosition.row == 1 && lastMove.endPosition.row == row && row == 3) {
+                        if (lastMove.piece == 'bp' && lastMove.from.row == 1 && lastMove.to.row == row && row == 3) {
                             newRow = row - 1
-                            if (lastMove.endPosition.col == (col - 1)) {
+                            if (lastMove.to.col == (col - 1)) {
                                 newCol = col - 1
                                 oldPiece = board[newRow][newCol]
                                 board[row][col] = ''
                                 board[newRow][newCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, enPassant:true})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get('bp')+pieceMultiplier.get('bp')[row][newCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta, enPassant:true})
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
-                            } else if (lastMove.endPosition.col == (col + 1)) {
+                            } else if (lastMove.to.col == (col + 1)) {
                                 newCol = col + 1
                                 oldPiece = board[newRow][newCol]
                                 board[row][col] = ''
                                 board[newRow][newCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, enPassant:true})
-                                }
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get('bp')+pieceMultiplier.get('bp')[row][newCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta, enPassant:true})                                }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
                             }
@@ -2335,13 +2440,26 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][col] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                if(newRow==7){
-                                    allAvailableChessMoves.push({piece:'bq',from:{row:row, col:col}, to:{row:newRow, col:col}})
-                                    allAvailableChessMoves.push({piece:'br',from:{row:row, col:col}, to:{row:newRow, col:col}})
-                                    allAvailableChessMoves.push({piece:'bb',from:{row:row, col:col}, to:{row:newRow, col:col}})
-                                    allAvailableChessMoves.push({piece:'bkn',from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                if(newRow==0){
+                                    scoreDelta = (basicPieceValue.get('bq')+pieceMultiplier.get('bq')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:'bq',from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
+                        
+                                    scoreDelta = (basicPieceValue.get('br')+pieceMultiplier.get('br')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:'br',from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('bb')+pieceMultiplier.get('bb')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:'bb',from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('bkn')+pieceMultiplier.get('bkn')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:'bkn',from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
                                 }else{
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
                                 }
                             }
                             board[row][col] = piece
@@ -2352,7 +2470,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[newRow][col] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][col])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[newRow][col] = oldPiece
@@ -2365,13 +2486,31 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                if(newRow==7){
-                                    allAvailableChessMoves.push({piece:'bq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'br',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'bb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'bkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                if(newRow==0){
+                                    scoreDelta = (basicPieceValue.get('bq')+pieceMultiplier.get('bq')[newRow][newCol])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'bq',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                        
+                                    scoreDelta = (basicPieceValue.get('br')+pieceMultiplier.get('br')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'br',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('bb')+pieceMultiplier.get('bb')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'bb',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('bkn')+pieceMultiplier.get('bkn')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'bkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }else{
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }
                             }
                             board[row][col] = piece
@@ -2384,37 +2523,61 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                if(newRow==7){
-                                    allAvailableChessMoves.push({piece:'bq',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'br',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'bb',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
-                                    allAvailableChessMoves.push({piece:'bkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                if(newRow==0){
+                                    scoreDelta = (basicPieceValue.get('bq')+pieceMultiplier.get('bq')[newRow][newCol])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'bq',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                        
+                                    scoreDelta = (basicPieceValue.get('br')+pieceMultiplier.get('br')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'br',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('bb')+pieceMultiplier.get('bb')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'bb',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
+                                    
+                                    scoreDelta = (basicPieceValue.get('bkn')+pieceMultiplier.get('bkn')[newRow][col])
+                                        -(basicPieceValue.get(piece)+pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:'bkn',from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }else{
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
                         }
-                        if (lastMove.piece == 'wp' && lastMove.startPosition.row == 6 && lastMove.endPosition.row == row && row == 4) {
+                        if (lastMove.piece == 'wp' && lastMove.from.row == 6 && lastMove.to.row == row && row == 4) {
                             newRow = row + 1
-                            if (lastMove.endPosition.col == (col - 1)) {
+                            if (lastMove.to.col == (col - 1)) {
                                 newCol = col - 1
                                 oldPiece = board[newRow][newCol]
                                 board[row][col] = ''
                                 board[newRow][newCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, enPassant:true})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get('wp')+pieceMultiplier.get('wp')[row][newCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta, enPassant:true}) 
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
-                            } else if (lastMove.endPosition.col == (col + 1)) {
+                            } else if (lastMove.to.col == (col + 1)) {
                                 newCol = col + 1
                                 oldPiece = board[newRow][newCol]
                                 board[row][col] = ''
                                 board[newRow][newCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, enPassant:true})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get('wp')+pieceMultiplier.get('wp')[row][newCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta, enPassant:true})     
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -2437,7 +2600,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[currRowTop][col] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRowTop, col:col}})
+                                scoreDelta = (pieceMultiplier.get(piece)[currRowTop][col])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRowTop][col])                            
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRowTop, col:col}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[currRowTop][col] = oldPiece
@@ -2456,7 +2622,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[currRowBottom][col] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRowBottom, col:col}})
+                                scoreDelta = (pieceMultiplier.get(piece)[currRowBottom][col])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRowBottom][col])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRowBottom, col:col}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[currRowBottom][col] = oldPiece
@@ -2475,7 +2644,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[row][currLeftCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currLeftCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[row][currLeftCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[row][currLeftCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currLeftCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[row][currLeftCol] = oldPiece
@@ -2494,7 +2666,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[row][currRightCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currRightCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[row][currRightCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[row][currRightCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currRightCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[row][currRightCol] = oldPiece
@@ -2516,7 +2691,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2528,7 +2706,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2542,7 +2723,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2554,7 +2738,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2568,7 +2755,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2580,7 +2770,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2594,7 +2787,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2606,7 +2802,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][newCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2625,7 +2824,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][currLeftCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][currLeftCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][currLeftCol])  
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][currLeftCol] = oldPiece
@@ -2644,7 +2846,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][currRightCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][currRightCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][currRightCol])  
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][currRightCol] = oldPiece
@@ -2671,7 +2876,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][currLeftCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][currLeftCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][currLeftCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][currLeftCol] = oldPiece
@@ -2690,7 +2898,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][currRightCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][currRightCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][currRightCol])
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][currRightCol] = oldPiece
@@ -2718,7 +2929,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[row][currLeftCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currLeftCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[row][currLeftCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[row][currLeftCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currLeftCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[row][currLeftCol] = oldPiece
@@ -2737,7 +2951,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[row][currRightCol] = piece
                             if (!chessCheckForMate(board, kingPosition, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currRightCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[row][currRightCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[row][currRightCol])  
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:currRightCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[row][currRightCol] = oldPiece
@@ -2765,7 +2982,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][currLeftCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][currLeftCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][currLeftCol])  
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][currLeftCol] = oldPiece
@@ -2784,7 +3004,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][col] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:col}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][col])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][col]) 
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:col}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][col] = oldPiece
@@ -2801,7 +3024,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][currRightCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][currRightCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][currRightCol]) 
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][currRightCol] = oldPiece
@@ -2829,7 +3055,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][currLeftCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][currLeftCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][currLeftCol]) 
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currLeftCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][currLeftCol] = oldPiece
@@ -2848,7 +3077,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][col] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:col}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][col])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][col]) 
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:col}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][col] = oldPiece
@@ -2865,7 +3097,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[currRow][currRightCol] = piece
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[currRow][currRightCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[currRow][currRightCol]) 
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:currRow, col:currRightCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[currRow][currRightCol] = oldPiece
@@ -2891,7 +3126,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[newRow][newCol] = piece
                                 if (!chessCheckForMate(board, { row: newRow, col: newCol }, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol]) 
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -2902,7 +3140,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][col] = piece
                             if (!chessCheckForMate(board, { row: newRow, col: col }, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][col]) 
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][col] = oldPiece
@@ -2914,7 +3155,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[newRow][newCol] = piece
                                 if (!chessCheckForMate(board, { row: newRow, col: newCol }, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol]) 
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -2930,7 +3174,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[row][newCol] = piece
                             if (!chessCheckForMate(board, { row: row, col: newCol }, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[row][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[row][newCol]) 
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[row][newCol] = oldPiece
@@ -2943,7 +3190,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[row][newCol] = piece
                             if (!chessCheckForMate(board, { row: row, col: newCol }, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:newCol}})
+                                scoreDelta = (pieceMultiplier.get(piece)[row][newCol])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[row][newCol]) 
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:newCol}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[row][newCol] = oldPiece
@@ -2960,7 +3210,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[newRow][newCol] = piece
                                 if (!chessCheckForMate(board, { row: newRow, col: newCol }, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol]) 
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -2971,7 +3224,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                             board[row][col] = ''
                             board[newRow][col] = piece
                             if (!chessCheckForMate(board, { row: newRow, col: col }, color)) {
-                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}})
+                                scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
+                                    -(pieceMultiplier.get(piece)[row][col])
+                                    -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][col]) 
+                                allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:col}, scoreDelta:scoreDelta})
                             }
                             board[row][col] = piece
                             board[newRow][col] = oldPiece
@@ -2983,7 +3239,10 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 board[row][col] = ''
                                 board[newRow][newCol] = piece
                                 if (!chessCheckForMate(board, { row: newRow, col: newCol }, color)) {
-                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}})
+                                    scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
+                                        -(pieceMultiplier.get(piece)[row][col])
+                                        -(basicPieceValue.get(oldPiece)+pieceMultiplier.get(oldPiece)[newRow][newCol]) 
+                                    allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:newRow, col:newCol}, scoreDelta:scoreDelta})
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -2994,42 +3253,48 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                     //Castle
                     if (king) {
                         if (leftRook) {
-                            if (board[row][col - 1] == '' && board[row][col - 2] == '' && board[row][col - 3] == '') {
+                            if (board[row][3] == '' && board[row][2] == '' && board[row][1] == '') {
                                 //Check for check only on first two spots and curr
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    oldPiece = board[row][col - 1]
                                     board[row][col] = ''
-                                    board[row][col - 1] = piece
-                                    if (!chessCheckForMate(board, { row: row, col: col - 1 }, color)) {
-                                        board[row][col - 1] = ''
-                                        board[row][col - 2] = piece
-                                        if (!chessCheckForMate(board, { row: row, col: col - 2 }, color)) {
-                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:col-2}, castle:true})
+                                    board[row][3] = piece
+                                    if (!chessCheckForMate(board, { row: row, col: 3 }, color)) {
+                                        board[row][3] = ''
+                                        board[row][2] = piece
+                                        if (!chessCheckForMate(board, { row: row, col: 2 }, color)) {
+                                            scoreDelta = (pieceMultiplier.get(piece)[row][2])
+                                                -(pieceMultiplier.get(piece)[row][col])
+                                                -(pieceMultiplier.get(`${color}r`)[row][0]) 
+                                                +(pieceMultiplier.get(`${color}r`)[row][3]) 
+                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:2}, scoreDelta:scoreDelta, castle:true})
                                         }
                                     }
                                     board[row][col] = piece
-                                    board[row][col - 1] = oldPiece
-                                    board[row][col - 2] = ''
+                                    board[row][3] = ''
+                                    board[row][2] = ''
                                 }
                             }
                         }
                         if (rightRook) {
-                            if (board[row][col + 1] == '' && board[row][col + 2] == '') {
+                            if (board[row][5] == '' && board[row][6] == '') {
                                 //Check for check on both spots and curr
                                 if (!chessCheckForMate(board, kingPosition, color)) {
-                                    oldPiece = board[row][col + 1]
                                     board[row][col] = ''
-                                    board[row][col + 1] = piece
-                                    if (!chessCheckForMate(board, { row: row, col: col + 1 }, color)) {
-                                        board[row][col + 1] = ''
-                                        board[row][col + 2] = piece
-                                        if (!chessCheckForMate(board, { row: row, col: col + 2 }, color)) {
-                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:col+2}, castle:true})
+                                    board[row][5] = piece
+                                    if (!chessCheckForMate(board, { row: row, col: 5 }, color)) {
+                                        board[row][5] = ''
+                                        board[row][6] = piece
+                                        if (!chessCheckForMate(board, { row: row, col: 6 }, color)) {
+                                            scoreDelta = (pieceMultiplier.get(piece)[row][6])
+                                                -(pieceMultiplier.get(piece)[row][col])
+                                                -(pieceMultiplier.get(`${color}r`)[row][7]) 
+                                                +(pieceMultiplier.get(`${color}r`)[row][5]) 
+                                            allAvailableChessMoves.push({piece:piece,from:{row:row, col:col}, to:{row:row, col:6}, scoreDelta:scoreDelta, castle:true})
                                         }
                                     }
                                     board[row][col] = piece
-                                    board[row][col + 1] = oldPiece
-                                    board[row][col + 2] = ''
+                                    board[row][5] = ''
+                                    board[row][6] = ''
                                 }
                             }
                         }
@@ -3041,6 +3306,258 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
 
     return allAvailableChessMoves
 }
+
+// export function chessNullMoveHeuristicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition) {
+//     return dispatch => {
+//         dispatch(startWaiting())
+//         let score = getBasicWeightedPositionEvaluation(board)
+//         let { from, to, result, moveScore, nodeCount, prunedNodeCount } = getMoveUsingNullMoveHeuristicMinMaxNoOptimization(0, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+//         console.log(`Visited ${nodeCount} nodes`)
+//         if (result == 1) {
+//             dispatch(tttUpdateResult(true, 1))
+//         } else if (result == 2) {
+//             dispatch(tttUpdateResult(true, 2))
+//         } else if (result == 3) {
+//             dispatch(tttUpdateResult(true, 2))
+//         } else {
+//             dispatch(chessMovePiece(board, from, to, turn))
+//         }
+//         dispatch(stopWaiting())
+//     }
+// }
+
+
+// function getMoveUsingNullMoveHeuristicMinMaxNoOptimization(level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition) {
+//     let maxLevel = 3
+//     let { color, opositeColor, isWhite } = turn % 2 == 0 ? { color: 'w',opositeColor:'b', isWhite: true } : { color: 'b',opositeColor:'w', isWhite: false }
+//     let allAvailableChessMoves = []
+
+//     //generate moves
+//     if (isWhite) {
+//         allAvailableChessMoves = getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition)
+//     } else {
+//         allAvailableChessMoves = getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+//     }
+
+//     //end game 
+//     if (allAvailableChessMoves.length == 0) {
+//         if (isWhite) {
+//             if (chessCheckForMate(board, whiteKingPosition, color)) {
+//                 return { from: undefined, to: undefined, result: 2, moveScore: -10000, nodeCount:0, prunedNodeCount:0 }
+//             } else {
+//                 return { from: undefined, to: undefined, result: 3, moveScore: 0 , nodeCount:0, prunedNodeCount:0  }
+//             }
+//         } else {
+//             if (chessCheckForMate(board, blackKingPosition, color)) {
+//                 return { from: undefined, to: undefined, result: 1, moveScore: 10000 , nodeCount:0, prunedNodeCount:0  }
+//             } else {
+//                 return { from: undefined, to: undefined, result: 3, moveScore: 0, nodeCount:0, prunedNodeCount:0   }
+//             }
+//         }
+//     }
+
+//     if(level>=maxLevel){
+//         return { from: undefined, to: undefined, result: 0, moveScore: score, nodeCount:0, prunedNodeCount:0   }
+//     }
+
+//     let maxMove = []
+//     let maxScore = 0
+//     let started = false
+//     let nodesVisited=0
+//     let nodesVisited2 = 0
+
+//     allAvailableChessMoves.forEach((move,i) => {
+//         let currScore = score
+//         let piece = board[move.from.row][move.from.col]
+//         let oldPiece = board[move.to.row][move.to.col]
+
+//         //Adjust score
+//         let a = basicPieceValue.get(piece)
+//         let b = pieceMultiplier.get(piece)[move.from.row][move.from.col]
+//         currScore -= (a + b)
+//         let c = basicPieceValue.get(move.piece)
+//         let d = pieceMultiplier.get(move.piece)[move.to.row][move.to.col]
+//         currScore += (c + d)
+        
+//         if(move.enPassant){
+//             currScore -= (basicPieceValue.get(`${isWhite? 'b' : 'w'}p`) + pieceMultiplier.get(`${isWhite? 'b' : 'w'}p`)[move.from.row][move.to.col])
+//         }else if(move.castle){
+//             if(move.to.col>move.from.col){
+//                 currScore -= (basicPieceValue.get(`${color}r`) + pieceMultiplier.get(`${color}r`)[isWhite ? 7 : 0][7])
+//                 currScore += (basicPieceValue.get(`${color}r`) + pieceMultiplier.get(`${color}r`)[isWhite ? 7 : 0][5])
+//             }else{
+//                 currScore -= (basicPieceValue.get(`${color}r`) + pieceMultiplier.get(`${color}r`)[isWhite ? 7 : 0][0])
+//                 currScore += (basicPieceValue.get(`${color}r`) + pieceMultiplier.get(`${color}r`)[isWhite ? 7 : 0][3])
+//             }
+//         }
+
+//         if (oldPiece != '') {
+//             currScore -= (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[move.to.row][move.to.col])
+//         }
+
+//         let currScore2 = score + move.scoreDelta
+
+//         if(currScore2 != currScore){
+//             console.log('Uh Oh. Updated score does not match original on move:')
+//             console.log(move)
+//         }
+        
+//         //Simulate move
+//         board[move.from.row][move.from.col] = ''
+//         board[move.to.row][move.to.col] = move.piece
+//         let enPassantPiece = board[move.from.row][move.to.col]
+
+//         if(move.enPassant){
+//             board[move.from.row][move.to.col] = ''
+//         }else if(move.castle){
+//             if(move.to.col>move.from.col){
+//                 board[isWhite ? 7 : 0][7] = ''
+//                 board[isWhite ? 7 : 0][5] = `${color}r`
+//             }else{
+//                 board[isWhite ? 7 : 0][0] = ''
+//                 board[isWhite ? 7 : 0][3] = `${color}r`
+//             }
+//         }
+
+//         const computeHeuristic = () => {
+//             let newLastMove = move
+//             if(isWhite){
+//                 let {heuristic, nodes} = chessCalculateNullMoveHeuristic(board, opositeColor, !isWhite, newLastMove, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+//                 return {heuristic, nodes}
+//             }else{
+//                 let {heuristic, nodes} = chessCalculateNullMoveHeuristic(board, opositeColor, !isWhite, newLastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition)
+//                 return {heuristic, nodes}
+//             }
+//         }
+
+//         let {heuristic, nodes} = computeHeuristic()
+
+//         if(heuristic+)
+
+
+//         const goDeeper = () => {
+//             if(isWhite){
+//                 let {newKing,newKingPosition} = (piece == 'wk') ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:whiteKing,newKingPosition:whiteKingPosition}
+//                 let newLeftRook = whiteLeftRook && board[7][0]=='wr'
+//                 let newRightRook = whiteRightRook && board[7][7]=='wr'
+    
+//                 let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, from:move.from, to:move.to}, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+//                 return { from, to, result, moveScore, nodeCount  }
+//             }else{
+//                 let {newKing,newKingPosition} = (piece == 'bk') ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:blackKing,newKingPosition:blackKingPosition}
+//                 let newLeftRook = blackLeftRook && board[7][0]=='br'
+//                 let newRightRook = blackRightRook && board[7][7]=='br'
+    
+//                 let { from, to, result, moveScore, nodeCount  } = getMoveUsingBasicMinMaxNoOptimization(level+1, currScore, board, turn+1, {piece:piece, from:move.from, to:move.to},whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition )
+//                 return { from, to, result, moveScore, nodeCount  }
+//             }
+//         }
+
+//         let { from, to, result, moveScore, nodeCount } = goDeeper()
+
+//         nodesVisited += 1 + nodeCount
+
+//         //Undo simulated move
+//         board[move.from.row][move.from.col] = piece
+//         board[move.to.row][move.to.col] = oldPiece
+
+//         if(move.enPassant){
+//             board[move.from.row][move.to.col] = enPassantPiece
+//         }else if(move.castle){
+//             if(move.to.col>move.from.col){
+//                 board[isWhite ? 7 : 0][5] = ''
+//                 board[isWhite ? 7 : 0][7] = `${color}r`
+//             }else{
+//                 board[isWhite ? 7 : 0][3] = ''
+//                 board[isWhite ? 7 : 0][0] = `${color}r`
+//             }
+//         }
+
+
+//         if (!started) {
+//             maxScore = moveScore
+//             maxMove = [move]
+//             started = true
+//         } else {
+//             if (isWhite) {
+//                 if (moveScore > maxScore) {
+//                     maxScore = moveScore
+//                     maxMove = [move]
+//                 } else if (moveScore == maxScore) {
+//                     maxMove.push(move)
+//                 }
+//             } else {
+//                 if (moveScore < maxScore) {
+//                     maxScore = moveScore
+//                     maxMove = [move]
+//                 } else if (moveScore == maxScore) {
+//                     maxMove.push(move)
+//                 }
+//             }
+//         }
+//     })
+
+//     let chosenMove = maxMove[Math.floor(Math.random() * maxMove.length)]
+
+//     return {from:{piece:chosenMove.piece, position:chosenMove.from},to:{row:chosenMove.to.row, col:chosenMove.to.col,enPassant:chosenMove.enPassant,castle:chosenMove.castle},result:0,moveScore:maxScore, nodeCount:nodesVisited}
+// }
+
+// function chessCalculateNullMoveHeuristic(board, color, isWhite, lastMove, king, leftRook, rightRook, kingPosition){
+//     let maxScoreChange = isWhite ? -10000 : 10000
+//     let nodes = 0
+//     let moves = getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, king, leftRook, rightRook, kingPosition)
+
+//     moves.forEach((move) => {
+//         let currScoreChange = move.scoreDelta
+//         let piece = board[move.from.row][move.from.col]
+
+//         //Simulate move
+//         board[move.from.row][move.from.col] = ''
+//         board[move.to.row][move.to.col] = move.piece
+//         let enPassantPiece = board[move.from.row][move.to.col]
+
+//         if(move.enPassant){
+//             board[move.from.row][move.to.col] = ''
+//         }else if(move.castle){
+//             if(move.to.col>move.from.col){
+//                 board[isWhite ? 7 : 0][7] = ''
+//                 board[isWhite ? 7 : 0][5] = `${color}r`
+//             }else{
+//                 board[isWhite ? 7 : 0][0] = ''
+//                 board[isWhite ? 7 : 0][3] = `${color}r`
+//             }
+//         }
+
+
+        
+//         let {newKing,newKingPosition} = (piece == `${color}k`) ? {newKing:false,newKingPosition:{row:move.to.row, col:move.to.col}} : {newKing:king,newKingPosition:kingPosition}
+//         let newLeftRook = leftRook && board[isWhite ? 7 : 0][0]==`${color}k`
+//         let newRightRook = rightRook && board[isWhite ? 7 : 0][7]==`${color}k`
+
+
+//         let moves2 = getAllAvailableChessMovesBasicOrder(board, color, isWhite, newLastMove, newKing, newLeftRook, newRightRook, newKingPosition)
+
+//         moves2.forEach((move2) => {
+//             currScoreChange += move2.scoreDelta
+//             if(isWhite){
+//                 if(currScoreChange>maxScoreChange){
+//                     maxScoreChange = currScoreChange
+//                 }
+//             }else{
+//                 if(currScoreChange<maxScoreChange){
+//                     maxScoreChange= currScoreChange
+//                 }
+//             }
+//             currScoreChange += move2.scoreDelta
+
+//             nodes+=1
+//         })
+
+//         nodes+=1
+//     })
+
+//     return {heuristic:maxScoreChange, nodes}
+// }
 
 /*********************************************************Raster Caster ***************************/
 

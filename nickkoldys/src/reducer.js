@@ -35,7 +35,7 @@ const initialState = {
     ['wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp', 'wp'],
     ['wr', 'wkn', 'wb', 'wq', 'wk', 'wb', 'wkn', 'wr']],
     activePiece: { piece: '', position: { row: -1, col: -1 } },
-    lastMove: { piece: '', startPosition: { row: -1, col: -1 }, endPosition: { row: -1, col: -1 } },
+    lastMove: { piece: '', from: { row: -1, col: -1 }, to: { row: -1, col: -1 } },
     canCastle: true,
     availableMoves: new Map(),
     leftWhiteRookAvailable: true,

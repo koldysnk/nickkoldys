@@ -126,7 +126,7 @@ export function ChessBoard(props) {
                             }
                         }
                         let image = pieces.get(v).piece
-                        if ((i == lastMove.startPosition.row && j == lastMove.startPosition.col) || (i == lastMove.endPosition.row && j == lastMove.endPosition.col)) {
+                        if ((i == lastMove.from.row && j == lastMove.from.col) || (i == lastMove.to.row && j == lastMove.to.col)) {
                             return <div key={`${i}-${j}`} className={`chessBoardTile ${(i % 2 == 1) ? "oddChessRow" : 'evenChessRow'} t${i}-${j}`}>
                                 <div className='chessLastMove'>
                                     <div className={(((v[0] == 'w' && turn % 2 == 0) || (v[0] == 'b' && turn % 2 == 1)) && playable) ? `chessSquare ${allAvailableMoves.has(`${i}-${j}`) ? 'chessSelectable' : ''} ${availableMoves.has(`${i}-${j}`) ? 'chessSquareAvailable' : ''}` : `chessSquare ${availableMoves.has(`${i}-${j}`) ? 'chessSquareAvailable' : ''}`} onClick={actionOnClick}>
