@@ -49,6 +49,8 @@ const initialState = {
     blackKingPosition: { row: 0, col: 4 },
     allAvailableMoves: new Map(),
     allAvailableMovesGenerated: false,
+    lastThreeMoveNodeCount: [100000, 100000, 100000],
+    increasedLevel: false,
     /*************************RasterCaster ********************/
     rasterCasterSelection: 0,
     rasterCasterDisclaimerActive: true,
@@ -253,6 +255,16 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 allAvailableMovesGenerated: action.payload,
+            };
+        case Action.SetLastThreeMoveNodeCount:
+            return {
+                ...state,
+                lastThreeMoveNodeCount: action.payload,
+            };
+        case Action.SetIncreasedChessLevel:
+            return {
+                ...state,
+                increasedLevel: action.payload,
             };
         /**********************************Raster Caster ******************************/
         case Action.SetRasterCasterSelection:

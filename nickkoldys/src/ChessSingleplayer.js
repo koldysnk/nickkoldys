@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { chessResetGame,chessRandAITurn, startWaiting, stopWaiting, tttSetPlayerFirst, chessBasicAITurn, chessBasicWeightedAITurn,chessBasicMinMaxAITurn } from './actions';
+import { chessResetGame,chessRandAITurn, startWaiting, stopWaiting, tttSetPlayerFirst, chessBasicAITurn, chessBasicWeightedAITurn,chessBasicMinMaxAITurn, chessAlphaBetaMinMaxAITurn } from './actions';
 import { ChessBoard } from './ChessBoard';
 import './ChessMultiplayer.css';
 import { ChessPromotion } from './ChessPromotion';
@@ -24,6 +24,8 @@ export function ChessSingleplayer(props) {
     const blackKingAvailable = useSelector(state => state.blackKingAvailable);
     const whiteKingPosition = useSelector(state => state.whiteKingPosition);
     const blackKingPosition = useSelector(state => state.blackKingPosition);
+    const increasedLevel = useSelector(state => state.increasedLevel);
+    const lastThreeMoveNodeCount = useSelector(state => state.lastThreeMoveNodeCount);
     const dispatch = useDispatch();
 
     let turnText = "Analyzing..."
@@ -53,7 +55,8 @@ export function ChessSingleplayer(props) {
             // }else{
             //     dispatch(chessBasicWeightedAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition))
             // }
-            dispatch(chessBasicMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
+            //dispatch(chessBasicMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
+            dispatch(chessAlphaBetaMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,increasedLevel,lastThreeMoveNodeCount))
         }
     }, [dispatch,turn,playerFirst])
 
