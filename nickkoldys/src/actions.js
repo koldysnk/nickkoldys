@@ -2510,17 +2510,17 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
                                     allAvailableChessMoves.push({ piece: 'bq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta })
 
-                                    scoreDelta = (basicPieceValue.get('br') + pieceMultiplier.get('br')[newRow][col])
+                                    scoreDelta = (basicPieceValue.get('br') + pieceMultiplier.get('br')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
                                     allAvailableChessMoves.push({ piece: 'br', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta })
 
-                                    scoreDelta = (basicPieceValue.get('bb') + pieceMultiplier.get('bb')[newRow][col])
+                                    scoreDelta = (basicPieceValue.get('bb') + pieceMultiplier.get('bb')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
                                     allAvailableChessMoves.push({ piece: 'bb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta })
 
-                                    scoreDelta = (basicPieceValue.get('bkn') + pieceMultiplier.get('bkn')[newRow][col])
+                                    scoreDelta = (basicPieceValue.get('bkn') + pieceMultiplier.get('bkn')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
                                     allAvailableChessMoves.push({ piece: 'bkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta })
@@ -2547,17 +2547,17 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
                                     allAvailableChessMoves.push({ piece: 'bq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta })
 
-                                    scoreDelta = (basicPieceValue.get('br') + pieceMultiplier.get('br')[newRow][col])
+                                    scoreDelta = (basicPieceValue.get('br') + pieceMultiplier.get('br')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
                                     allAvailableChessMoves.push({ piece: 'br', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta })
 
-                                    scoreDelta = (basicPieceValue.get('bb') + pieceMultiplier.get('bb')[newRow][col])
+                                    scoreDelta = (basicPieceValue.get('bb') + pieceMultiplier.get('bb')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
                                     allAvailableChessMoves.push({ piece: 'bb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta })
 
-                                    scoreDelta = (basicPieceValue.get('bkn') + pieceMultiplier.get('bkn')[newRow][col])
+                                    scoreDelta = (basicPieceValue.get('bkn') + pieceMultiplier.get('bkn')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
                                     allAvailableChessMoves.push({ piece: 'bkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta })
