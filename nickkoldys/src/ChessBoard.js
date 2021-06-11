@@ -21,6 +21,7 @@ export function ChessBoard(props) {
     const blackKingPosition = useSelector(state => state.blackKingPosition);
     const allAvailableMoves = useSelector(state => state.allAvailableMoves);
     const allAvailableMovesGenerated = useSelector(state => state.allAvailableMovesGenerated);
+    const boardStateCount = useSelector(state => state.boardStateCount);
     const dispatch = useDispatch();
 
     let pieces = new Map()
@@ -65,22 +66,9 @@ export function ChessBoard(props) {
                 dispatch(chessGetAllAvailableMoves(board, lastMove, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition, turn))
                 dispatch(stopWaiting())
             }
-        } else {
-            if (allAvailableMoves.size == 0) {
-                if (turn % 2 == 0) {
-                    if (chessCheckForMate(board, whiteKingPosition, 'w')) {
-                        tttUpdateResult(true, 2)
-                    } else {
-                        tttUpdateResult(true, 0)
-                    }
-                } else {
-                    if (chessCheckForMate(board, blackKingPosition, 'b')) {
-                        tttUpdateResult(true, 1)
-                    } else {
-                        tttUpdateResult(true, 0)
-                    }
-                }
-            }
+        }
+        if (boardStateCount.get(`${board}`)>=3) {
+            dispatch(tttUpdateResult(true,0))
         }
     }, [dispatch, turn]);
 
@@ -120,7 +108,7 @@ export function ChessBoard(props) {
                                     dispatch(stopWaiting())
                                 } else if (availableMoves.has(`${i}-${j}`)) {
                                     dispatch(startWaiting())
-                                    dispatch(chessMovePiece(board, activePiece, availableMoves.get(`${i}-${j}`), turn))
+                                    dispatch(chessMovePiece(board, activePiece, availableMoves.get(`${i}-${j}`), turn,boardStateCount))
                                     dispatch(stopWaiting())
                                 }
                             }

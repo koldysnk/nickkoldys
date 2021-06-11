@@ -42,6 +42,7 @@ export const Action = Object.freeze({
     SetAllAvailableMovesGenerated: 'SetAllAvailableMovesGenerated',
     SetIncreasedChessLevel:'SetIncreasedChessLevel',
     SetLastThreeMoveNodeCount:'SetLastThreeMoveNodeCount',
+    SetBoardStateCount:'SetBoardStateCount',
     //RasterCaster
     SetRasterCasterSelection: 'SetRasterCasterSelection',
     SetRasterCasterCustomFunction: 'SetRasterCasterCustomFunction',
@@ -602,6 +603,13 @@ export function setLastThreeMoveNodeCount(arr) {
     return {
         type: Action.SetLastThreeMoveNodeCount,
         payload: arr,
+    }
+}
+
+export function setBoardStateCount(map) {
+    return {
+        type: Action.SetBoardStateCount,
+        payload: map,
     }
 }
 
@@ -1383,7 +1391,7 @@ function getAvailableChessMoves(board, row, col, piece, lastMove, king, leftRook
     return availableMoves
 }
 
-export function chessMovePiece(board, from, to, turn) {
+export function chessMovePiece(board, from, to, turn, boardStateCount) {
     ///add castle king check
     return dispatch => {
         board[from.position.row][from.position.col] = ''
@@ -1434,6 +1442,13 @@ export function chessMovePiece(board, from, to, turn) {
         } else {
             dispatch(setTurn(turn + 1))
             dispatch(setAllAvailableMovesGenerated(false))
+            let boardRep = `${board}`
+            if(boardStateCount.has(boardRep)){
+                boardStateCount.set(boardRep,boardStateCount.get(boardRep)+1)
+            }else{
+                boardStateCount.set(boardRep,1)
+            }
+            dispatch(setBoardStateCount(boardStateCount))
         }
         // dispatch(setTurn(turn+1))
         dispatch(chessSetBoard(board))
@@ -1443,11 +1458,18 @@ export function chessMovePiece(board, from, to, turn) {
     }
 }
 
-export function chessPromotePiece(board, lastMove, newPiece, turn) {
+export function chessPromotePiece(board, lastMove, newPiece, turn,boardStateCount) {
     return dispatch => {
         board[lastMove.to.row][lastMove.to.col] = newPiece
         dispatch(setTurn(turn + 1))
         dispatch(chessSetBoard(board))
+        let boardRep = `${board}`
+        if(boardStateCount.has(boardRep)){
+            boardStateCount.set(boardRep,boardStateCount.get(boardRep)+1)
+        }else{
+            boardStateCount.set(boardRep,1)
+        }
+        dispatch(setBoardStateCount(boardStateCount))
         dispatch(setPromotionActive(false))
         dispatch(setAllAvailableMovesGenerated(false))
     }
@@ -1731,6 +1753,9 @@ export function chessResetGame() {
         dispatch(setPromotionActive(false))
         dispatch(setWhiteKingPosition({ row: 7, col: 4 }))
         dispatch(setBlackKingPosition({ row: 0, col: 4 }))
+        dispatch(setIncreaseChessLevel(false))
+        dispatch(setLastThreeMoveNodeCount([100000,100000,100000]))
+        dispatch(setBoardStateCount(new Map()))
     }
 }
 
@@ -2086,12 +2111,12 @@ function getBasicWeightedPositionEvaluation(board) {
     return score
 }
 
-export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition) {
+export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount) {
     return dispatch => {
         dispatch(startWaiting())
         let score = getBasicWeightedPositionEvaluation(board)
         let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxNoOptimization(0, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
-        console.log(`Visited ${nodeCount} nodes`)
+        console.log(`Basic: Visited ${nodeCount} nodes`)
         if (result == 1) {
             dispatch(tttUpdateResult(true, 1))
         } else if (result == 2) {
@@ -2099,7 +2124,7 @@ export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLe
         } else if (result == 3) {
             dispatch(tttUpdateResult(true, 2))
         } else {
-            dispatch(chessMovePiece(board, from, to, turn))
+            dispatch(chessMovePiece(board, from, to, turn,boardStateCount))
         }
         dispatch(stopWaiting())
     }
@@ -2144,32 +2169,7 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
     let started = false
     let nodesVisited = 0
 
-    //least impact to greatest
-    // allAvailableChessMoves.sort((a,b) => { 
-    //     return Math.abs(a.scoreDelta)-Math.abs(b.scoreDelta)
-    // })
-
-    //complex sort least impact to greatest with takes at start
-    // allAvailableChessMoves.sort((a,b) => {
-    //     let aD = Math.abs(a.scoreDelta)
-    //     let bD = Math.abs(b.scoreDelta)
-    //     if(aD>5){
-    //         if(bD>5){
-    //             return aD-bD
-    //         }else{
-    //             return bD-aD
-    //         }
-    //     }
-    //     if(bD>5){
-    //         return bD-aD
-    //     }
-    //     return aD-bD
-    // })
-
-    //greatest impact to least
-    // allAvailableChessMoves.sort((a,b) => { 
-    //     return Math.abs(b.scoreDelta)-Math.abs(a.scoreDelta)
-    // })
+    
 
     allAvailableChessMoves.forEach((move, i) => {
         let currScore = score
@@ -3325,7 +3325,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
     return allAvailableChessMoves
 }
 
-export function chessAlphaBetaMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,increasedLevel,lastThreeMoveNodeCount) {
+export function chessAlphaBetaMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,increasedLevel,lastThreeMoveNodeCount,boardStateCount) {
     return dispatch => {
         dispatch(startWaiting())
         let score = getBasicWeightedPositionEvaluation(board)
@@ -3338,8 +3338,8 @@ export function chessAlphaBetaMinMaxAITurn(board, turn, lastMove, whiteKing, whi
             console.log("increasedLevel")
             dispatch(setIncreaseChessLevel(true))
         }
-        let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
-        console.log(`Visited ${nodeCount} nodes`)
+        let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount)
+        console.log(`Alpha Beta: Visited ${nodeCount} nodes`)
         dispatch(setLastThreeMoveNodeCount([lastThreeMoveNodeCount[1],lastThreeMoveNodeCount[2],nodeCount]))
         if (result == 1) {
             dispatch(tttUpdateResult(true, 1))
@@ -3348,16 +3348,22 @@ export function chessAlphaBetaMinMaxAITurn(board, turn, lastMove, whiteKing, whi
         } else if (result == 3) {
             dispatch(tttUpdateResult(true, 2))
         } else {
-            dispatch(chessMovePiece(board, from, to, turn))
+            dispatch(chessMovePiece(board, from, to, turn,boardStateCount))
         }
         dispatch(stopWaiting())
     }
 }
 
 
-function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition) {
+function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount) {
     let { color, isWhite } = turn % 2 == 0 ? { color: 'w', isWhite: true } : { color: 'b', isWhite: false }
     let allAvailableChessMoves = []
+
+    //Tie by repeat
+    let boardRep = `${board}`
+    if(boardStateCount.get(boardRep)>=3){
+        return { from: undefined, to: undefined, result: 3, moveScore: 0, nodeCount: 0 }
+    }
 
     //generate moves
     if (isWhite) {
@@ -3401,8 +3407,8 @@ function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score
     allAvailableChessMoves.sort((a, b) => {
         let aD = Math.abs(a.scoreDelta)
         let bD = Math.abs(b.scoreDelta)
-        if (aD > 5) {
-            if (bD > 5) {
+        if (aD >= 10) {
+            if (bD >= 10) {
                 return aD - bD
             } else {
                 return bD - aD
@@ -3472,20 +3478,28 @@ function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score
             }
         }
 
+        
+        boardRep = `${board}`
+        if(boardStateCount.has(boardRep)){
+            boardStateCount.set(boardRep,boardStateCount.get(boardRep)+1)
+        }else{
+            boardStateCount.set(boardRep,1)
+        }
+
         const goDeeper = () => {
             if (isWhite) {
                 let { newKing, newKingPosition } = (piece == 'wk') ? { newKing: false, newKingPosition: { row: move.to.row, col: move.to.col } } : { newKing: whiteKing, newKingPosition: whiteKingPosition }
                 let newLeftRook = whiteLeftRook && board[7][0] == 'wr'
                 let newRightRook = whiteRightRook && board[7][7] == 'wr'
 
-                let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level + 1, currScore2, board, turn + 1, { piece: piece, from: move.from, to: move.to }, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition)
+                let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level + 1, currScore2, board, turn + 1, move, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount)
                 return { from, to, result, moveScore, nodeCount }
             } else {
                 let { newKing, newKingPosition } = (piece == 'bk') ? { newKing: false, newKingPosition: { row: move.to.row, col: move.to.col } } : { newKing: blackKing, newKingPosition: blackKingPosition }
                 let newLeftRook = blackLeftRook && board[7][0] == 'br'
                 let newRightRook = blackRightRook && board[7][7] == 'br'
 
-                let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level + 1, currScore2, board, turn + 1, { piece: piece, from: move.from, to: move.to }, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition)
+                let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level + 1, currScore2, board, turn + 1, move, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition,boardStateCount)
                 return { from, to, result, moveScore, nodeCount }
             }
         }
@@ -3495,6 +3509,7 @@ function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score
         nodesVisited += 1 + nodeCount
 
         //Undo simulated move
+        boardStateCount.set(boardRep,boardStateCount.get(boardRep)-1)
         board[move.from.row][move.from.col] = piece
         board[move.to.row][move.to.col] = oldPiece
 

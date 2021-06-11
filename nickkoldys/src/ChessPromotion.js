@@ -7,6 +7,7 @@ export function ChessPromotion(props) {
     const turn = useSelector(state => state.turn);
     const board = useSelector(state => state.chessBoard);
     const lastMove = useSelector(state => state.lastMove);
+    const boardStateCount = useSelector(state => state.boardStateCount);
     const dispatch = useDispatch();
 
     let pieces = new Map()
@@ -37,7 +38,7 @@ export function ChessPromotion(props) {
             {promoBoard.map((w,i) => {
                 return w.map((v,j) => {
                     const onSelectPiece = () => {
-                        dispatch(chessPromotePiece(board, lastMove, v, turn))
+                        dispatch(chessPromotePiece(board, lastMove, v, turn,boardStateCount))
                     }
                     const image = pieces.get(v).piece
                     const square = <div className='chessPromotionSquare' onClick={onSelectPiece}>{image}</div>

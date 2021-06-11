@@ -51,6 +51,7 @@ const initialState = {
     allAvailableMovesGenerated: false,
     lastThreeMoveNodeCount: [100000, 100000, 100000],
     increasedLevel: false,
+    boardStateCount: new Map(),
     /*************************RasterCaster ********************/
     rasterCasterSelection: 0,
     rasterCasterDisclaimerActive: true,
@@ -265,6 +266,11 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 increasedLevel: action.payload,
+            };
+        case Action.SetBoardStateCount:
+            return {
+                ...state,
+                boardStateCount: action.payload,
             };
         /**********************************Raster Caster ******************************/
         case Action.SetRasterCasterSelection:

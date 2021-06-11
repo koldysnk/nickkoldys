@@ -26,6 +26,7 @@ export function ChessSingleplayer(props) {
     const blackKingPosition = useSelector(state => state.blackKingPosition);
     const increasedLevel = useSelector(state => state.increasedLevel);
     const lastThreeMoveNodeCount = useSelector(state => state.lastThreeMoveNodeCount);
+    const boardStateCount = useSelector(state => state.boardStateCount);
     const dispatch = useDispatch();
 
     let turnText = "Analyzing..."
@@ -56,7 +57,9 @@ export function ChessSingleplayer(props) {
             //     dispatch(chessBasicWeightedAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition))
             // }
             //dispatch(chessBasicMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
-            dispatch(chessAlphaBetaMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,increasedLevel,lastThreeMoveNodeCount))
+            dispatch(chessAlphaBetaMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,increasedLevel,lastThreeMoveNodeCount,boardStateCount))
+        }else if(!gameOver){
+            dispatch(chessBasicMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,boardStateCount))
         }
     }, [dispatch,turn,playerFirst])
 
