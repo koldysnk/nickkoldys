@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { chessResetGame,chessRandAITurn, startWaiting, stopWaiting, tttSetPlayerFirst, chessBasicAITurn, chessBasicWeightedAITurn,chessBasicMinMaxAITurn, chessAlphaBetaMinMaxAITurn } from './actions';
+import { chessResetGame,chessRandAITurn, startWaiting, stopWaiting, tttSetPlayerFirst, chessBasicAITurn, chessBasicWeightedAITurn,chessBasicMinMaxAITurn, chessAlphaBetaMinMaxAITurn,chessAlphaBetaAndQuiescenceMinMaxAITurn } from './actions';
 import { ChessBoard } from './ChessBoard';
 import './ChessMultiplayer.css';
 import { ChessPromotion } from './ChessPromotion';
@@ -24,7 +24,7 @@ export function ChessSingleplayer(props) {
     const blackKingAvailable = useSelector(state => state.blackKingAvailable);
     const whiteKingPosition = useSelector(state => state.whiteKingPosition);
     const blackKingPosition = useSelector(state => state.blackKingPosition);
-    const increasedLevel = useSelector(state => state.increasedLevel);
+    const maxRecursionLevel = useSelector(state => state.maxRecursionLevel);
     const lastThreeMoveNodeCount = useSelector(state => state.lastThreeMoveNodeCount);
     const boardStateCount = useSelector(state => state.boardStateCount);
     const dispatch = useDispatch();
@@ -56,10 +56,10 @@ export function ChessSingleplayer(props) {
             // }else{
             //     dispatch(chessBasicWeightedAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition))
             // }
-            //dispatch(chessBasicMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition))
-            dispatch(chessAlphaBetaMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,increasedLevel,lastThreeMoveNodeCount,boardStateCount))
+            dispatch(chessBasicMinMaxAITurn(chessBoard, turn, lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,boardStateCount))
+            //dispatch(chessAlphaBetaMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,maxRecursionLevel,lastThreeMoveNodeCount,boardStateCount))
         }else if(!gameOver){
-            dispatch(chessBasicMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,boardStateCount))
+            dispatch(chessAlphaBetaAndQuiescenceMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,maxRecursionLevel,lastThreeMoveNodeCount,boardStateCount))
         }
     }, [dispatch,turn,playerFirst])
 

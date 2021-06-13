@@ -1,0 +1,88 @@
+low to high impact ordering
+[HMR] Waiting for update signal from WDS...
+actions.js:2096 Basic: Visited 9322 nodes
+actions.js:3319 Alpha Beta: Visited 10739 nodes
+actions.js:2096 Basic: Visited 12201 nodes
+actions.js:3319 Alpha Beta: Visited 18085 nodes
+actions.js:2096 Basic: Visited 16862 nodes
+actions.js:3319 Alpha Beta: Visited 57709 nodes
+actions.js:2096 Basic: Visited 33608 nodes
+actions.js:3319 Alpha Beta: Visited 75186 nodes
+actions.js:2096 Basic: Visited 35748 nodes
+actions.js:3319 Alpha Beta: Visited 64713 nodes
+actions.js:2096 Basic: Visited 31937 nodes
+actions.js:3319 Alpha Beta: Visited 31627 nodes
+actions.js:2096 Basic: Visited 35889 nodes
+actions.js:3319 Alpha Beta: Visited 74398 nodes
+actions.js:2096 Basic: Visited 33964 nodes
+actions.js:3319 Alpha Beta: Visited 58836 nodes
+actions.js:2096 Basic: Visited 43516 nodes
+actions.js:3319 Alpha Beta: Visited 21798 nodes
+actions.js:2096 Basic: Visited 32525 nodes
+actions.js:3319 Alpha Beta: Visited 45825 nodes
+actions.js:2096 Basic: Visited 33627 nodes
+actions.js:3319 Alpha Beta: Visited 53004 nodes
+actions.js:2096 Basic: Visited 34433 nodes
+actions.js:3319 Alpha Beta: Visited 76484 nodes
+actions.js:2096 Basic: Visited 46861 nodes
+actions.js:3319 Alpha Beta: Visited 7394 nodes
+actions.js:2096 Basic: Visited 40880 nodes
+actions.js:3319 Alpha Beta: Visited 34214 nodes
+actions.js:2096 Basic: Visited 50810 nodes
+actions.js:3319 Alpha Beta: Visited 176150 nodes
+actions.js:2096 Basic: Visited 47169 nodes
+actions.js:3319 Alpha Beta: Visited 42083 nodes
+actions.js:2096 Basic: Visited 30465 nodes
+actions.js:3319 Alpha Beta: Visited 139721 nodes
+actions.js:2096 Basic: Visited 37658 nodes
+actions.js:3319 Alpha Beta: Visited 18060 nodes
+actions.js:2096 Basic: Visited 32353 nodes
+actions.js:3319 Alpha Beta: Visited 53800 nodes
+actions.js:2096 Basic: Visited 39633 nodes
+actions.js:3319 Alpha Beta: Visited 27043 nodes
+actions.js:2096 Basic: Visited 33143 nodes
+actions.js:3319 Alpha Beta: Visited 6077 nodes
+actions.js:2096 Basic: Visited 35333 nodes
+actions.js:3319 Alpha Beta: Visited 4505 nodes
+actions.js:2096 Basic: Visited 31255 nodes
+actions.js:3319 Alpha Beta: Visited 40490 nodes
+actions.js:2096 Basic: Visited 47020 nodes
+actions.js:3319 Alpha Beta: Visited 37585 nodes
+actions.js:2096 Basic: Visited 31850 nodes
+actions.js:3319 Alpha Beta: Visited 47566 nodes
+actions.js:2096 Basic: Visited 42128 nodes
+actions.js:3319 Alpha Beta: Visited 13838 nodes
+actions.js:2096 Basic: Visited 36480 nodes
+actions.js:3319 Alpha Beta: Visited 45084 nodes
+actions.js:2096 Basic: Visited 38890 nodes
+actions.js:3319 Alpha Beta: Visited 51764 nodes
+actions.js:2096 Basic: Visited 38221 nodes
+actions.js:3319 Alpha Beta: Visited 20465 nodes
+actions.js:2096 Basic: Visited 32871 nodes
+actions.js:3319 Alpha Beta: Visited 53590 nodes
+actions.js:2096 Basic: Visited 37182 nodes
+actions.js:3319 Alpha Beta: Visited 42108 nodes
+actions.js:2096 Basic: Visited 18362 nodes
+actions.js:3319 Alpha Beta: Visited 24376 nodes
+actions.js:2096 Basic: Visited 23291 nodes
+actions.js:3319 Alpha Beta: Visited 48519 nodes
+actions.js:2096 Basic: Visited 21283 nodes
+actions.js:3319 Alpha Beta: Visited 41229 nodes
+actions.js:2096 Basic: Visited 24066 nodes
+actions.js:3319 Alpha Beta: Visited 25598 nodes
+actions.js:2096 Basic: Visited 16613 nodes
+actions.js:3319 Alpha Beta: Visited 24537 nodes
+actions.js:2096 Basic: Visited 14895 nodes
+actions.js:3319 Alpha Beta: Visited 12417 nodes
+actions.js:2096 Basic: Visited 11157 nodes
+actions.js:3319 Alpha Beta: Visited 16077 nodes
+actions.js:2096 Basic: Visited 7781 nodes
+actions.js:3319 Alpha Beta: Visited 11712 nodes
+actions.js:2096 Basic: Visited 8956 nodes
+actions.js:3319 Alpha Beta: Visited 28806 nodes
+actions.js:2096 Basic: Visited 8508 nodes
+actions.js:3319 Alpha Beta: Visited 10497 nodes
+actions.js:2096 Basic: Visited 5593 nodes
+actions.js:3319 Alpha Beta: Visited 3206 nodes
+actions.js:2096 Basic: Visited 6165 nodes
+actions.js:3319 Alpha Beta: Visited 0 nodes

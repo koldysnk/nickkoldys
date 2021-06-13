@@ -1,0 +1,115 @@
+[HMR] Waiting for update signal from WDS...
+actions.js:2119 Basic: Visited 9322 nodes
+actions.js:3342 Alpha Beta: Visited 869268 nodes
+actions.js:2119 Basic: Visited 12046 nodes
+actions.js:3342 Alpha Beta: Visited 1184584 nodes
+actions.js:2119 Basic: Visited 20731 nodes
+actions.js:3342 Alpha Beta: Visited 875565 nodes
+actions.js:2119 Basic: Visited 23091 nodes
+actions.js:3342 Alpha Beta: Visited 787092 nodes
+actions.js:2119 Basic: Visited 34051 nodes
+actions.js:3342 Alpha Beta: Visited 606674 nodes
+actions.js:2119 Basic: Visited 47230 nodes
+actions.js:3342 Alpha Beta: Visited 1577877 nodes
+actions.js:2119 Basic: Visited 38971 nodes
+actions.js:3342 Alpha Beta: Visited 882510 nodes
+actions.js:2119 Basic: Visited 47889 nodes
+actions.js:3342 Alpha Beta: Visited 691601 nodes
+actions.js:2119 Basic: Visited 51060 nodes
+actions.js:3342 Alpha Beta: Visited 202171 nodes
+actions.js:2119 Basic: Visited 33522 nodes
+actions.js:3342 Alpha Beta: Visited 859437 nodes
+actions.js:2119 Basic: Visited 26913 nodes
+actions.js:3342 Alpha Beta: Visited 372954 nodes
+actions.js:2119 Basic: Visited 41030 nodes
+actions.js:3342 Alpha Beta: Visited 460598 nodes
+actions.js:2119 Basic: Visited 45081 nodes
+actions.js:3342 Alpha Beta: Visited 395489 nodes
+actions.js:2119 Basic: Visited 63141 nodes
+actions.js:3342 Alpha Beta: Visited 357402 nodes
+actions.js:2119 Basic: Visited 64679 nodes
+actions.js:3342 Alpha Beta: Visited 180543 nodes
+actions.js:2119 Basic: Visited 54985 nodes
+actions.js:3342 Alpha Beta: Visited 693677 nodes
+actions.js:2119 Basic: Visited 41517 nodes
+actions.js:3342 Alpha Beta: Visited 2447469 nodes
+actions.js:2119 Basic: Visited 45537 nodes
+actions.js:3342 Alpha Beta: Visited 531491 nodes
+actions.js:2119 Basic: Visited 39987 nodes
+actions.js:3342 Alpha Beta: Visited 611502 nodes
+actions.js:2119 Basic: Visited 2537 nodes
+actions.js:3342 Alpha Beta: Visited 413789 nodes
+actions.js:2119 Basic: Visited 53151 nodes
+actions.js:3342 Alpha Beta: Visited 332968 nodes
+actions.js:2119 Basic: Visited 46213 nodes
+actions.js:3342 Alpha Beta: Visited 611812 nodes
+actions.js:2119 Basic: Visited 49329 nodes
+actions.js:3342 Alpha Beta: Visited 559779 nodes
+actions.js:2119 Basic: Visited 39358 nodes
+actions.js:3342 Alpha Beta: Visited 789060 nodes
+actions.js:2119 Basic: Visited 31625 nodes
+actions.js:3342 Alpha Beta: Visited 430831 nodes
+actions.js:2119 Basic: Visited 32773 nodes
+index.js:1 Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+    at ChessBoard (http://localhost:3000/static/js/main.chunk.js:1354:26)
+    at div
+    at ChessSingleplayer (http://localhost:3000/static/js/main.chunk.js:2844:79)
+    at Route (http://localhost:3000/static/js/vendors~main.chunk.js:38875:29)
+    at Switch (http://localhost:3000/static/js/vendors~main.chunk.js:39077:29)
+    at div
+    at div
+    at App
+    at Router (http://localhost:3000/static/js/vendors~main.chunk.js:38510:30)
+    at BrowserRouter (http://localhost:3000/static/js/vendors~main.chunk.js:38130:35)
+    at Provider (http://localhost:3000/static/js/vendors~main.chunk.js:35479:20)
+console.<computed> @ index.js:1
+printWarning @ react-dom.development.js:67
+error @ react-dom.development.js:43
+checkForNestedUpdates @ react-dom.development.js:23812
+scheduleUpdateOnFiber @ react-dom.development.js:21835
+dispatchAction @ react-dom.development.js:16139
+checkForUpdates @ useSelector.js:74
+handleChangeWrapper @ Subscription.js:95
+(anonymous) @ Subscription.js:23
+batchedUpdates$1 @ react-dom.development.js:22380
+notify @ Subscription.js:19
+notifyNestedSubs @ Subscription.js:90
+handleChangeWrapper @ Subscription.js:95
+dispatch @ redux.js:297
+(anonymous) @ index.js:11
+(anonymous) @ ChessBoard.js:65
+invokePassiveEffectCreate @ react-dom.development.js:23487
+callCallback @ react-dom.development.js:3945
+invokeGuardedCallbackDev @ react-dom.development.js:3994
+invokeGuardedCallback @ react-dom.development.js:4056
+flushPassiveEffectsImpl @ react-dom.development.js:23574
+unstable_runWithPriority @ scheduler.development.js:468
+runWithPriority$1 @ react-dom.development.js:11276
+flushPassiveEffects @ react-dom.development.js:23447
+(anonymous) @ react-dom.development.js:23324
+workLoop @ scheduler.development.js:417
+flushWork @ scheduler.development.js:390
+performWorkUntilDeadline @ scheduler.development.js:157
+actions.js:3342 Alpha Beta: Visited 689547 nodes
+actions.js:2119 Basic: Visited 35826 nodes
+actions.js:3342 Alpha Beta: Visited 412351 nodes
+actions.js:2119 Basic: Visited 3550 nodes
+actions.js:3342 Alpha Beta: Visited 241019 nodes
+actions.js:2119 Basic: Visited 32571 nodes
+actions.js:3342 Alpha Beta: Visited 236472 nodes
+actions.js:2119 Basic: Visited 41180 nodes
+actions.js:3342 Alpha Beta: Visited 58362 nodes
+actions.js:2119 Basic: Visited 42239 nodes
+actions.js:3342 Alpha Beta: Visited 178272 nodes
+actions.js:2119 Basic: Visited 31868 nodes
+actions.js:3342 Alpha Beta: Visited 12645 nodes
+actions.js:2119 Basic: Visited 32627 nodes
+actions.js:3342 Alpha Beta: Visited 85958 nodes
+actions.js:2119 Basic: Visited 19182 nodes
+actions.js:3342 Alpha Beta: Visited 19032 nodes
+actions.js:2119 Basic: Visited 19586 nodes
+actions.js:3342 Alpha Beta: Visited 36124 nodes
+actions.js:2119 Basic: Visited 26934 nodes
+actions.js:3342 Alpha Beta: Visited 25896 nodes
+actions.js:2119 Basic: Visited 30280 nodes
+actions.js:3342 Alpha Beta: Visited 0 nodes

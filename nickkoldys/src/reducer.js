@@ -50,7 +50,7 @@ const initialState = {
     allAvailableMoves: new Map(),
     allAvailableMovesGenerated: false,
     lastThreeMoveNodeCount: [100000, 100000, 100000],
-    increasedLevel: false,
+    increasedLevel: 4,
     boardStateCount: new Map(),
     /*************************RasterCaster ********************/
     rasterCasterSelection: 0,
@@ -262,10 +262,10 @@ export function reducer(state = initialState, action) {
                 ...state,
                 lastThreeMoveNodeCount: action.payload,
             };
-        case Action.SetIncreasedChessLevel:
+        case Action.SetMaxRecursionLevel:
             return {
                 ...state,
-                increasedLevel: action.payload,
+                maxRecursionLevel: action.payload,
             };
         case Action.SetBoardStateCount:
             return {
