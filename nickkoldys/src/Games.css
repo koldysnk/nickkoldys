@@ -32,14 +32,8 @@ Link{
 
 /* Color Theme from https://www.w3schools.com/w3css/tryit.asp?filename=tryw3css_theme_light-blue*/
 
-.ticTacToeTile{
+
+
+a:nth-child(odd) > .gameTile, .Games > .gameTile:nth-child(odd){
     background-color: rgb(27,122,159);
-}
-
-.hangmanTile{
-    background-color:rgb(161,217,239);
-}
-
-.chessTile{
-    background-color:rgb(32,146,191);
 }

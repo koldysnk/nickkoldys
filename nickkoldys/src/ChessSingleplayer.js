@@ -58,9 +58,10 @@ export function ChessSingleplayer(props) {
             // }
             dispatch(chessBasicMinMaxAITurn(chessBoard, turn, lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,boardStateCount))
             //dispatch(chessAlphaBetaMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,maxRecursionLevel,lastThreeMoveNodeCount,boardStateCount))
-        }else if(!gameOver){
-            dispatch(chessAlphaBetaAndQuiescenceMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,maxRecursionLevel,lastThreeMoveNodeCount,boardStateCount))
         }
+        // else if(!gameOver){
+        //     dispatch(chessAlphaBetaAndQuiescenceMinMaxAITurn(chessBoard, turn,lastMove, whiteKingAvailable, leftWhiteRookAvailable, rightWhiteRookAvailable, whiteKingPosition, blackKingAvailable, leftBlackRookAvailable, rightBlackRookAvailable, blackKingPosition,maxRecursionLevel,lastThreeMoveNodeCount,boardStateCount))
+        // }
     }, [dispatch,turn,playerFirst])
 
     turnText = turnText.concat(" (Work in Progress)")
