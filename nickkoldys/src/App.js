@@ -16,6 +16,7 @@ import { HangmanGuess } from './HangmanGuess';
 import { ChessMenu } from './ChessMenu';
 import { ChessMultiplayer } from './ChessMultiplayer';
 import { ChessSingleplayer } from './ChessSingleplayer';
+import { PixelPerfect } from './PixelPerfect';
 
 function App() {
   return (
@@ -64,6 +65,9 @@ function App() {
         </Route>
         <Route exact path="/raster_caster">
           <RasterCaster />
+        </Route>
+        <Route exact path="/pixel_perfect">
+          <PixelPerfect />
         </Route>
         <Route exact path="/about">
           <About />
