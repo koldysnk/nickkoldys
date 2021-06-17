@@ -55,6 +55,11 @@ const initialState = {
     /*************************RasterCaster ********************/
     rasterCasterSelection: 0,
     rasterCasterDisclaimerActive: true,
+    /*************************Pixel Perfect *******************/
+    ppCurrData: undefined,
+    ppGoalData: undefined,
+    ppStarted: false,
+    ppAccuracy: 0,
 }
 
 export function reducer(state = initialState, action) {
@@ -292,6 +297,27 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 rasterCasterDisclaimerActive: action.payload,
+            };
+        /************************************Pixel Perfect **********************************/
+        case Action.SetPPCurrData:
+            return {
+                ...state,
+                ppCurrData: action.payload,
+            };
+        case Action.SetPPGoalData:
+            return {
+                ...state,
+                ppGoalData: action.payload,
+            };
+        case Action.SetPPStarted:
+            return {
+                ...state,
+                ppStarted: action.payload,
+            };
+        case Action.SetPPAccuracy:
+            return {
+                ...state,
+                ppAccuracy: action.payload,
             };
         default:
             return state;

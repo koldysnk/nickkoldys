@@ -40,15 +40,19 @@ export const Action = Object.freeze({
     SetBlackKingPosition: 'SetBlackKingPosition',
     SetAllAvailableMoves: 'SetAllAvailableMoves',
     SetAllAvailableMovesGenerated: 'SetAllAvailableMovesGenerated',
-    SetMaxRecursionLevel:'SetMaxRecursionLevel',
-    SetLastThreeMoveNodeCount:'SetLastThreeMoveNodeCount',
-    SetBoardStateCount:'SetBoardStateCount',
+    SetMaxRecursionLevel: 'SetMaxRecursionLevel',
+    SetLastThreeMoveNodeCount: 'SetLastThreeMoveNodeCount',
+    SetBoardStateCount: 'SetBoardStateCount',
     //RasterCaster
     SetRasterCasterSelection: 'SetRasterCasterSelection',
     SetRasterCasterCustomFunction: 'SetRasterCasterCustomFunction',
     SetRasterCasterExample1Function: 'SetRasterCasterExample1Function',
     SetRasterCasterDisclaimerActive: 'SetRasterCasterDisclaimerActive',
-
+    //Pixel Perfect
+    SetPPGoalData: 'SetPPGoalData',
+    SetPPCurrData: 'SetPPCurrData',
+    SetPPAccuracy: 'SetPPAccuracy',
+    SetPPStarted: 'SetPPStarted0',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -1443,10 +1447,10 @@ export function chessMovePiece(board, from, to, turn, boardStateCount) {
             dispatch(setTurn(turn + 1))
             dispatch(setAllAvailableMovesGenerated(false))
             let boardRep = `${board}`
-            if(boardStateCount.has(boardRep)){
-                boardStateCount.set(boardRep,boardStateCount.get(boardRep)+1)
-            }else{
-                boardStateCount.set(boardRep,1)
+            if (boardStateCount.has(boardRep)) {
+                boardStateCount.set(boardRep, boardStateCount.get(boardRep) + 1)
+            } else {
+                boardStateCount.set(boardRep, 1)
             }
             dispatch(setBoardStateCount(boardStateCount))
         }
@@ -1458,16 +1462,16 @@ export function chessMovePiece(board, from, to, turn, boardStateCount) {
     }
 }
 
-export function chessPromotePiece(board, lastMove, newPiece, turn,boardStateCount) {
+export function chessPromotePiece(board, lastMove, newPiece, turn, boardStateCount) {
     return dispatch => {
         board[lastMove.to.row][lastMove.to.col] = newPiece
         dispatch(setTurn(turn + 1))
         dispatch(chessSetBoard(board))
         let boardRep = `${board}`
-        if(boardStateCount.has(boardRep)){
-            boardStateCount.set(boardRep,boardStateCount.get(boardRep)+1)
-        }else{
-            boardStateCount.set(boardRep,1)
+        if (boardStateCount.has(boardRep)) {
+            boardStateCount.set(boardRep, boardStateCount.get(boardRep) + 1)
+        } else {
+            boardStateCount.set(boardRep, 1)
         }
         dispatch(setBoardStateCount(boardStateCount))
         dispatch(setPromotionActive(false))
@@ -1754,7 +1758,7 @@ export function chessResetGame() {
         dispatch(setWhiteKingPosition({ row: 7, col: 4 }))
         dispatch(setBlackKingPosition({ row: 0, col: 4 }))
         dispatch(setMaxRecursionLevel(4))
-        dispatch(setLastThreeMoveNodeCount([100000,100000,100000]))
+        dispatch(setLastThreeMoveNodeCount([100000, 100000, 100000]))
         dispatch(setBoardStateCount(new Map()))
     }
 }
@@ -2111,7 +2115,7 @@ function getBasicWeightedPositionEvaluation(board) {
     return score
 }
 
-export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount) {
+export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition, boardStateCount) {
     return dispatch => {
         dispatch(startWaiting())
         let score = getBasicWeightedPositionEvaluation(board)
@@ -2124,7 +2128,7 @@ export function chessBasicMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLe
         } else if (result == 3) {
             dispatch(tttUpdateResult(true, 2))
         } else {
-            dispatch(chessMovePiece(board, from, to, turn,boardStateCount))
+            dispatch(chessMovePiece(board, from, to, turn, boardStateCount))
         }
         dispatch(stopWaiting())
     }
@@ -2169,7 +2173,7 @@ function getMoveUsingBasicMinMaxNoOptimization(level, score, board, turn, lastMo
     let started = false
     let nodesVisited = 0
 
-    
+
 
     allAvailableChessMoves.forEach((move, i) => {
         let currScore = score
@@ -2312,23 +2316,23 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 if (newRow == 0) {
                                     scoreDelta = (basicPieceValue.get('wq') + pieceMultiplier.get('wq')[newRow][col])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: 'wq', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: 'wq', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
 
                                     scoreDelta = (basicPieceValue.get('wr') + pieceMultiplier.get('wr')[newRow][col])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: 'wr', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: 'wr', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
 
                                     scoreDelta = (basicPieceValue.get('wb') + pieceMultiplier.get('wb')[newRow][col])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: 'wb', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: 'wb', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
 
                                     scoreDelta = (basicPieceValue.get('wkn') + pieceMultiplier.get('wkn')[newRow][col])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: 'wkn', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: 'wkn', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
                                 } else {
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
                                         - (pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
                                 }
                             }
                             board[row][col] = piece
@@ -2342,7 +2346,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][col])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[newRow][col] = oldPiece
@@ -2359,27 +2363,27 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (basicPieceValue.get('wq') + pieceMultiplier.get('wq')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'wq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'wq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('wr') + pieceMultiplier.get('wr')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'wr', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'wr', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('wb') + pieceMultiplier.get('wb')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'wb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'wb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('wkn') + pieceMultiplier.get('wkn')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'wkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'wkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 } else {
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                             }
                             board[row][col] = piece
@@ -2395,27 +2399,27 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (basicPieceValue.get('wq') + pieceMultiplier.get('wq')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'wq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'wq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('wr') + pieceMultiplier.get('wr')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'wr', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'wr', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('wb') + pieceMultiplier.get('wb')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'wb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'wb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('wkn') + pieceMultiplier.get('wkn')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'wkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'wkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 } else {
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                             }
                             board[row][col] = piece
@@ -2432,7 +2436,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get('bp') + pieceMultiplier.get('bp')[row][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:true, enPassant: true })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: true, enPassant: true })
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -2445,7 +2449,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get('bp') + pieceMultiplier.get('bp')[row][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:true, capture:true, enPassant: true })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: true, capture: true, enPassant: true })
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -2461,23 +2465,23 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 if (newRow == 7) {
                                     scoreDelta = (basicPieceValue.get('bq') + pieceMultiplier.get('bq')[newRow][col])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: 'bq', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: 'bq', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
 
                                     scoreDelta = (basicPieceValue.get('br') + pieceMultiplier.get('br')[newRow][col])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: 'br', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: 'br', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
 
                                     scoreDelta = (basicPieceValue.get('bb') + pieceMultiplier.get('bb')[newRow][col])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: 'bb', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: 'bb', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
 
                                     scoreDelta = (basicPieceValue.get('bkn') + pieceMultiplier.get('bkn')[newRow][col])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: 'bkn', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: 'bkn', from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
                                 } else {
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
                                         - (pieceMultiplier.get(piece)[row][col])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:false })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: false })
                                 }
                             }
                             board[row][col] = piece
@@ -2491,7 +2495,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][col])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[newRow][col] = oldPiece
@@ -2508,27 +2512,27 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (basicPieceValue.get('bq') + pieceMultiplier.get('bq')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'bq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'bq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('br') + pieceMultiplier.get('br')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'br', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'br', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('bb') + pieceMultiplier.get('bb')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'bb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'bb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('bkn') + pieceMultiplier.get('bkn')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'bkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'bkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 } else {
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                             }
                             board[row][col] = piece
@@ -2545,27 +2549,27 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (basicPieceValue.get('bq') + pieceMultiplier.get('bq')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'bq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'bq', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('br') + pieceMultiplier.get('br')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'br', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'br', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('bb') + pieceMultiplier.get('bb')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'bb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'bb', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
 
                                     scoreDelta = (basicPieceValue.get('bkn') + pieceMultiplier.get('bkn')[newRow][newCol])
                                         - (basicPieceValue.get(piece) + pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: 'bkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: 'bkn', from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 } else {
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                             }
                             board[row][col] = piece
@@ -2582,7 +2586,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get('wp') + pieceMultiplier.get('wp')[row][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:true, enPassant: true })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: true, enPassant: true })
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -2595,7 +2599,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get('wp') + pieceMultiplier.get('wp')[row][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:true, enPassant: true })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: true, enPassant: true })
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -2621,7 +2625,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[currRowTop][col])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRowTop][col])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRowTop, col: col }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRowTop, col: col }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[currRowTop][col] = oldPiece
@@ -2643,7 +2647,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[currRowBottom][col])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRowBottom][col])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRowBottom, col: col }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRowBottom, col: col }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[currRowBottom][col] = oldPiece
@@ -2665,7 +2669,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[row][currLeftCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[row][currLeftCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: currLeftCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: currLeftCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[row][currLeftCol] = oldPiece
@@ -2687,7 +2691,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[row][currRightCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[row][currRightCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: currRightCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: currRightCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[row][currRightCol] = oldPiece
@@ -2712,7 +2716,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2727,7 +2731,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2744,7 +2748,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2759,7 +2763,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2776,7 +2780,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2791,7 +2795,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2808,7 +2812,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2823,7 +2827,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][newCol] = oldPiece
@@ -2845,7 +2849,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][currLeftCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][currLeftCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currLeftCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currLeftCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][currLeftCol] = oldPiece
@@ -2867,7 +2871,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][currRightCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][currRightCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currRightCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currRightCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][currRightCol] = oldPiece
@@ -2897,7 +2901,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][currLeftCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][currLeftCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currLeftCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currLeftCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][currLeftCol] = oldPiece
@@ -2919,7 +2923,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][currRightCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][currRightCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currRightCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currRightCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][currRightCol] = oldPiece
@@ -2950,7 +2954,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[row][currLeftCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[row][currLeftCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: currLeftCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: currLeftCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[row][currLeftCol] = oldPiece
@@ -2972,7 +2976,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[row][currRightCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[row][currRightCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: currRightCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: currRightCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[row][currRightCol] = oldPiece
@@ -3003,7 +3007,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][currLeftCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][currLeftCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currLeftCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currLeftCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][currLeftCol] = oldPiece
@@ -3025,7 +3029,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][col])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][col])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: col }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: col }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][col] = oldPiece
@@ -3045,7 +3049,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][currRightCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][currRightCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currRightCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currRightCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][currRightCol] = oldPiece
@@ -3076,7 +3080,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][currLeftCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][currLeftCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currLeftCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currLeftCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][currLeftCol] = oldPiece
@@ -3098,7 +3102,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][col])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][col])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: col }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: col }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][col] = oldPiece
@@ -3118,7 +3122,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[currRow][currRightCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[currRow][currRightCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currRightCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: currRow, col: currRightCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[currRow][currRightCol] = oldPiece
@@ -3147,7 +3151,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -3161,7 +3165,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][col])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][col] = oldPiece
@@ -3176,7 +3180,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -3195,7 +3199,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[row][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[row][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[row][newCol] = oldPiece
@@ -3211,7 +3215,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[row][newCol])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[row][newCol])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[row][newCol] = oldPiece
@@ -3231,7 +3235,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -3245,7 +3249,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                 scoreDelta = (pieceMultiplier.get(piece)[newRow][col])
                                     - (pieceMultiplier.get(piece)[row][col])
                                     - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][col])
-                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: col }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                             }
                             board[row][col] = piece
                             board[newRow][col] = oldPiece
@@ -3260,7 +3264,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                     scoreDelta = (pieceMultiplier.get(piece)[newRow][newCol])
                                         - (pieceMultiplier.get(piece)[row][col])
                                         - (basicPieceValue.get(oldPiece) + pieceMultiplier.get(oldPiece)[newRow][newCol])
-                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture:oldPiece!='' })
+                                    allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: newRow, col: newCol }, scoreDelta: scoreDelta, capture: oldPiece != '' })
                                 }
                                 board[row][col] = piece
                                 board[newRow][newCol] = oldPiece
@@ -3284,7 +3288,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                                 - (pieceMultiplier.get(piece)[row][col])
                                                 - (pieceMultiplier.get(`${color}r`)[row][0])
                                                 + (pieceMultiplier.get(`${color}r`)[row][3])
-                                            allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: 2 }, scoreDelta: scoreDelta, capture:false, castle: true })
+                                            allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: 2 }, scoreDelta: scoreDelta, capture: false, castle: true })
                                         }
                                     }
                                     board[row][col] = piece
@@ -3307,7 +3311,7 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
                                                 - (pieceMultiplier.get(piece)[row][col])
                                                 - (pieceMultiplier.get(`${color}r`)[row][7])
                                                 + (pieceMultiplier.get(`${color}r`)[row][5])
-                                            allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: 6 }, scoreDelta: scoreDelta, capture:false, castle: true })
+                                            allAvailableChessMoves.push({ piece: piece, from: { row: row, col: col }, to: { row: row, col: 6 }, scoreDelta: scoreDelta, capture: false, castle: true })
                                         }
                                     }
                                     board[row][col] = piece
@@ -3325,20 +3329,20 @@ function getAllAvailableChessMovesBasicOrder(board, color, isWhite, lastMove, ki
     return allAvailableChessMoves
 }
 
-export function chessAlphaBetaMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,maxRecursionLevel,lastThreeMoveNodeCount,boardStateCount) {
+export function chessAlphaBetaMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition, maxRecursionLevel, lastThreeMoveNodeCount, boardStateCount) {
     return dispatch => {
         dispatch(startWaiting())
         let score = getBasicWeightedPositionEvaluation(board)
         let level = 0
         let alpha = -10000
-        let beta = 10000    
+        let beta = 10000
         let maxLevel = maxRecursionLevel
         // if((lastThreeMoveNodeCount[0]<=10000 && lastThreeMoveNodeCount[1]<=10000 && lastThreeMoveNodeCount[2]<=10000)){
         //     maxLevel +=1
         //     console.log("Increased Max Recursion Level")
         //     dispatch(setMaxRecursionLevel(maxLevel))
         // }
-        let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount)
+        let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel, alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition, boardStateCount)
         console.log(`Alpha Beta: Visited ${nodeCount} nodes`)
         //dispatch(setLastThreeMoveNodeCount([lastThreeMoveNodeCount[1],lastThreeMoveNodeCount[2],nodeCount]))
         if (result == 1) {
@@ -3348,20 +3352,20 @@ export function chessAlphaBetaMinMaxAITurn(board, turn, lastMove, whiteKing, whi
         } else if (result == 3) {
             dispatch(tttUpdateResult(true, 0))
         } else {
-            dispatch(chessMovePiece(board, from, to, turn,boardStateCount))
+            dispatch(chessMovePiece(board, from, to, turn, boardStateCount))
         }
         dispatch(stopWaiting())
     }
 }
 
 
-function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount) {
+function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel, alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition, boardStateCount) {
     let { color, isWhite } = turn % 2 == 0 ? { color: 'w', isWhite: true } : { color: 'b', isWhite: false }
     let allAvailableChessMoves = []
 
     //Tie by repeat
     let boardRep = `${board}`
-    if(boardStateCount.get(boardRep)>=3){
+    if (boardStateCount.get(boardRep) >= 3) {
         return { from: undefined, to: undefined, result: 3, moveScore: 0, nodeCount: 0 }
     }
 
@@ -3399,8 +3403,8 @@ function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score
     let nodesVisited = 0
 
     //least impact to greatest
-    allAvailableChessMoves.sort((a,b) => { 
-        return Math.abs(a.scoreDelta)-Math.abs(b.scoreDelta)
+    allAvailableChessMoves.sort((a, b) => {
+        return Math.abs(a.scoreDelta) - Math.abs(b.scoreDelta)
     })
 
     //complex sort least impact to greatest with takes at start
@@ -3478,12 +3482,12 @@ function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score
             }
         }
 
-        
+
         boardRep = `${board}`
-        if(boardStateCount.has(boardRep)){
-            boardStateCount.set(boardRep,boardStateCount.get(boardRep)+1)
-        }else{
-            boardStateCount.set(boardRep,1)
+        if (boardStateCount.has(boardRep)) {
+            boardStateCount.set(boardRep, boardStateCount.get(boardRep) + 1)
+        } else {
+            boardStateCount.set(boardRep, 1)
         }
 
         const goDeeper = () => {
@@ -3492,14 +3496,14 @@ function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score
                 let newLeftRook = whiteLeftRook && board[7][0] == 'wr'
                 let newRightRook = whiteRightRook && board[7][7] == 'wr'
 
-                let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level + 1, currScore2, board, turn + 1, move, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount)
+                let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel, alpha, beta, level + 1, currScore2, board, turn + 1, move, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition, boardStateCount)
                 return { from, to, result, moveScore, nodeCount }
             } else {
                 let { newKing, newKingPosition } = (piece == 'bk') ? { newKing: false, newKingPosition: { row: move.to.row, col: move.to.col } } : { newKing: blackKing, newKingPosition: blackKingPosition }
                 let newLeftRook = blackLeftRook && board[7][0] == 'br'
                 let newRightRook = blackRightRook && board[7][7] == 'br'
 
-                let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level + 1, currScore2, board, turn + 1, move, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition,boardStateCount)
+                let { from, to, result, moveScore, nodeCount } = getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel, alpha, beta, level + 1, currScore2, board, turn + 1, move, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition, boardStateCount)
                 return { from, to, result, moveScore, nodeCount }
             }
         }
@@ -3509,7 +3513,7 @@ function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score
         nodesVisited += 1 + nodeCount
 
         //Undo simulated move
-        boardStateCount.set(boardRep,boardStateCount.get(boardRep)-1)
+        boardStateCount.set(boardRep, boardStateCount.get(boardRep) - 1)
         board[move.from.row][move.from.col] = piece
         board[move.to.row][move.to.col] = oldPiece
 
@@ -3569,20 +3573,20 @@ function getMoveUsingBasicMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score
     return { from: { piece: chosenMove.piece, position: chosenMove.from }, to: { row: chosenMove.to.row, col: chosenMove.to.col, enPassant: chosenMove.enPassant, castle: chosenMove.castle }, result: 0, moveScore: maxScore, nodeCount: nodesVisited }
 }
 
-export function chessAlphaBetaAndQuiescenceMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,maxRecursionLevel,lastThreeMoveNodeCount,boardStateCount) {
+export function chessAlphaBetaAndQuiescenceMinMaxAITurn(board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition, maxRecursionLevel, lastThreeMoveNodeCount, boardStateCount) {
     return dispatch => {
         dispatch(startWaiting())
         let score = getBasicWeightedPositionEvaluation(board)
         let level = 0
         let alpha = -10000
-        let beta = 10000    
+        let beta = 10000
         let maxLevel = maxRecursionLevel
         // if((lastThreeMoveNodeCount[0]<=10000 && lastThreeMoveNodeCount[1]<=10000 && lastThreeMoveNodeCount[2]<=10000)){
         //     maxLevel +=1
         //     console.log("Increased Max Recursion Level")
         //     dispatch(setMaxRecursionLevel(maxLevel))
         // }
-        let { from, to, result, moveScore, nodeCount } = getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount)
+        let { from, to, result, moveScore, nodeCount } = getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel, alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition, boardStateCount)
         console.log(`Quiescence: Visited ${nodeCount} nodes`)
         //dispatch(setLastThreeMoveNodeCount([lastThreeMoveNodeCount[1],lastThreeMoveNodeCount[2],nodeCount]))
         if (result == 1) {
@@ -3592,20 +3596,20 @@ export function chessAlphaBetaAndQuiescenceMinMaxAITurn(board, turn, lastMove, w
         } else if (result == 3) {
             dispatch(tttUpdateResult(true, 0))
         } else {
-            dispatch(chessMovePiece(board, from, to, turn,boardStateCount))
+            dispatch(chessMovePiece(board, from, to, turn, boardStateCount))
         }
         dispatch(stopWaiting())
     }
 }
 
 
-function getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount) {
+function getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel, alpha, beta, level, score, board, turn, lastMove, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition, boardStateCount) {
     let { color, isWhite } = turn % 2 == 0 ? { color: 'w', isWhite: true } : { color: 'b', isWhite: false }
     let allAvailableChessMoves = []
 
     //Tie by repeat
     let boardRep = `${board}`
-    if(boardStateCount.get(boardRep)>=3){
+    if (boardStateCount.get(boardRep) >= 3) {
         return { from: undefined, to: undefined, result: 3, moveScore: 0, nodeCount: 0 }
     }
 
@@ -3633,13 +3637,13 @@ function getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, 
         }
     }
 
-    let quiescence = level>=maxLevel
+    let quiescence = level >= maxLevel
 
     let maxMove = []
     let maxScore = 0
     let started = false
     let nodesVisited = 0
-    let ogNodes=0
+    let ogNodes = 0
 
     //least impact to greatest
     // allAvailableChessMoves.sort((a,b) => { 
@@ -3672,7 +3676,7 @@ function getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, 
     }
 
     allAvailableChessMoves.every((move, i) => {
-        if(quiescence && (!move.capture  || lastMove.to.row!=move.to.row || lastMove.to.col!=move.to.col)){
+        if (quiescence && (!move.capture || lastMove.to.row != move.to.row || lastMove.to.col != move.to.col)) {
             return true
         }
         // if(quiescence){
@@ -3730,12 +3734,12 @@ function getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, 
             }
         }
 
-        
+
         boardRep = `${board}`
-        if(boardStateCount.has(boardRep)){
-            boardStateCount.set(boardRep,boardStateCount.get(boardRep)+1)
-        }else{
-            boardStateCount.set(boardRep,1)
+        if (boardStateCount.has(boardRep)) {
+            boardStateCount.set(boardRep, boardStateCount.get(boardRep) + 1)
+        } else {
+            boardStateCount.set(boardRep, 1)
         }
 
         const goDeeper = () => {
@@ -3744,14 +3748,14 @@ function getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, 
                 let newLeftRook = whiteLeftRook && board[7][0] == 'wr'
                 let newRightRook = whiteRightRook && board[7][7] == 'wr'
 
-                let { from, to, result, moveScore, nodeCount } = getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level + 1, currScore2, board, turn + 1, move, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition,boardStateCount)
+                let { from, to, result, moveScore, nodeCount } = getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel, alpha, beta, level + 1, currScore2, board, turn + 1, move, newKing, newLeftRook, newRightRook, newKingPosition, blackKing, blackLeftRook, blackRightRook, blackKingPosition, boardStateCount)
                 return { from, to, result, moveScore, nodeCount }
             } else {
                 let { newKing, newKingPosition } = (piece == 'bk') ? { newKing: false, newKingPosition: { row: move.to.row, col: move.to.col } } : { newKing: blackKing, newKingPosition: blackKingPosition }
                 let newLeftRook = blackLeftRook && board[7][0] == 'br'
                 let newRightRook = blackRightRook && board[7][7] == 'br'
 
-                let { from, to, result, moveScore, nodeCount } = getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level + 1, currScore2, board, turn + 1, move, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition,boardStateCount)
+                let { from, to, result, moveScore, nodeCount } = getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel, alpha, beta, level + 1, currScore2, board, turn + 1, move, whiteKing, whiteLeftRook, whiteRightRook, whiteKingPosition, newKing, newLeftRook, newRightRook, newKingPosition, boardStateCount)
                 return { from, to, result, moveScore, nodeCount }
             }
         }
@@ -3762,7 +3766,7 @@ function getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, 
         ogNodes += 1
 
         //Undo simulated move
-        boardStateCount.set(boardRep,boardStateCount.get(boardRep)-1)
+        boardStateCount.set(boardRep, boardStateCount.get(boardRep) - 1)
         board[move.from.row][move.from.col] = piece
         board[move.to.row][move.to.col] = oldPiece
 
@@ -3821,7 +3825,7 @@ function getMoveUsingQuiescenceMinMaxWithAlphaBeta(maxLevel,alpha, beta, level, 
     //     console.log(`Added: ${nodesVisited-ogNodes}`)
     // }
 
-    if(maxMove.length == 0){
+    if (maxMove.length == 0) {
         return { from: undefined, to: undefined, result: 0, moveScore: score, nodeCount: nodesVisited }
     }
 
@@ -3859,5 +3863,139 @@ export function setRasterCasterDisclaimerActive(b) {
     return {
         type: Action.SetRasterCasterDisclaimerActive,
         payload: b,
+    }
+}
+
+/**************************************************Pixel Perfect ****************************************/
+
+
+export function setPPGoalData(data) {
+    return {
+        type: Action.SetPPGoalData,
+        payload: data
+    }
+}
+
+export function setPPCurrData(data) {
+    return {
+        type: Action.SetPPCurrData,
+        payload: data
+    }
+}
+
+export function setPPStarted(data) {
+    return {
+        type: Action.SetPPStarted,
+        payload: data
+    }
+}
+
+export function setPPAccuracy(data) {
+    return {
+        type: Action.SetPPAccuracy,
+        payload: data
+    }
+}
+
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+}
+
+export function startPP(goalData, width, height) {
+    return dispatch => {
+        dispatch(setPPGoalData(goalData))
+        let pix = goalData.data
+        let newData = new ImageData(width, height)
+        let newPix = newData.data
+        let total = 0
+        let count = 0
+        for (let i = 0, n = pix.length; i < n; i += 4) {
+            newPix[i] = Math.random() * 256; // red
+            let a = (255 - Math.abs(newPix[i] - pix[i])) / 255
+            newPix[i + 1] = Math.random() * 256; // green
+            let b = (255 - Math.abs(newPix[i + 1] - pix[i + 1])) / 255
+            newPix[i + 2] = Math.random() * 256; // blue
+            let c = (255 - Math.abs(newPix[i + 2] - pix[i + 2])) / 255
+            newPix[i + 3] = 255
+
+            let d = (a + b + c) / 3
+            total += d
+            count += 1
+        }
+        dispatch(setPPCurrData(newData))
+        dispatch(setPPAccuracy(total / count))
+
+        dispatch(setPPStarted(true))
+    }
+}
+
+export function stepPP(goalData, currData, width, height) {
+    return dispatch => {
+
+        let mr = 5
+        let pix = goalData.data
+        let currPix = currData.data
+
+        let newData = new ImageData(width, height)
+        let newPix = newData.data
+        let count = 0
+        let total = 0
+        for (let i = 0, n = pix.length; i < n; i += 4) {
+            let a = pix[i]
+            let maxA = currPix[i]
+            let maxAAcc = (255 - Math.abs(maxA - a)) / 255
+
+            let b = pix[i + 1]
+            let maxB = currPix[i + 1]
+            let maxBAcc = (255 - Math.abs(maxB - b)) / 255
+
+            let c = pix[i + 2]
+            let maxC = currPix[i + 2]
+            let maxCAcc = (255 - Math.abs(maxC - c)) / 255
+
+            for (let j = 0; j < 10; j++) {
+                let newVal = (currPix[i] + getRandomIntInclusive(-mr, mr)) % 255
+                let newAcc = (255 - Math.abs(newVal - a)) / 255
+
+                if (newAcc > maxAAcc) {
+                    maxAAcc = newAcc
+                    maxA = newVal
+                }
+
+                newVal = (currPix[i + 1] + getRandomIntInclusive(-mr, mr)) % 255
+                newAcc = (255 - Math.abs(newVal - b)) / 255
+
+                if (newAcc > maxBAcc) {
+                    maxBAcc = newAcc
+                    maxB = newVal
+                }
+
+
+                newVal = (currPix[i + 2] + getRandomIntInclusive(-mr, mr)) % 255
+                newAcc = (255 - Math.abs(newVal - c)) / 255
+
+                if (newAcc > maxCAcc) {
+                    maxCAcc = newAcc
+                    maxC = newVal
+                }
+            }
+            
+            newPix[i] = maxA // red
+            newPix[i + 1] = maxB // green
+            newPix[i + 2] = maxC // blue
+
+            newPix[i + 3] = 255
+
+            let d = (maxAAcc + maxBAcc + maxCAcc) / 3
+
+
+            total += d
+            count++
+        }
+
+        dispatch(setPPCurrData(newData))
+        dispatch(setPPAccuracy(total / count))
     }
 }

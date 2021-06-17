@@ -13,6 +13,10 @@
 }
 
 .ppOriginalImageBox{
-    width: 40vw;
-    height: 40vh;
+    max-width: 40vw;
+    max-height: 40vh;
+}
+
+.hiddenCanvas{
+    opacity: 0;
 }
