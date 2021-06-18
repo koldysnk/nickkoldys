@@ -51,7 +51,9 @@ export const Action = Object.freeze({
     //Pixel Perfect
     SetPPGoalData: 'SetPPGoalData',
     SetPPCurrData: 'SetPPCurrData',
+    SetPPBestData: 'SetPPBestData',
     SetPPAccuracy: 'SetPPAccuracy',
+    SetPPCurrAccuracy: 'SetPPCurrAccuracy',
     SetPPStarted: 'SetPPStarted0',
 });
 
@@ -3876,6 +3878,13 @@ export function setPPGoalData(data) {
     }
 }
 
+export function setPPBestData(data) {
+    return {
+        type: Action.SetPPBestData,
+        payload: data
+    }
+}
+
 export function setPPCurrData(data) {
     return {
         type: Action.SetPPCurrData,
@@ -3893,6 +3902,13 @@ export function setPPStarted(data) {
 export function setPPAccuracy(data) {
     return {
         type: Action.SetPPAccuracy,
+        payload: data
+    }
+}
+
+export function setPPCurrAccuracy(data) {
+    return {
+        type: Action.SetPPCurrAccuracy,
         payload: data
     }
 }
@@ -3998,4 +4014,94 @@ export function stepPP(goalData, currData, width, height) {
         dispatch(setPPCurrData(newData))
         dispatch(setPPAccuracy(total / count))
     }
+}
+
+export function startPPTri(goalData,context,context2, width, height) {
+    return dispatch => {
+        dispatch(setPPGoalData(goalData))
+        let pix = goalData.data
+        let bestData = context.getImageData(0, 0, width, height)
+        let currData = context2.getImageData(0, 0, width, height)
+        let newPix = bestData.data
+        
+        dispatch(setPPBestData(bestData))
+        dispatch(setPPCurrData(currData))
+        dispatch(setPPAccuracy(ppComputeAccuracy(pix,newPix)))
+
+        dispatch(setPPStarted(true))
+    }
+}
+
+export function stepPPTri(context,context2,goalData,bestData,accuracy,currData,width,height) {
+    return dispatch => {
+        dispatch(startWaiting())
+
+        let maxAccuracy = 0
+        let maxData = new ImageData(width,height)
+
+        for(let i =0;i<100;i++){
+            context2.putImageData(bestData,0,0)
+
+            let r = getRandomIntInclusive(0,255)
+            let g = getRandomIntInclusive(0,255)
+            let b = getRandomIntInclusive(0,255)
+            let a = Math.random()
+            
+            context2.fillStyle = `rgba(
+                ${r},
+                ${g},
+                ${b},
+                ${a})`;
+            context2.beginPath();
+            let x1 = getRandomIntInclusive(0,width)
+            let y1 = getRandomIntInclusive(0,height)
+            let x2 = getRandomIntInclusive(0,width)
+            let y2 = getRandomIntInclusive(0,height)
+            let x3 = getRandomIntInclusive(0,width)
+            let y4 = getRandomIntInclusive(0,height)
+            context2.moveTo(x1, y1);
+            context2.lineTo(x2, y2);
+            context2.lineTo(x3, y4);
+            context2.fill();
+    
+            let newData = context2.getImageData(0, 0, width, height)
+            let newAccuracy = ppComputeAccuracy(goalData.data,newData.data)
+
+            if (newAccuracy>maxAccuracy){
+                maxAccuracy=newAccuracy
+                maxData = newData
+            }
+        }
+
+        
+        
+
+     
+
+        if(maxAccuracy>accuracy){
+            dispatch(setPPAccuracy(maxAccuracy))
+            dispatch(setPPBestData(maxData))
+        }
+
+        dispatch(setPPCurrAccuracy(maxAccuracy))
+        dispatch(setPPCurrData(maxData))
+
+        
+        dispatch(stopWaiting())
+    }
+}
+
+function ppComputeAccuracy(pix,newPix){
+    let total = 0
+    let count = 0
+    for (let i = 0, n = pix.length; i < n; i += 4) {
+        let a = (255 - Math.abs(newPix[i] - pix[i])) / 255
+        let b = (255 - Math.abs(newPix[i + 1] - pix[i + 1])) / 255
+        let c = (255 - Math.abs(newPix[i + 2] - pix[i + 2])) / 255
+
+        let d = (a + b + c) / 3
+        total += d
+        count += 1
+    }
+    return total/count
 }
