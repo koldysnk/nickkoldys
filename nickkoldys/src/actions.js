@@ -54,7 +54,8 @@ export const Action = Object.freeze({
     SetPPBestData: 'SetPPBestData',
     SetPPAccuracy: 'SetPPAccuracy',
     SetPPCurrAccuracy: 'SetPPCurrAccuracy',
-    SetPPStarted: 'SetPPStarted0',
+    SetPPStarted: 'SetPPStarted',
+    SetPPGenerationCount: 'SetPPGenerationCount',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -3906,6 +3907,13 @@ export function setPPAccuracy(data) {
     }
 }
 
+export function setPPGenerationCount(data) {
+    return {
+        type: Action.SetPPGenerationCount,
+        payload: data
+    }
+}
+
 export function setPPCurrAccuracy(data) {
     return {
         type: Action.SetPPCurrAccuracy,
@@ -4032,7 +4040,7 @@ export function startPPTri(goalData,context,context2, width, height) {
     }
 }
 
-export function stepPPTri(context,context2,goalData,bestData,accuracy,currData,width,height) {
+export function stepPPTri(context2,goalData,bestData,accuracy,ppGenerationCount,width,height) {
     return dispatch => {
         dispatch(startWaiting())
 
@@ -4086,7 +4094,7 @@ export function stepPPTri(context,context2,goalData,bestData,accuracy,currData,w
         dispatch(setPPCurrAccuracy(maxAccuracy))
         dispatch(setPPCurrData(maxData))
 
-        
+        dispatch(setPPGenerationCount(ppGenerationCount+1))
         dispatch(stopWaiting())
     }
 }

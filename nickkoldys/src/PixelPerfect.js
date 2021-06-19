@@ -10,7 +10,7 @@ export function PixelPerfect(props) {
     const started = useSelector(state => state.ppStarted);
     const accuracy = useSelector(state => state.ppAccuracy);
     const currAccuracy = useSelector(state => state.ppCurrAccuracy);
-    const isWaiting = useSelector(state => state.isWaiting);
+    const ppGenerationCount = useSelector(state => state.ppGenerationCount);
     
     const dispatch = useDispatch();
 
@@ -48,7 +48,7 @@ export function PixelPerfect(props) {
             let height = canvas.height
             context.putImageData(bestData,0,0)
             context2.putImageData(currData,0,0)
-            dispatch(stepPPTri(context,context2,goalData,bestData,accuracy,currData,width,height))
+            dispatch(stepPPTri(context2,goalData,bestData,accuracy,ppGenerationCount,width,height))
         }
     }
 
@@ -63,9 +63,9 @@ export function PixelPerfect(props) {
             let height = canvas.height
             context.putImageData(bestData,0,0)
             context2.putImageData(currData,0,0)
-            dispatch(stepPPTri(context,context2,goalData,bestData,accuracy,currData,width,height))
+            dispatch(stepPPTri(context2,goalData,bestData,accuracy,ppGenerationCount,width,height))
         }
-    }, [dispatch,started,accuracy,currAccuracy])
+    }, [dispatch,started,ppGenerationCount])
 
     return (
         <div className='PixelPerfect' >
@@ -73,7 +73,7 @@ export function PixelPerfect(props) {
             <div className='ppOriginalImageBox'>
                 <img className='ppOriginalImage' src='panda.jpg'></img>
             </div>
-            <div><button onClick={start}>Start</button>{started ? <button onClick={step}>Continue (If stuck)</button>:''}</div>
+            <div><button onClick={start}>Start</button></div>
             <canvas className={`canvas ${started ? '' : 'hiddenCanvas'}`} ></canvas>
             {started ? `Best Accuracy: ${(accuracy * 100).toFixed(4).replace(/\.0*$|0+$/, "")}%` : ''}
             <canvas className={`canvas ${started ? '' : 'hiddenCanvas'}`} ></canvas>
@@ -81,3 +81,5 @@ export function PixelPerfect(props) {
         </div>
     );
 }
+
+//{started ? <button onClick={step}>Continue (If stuck)</button>:''}

@@ -17,6 +17,7 @@ export function About(props) {
             <p>Robot icon by <a href="https://freeicons.io/profile/726">Free Preloaders</a> on <a href="https://freeicons.io">freeicons.io</a></p>
             <p><a href='https://trello.com/b/CHd5DDcg/nick-koldys-personal-site'>View Trello</a></p>
             <p>Panda photo by <a href="https://unsplash.com/@muffinwiz?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Lukas W.</a> on <a href="https://unsplash.com/s/visual/b8e34082-bf9c-4ecf-a93d-9958649e3e3b?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></p>
+            <p>Photo by <a href="https://unsplash.com/@emilianocicero?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Emiliano Cicero</a> on <a href="https://unsplash.com/t/history?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></p>
         </div>                     
     );
 }

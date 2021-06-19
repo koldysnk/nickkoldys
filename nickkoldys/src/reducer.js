@@ -62,6 +62,7 @@ const initialState = {
     ppStarted: false,
     ppAccuracy: 0,
     ppCurrAccuracy: 0,
+    ppGenerationCount:0,
 }
 
 export function reducer(state = initialState, action) {
@@ -330,6 +331,11 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 ppCurrAccuracy: action.payload,
+            };
+        case Action.SetPPGenerationCount:
+            return {
+                ...state,
+                ppGenerationCount: action.payload,
             };
         default:
             return state;
