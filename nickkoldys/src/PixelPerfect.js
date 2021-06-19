@@ -41,7 +41,14 @@ export function PixelPerfect(props) {
     const step = () => {
         if (started) {
             let canvas = document.getElementsByClassName('canvas')[0]
-            dispatch(stepPP(goalData,currData,canvas.width,canvas.height))
+            let context = canvas.getContext('2d')
+            let canvas2 = document.getElementsByClassName('canvas')[1]
+            let context2 = canvas2.getContext('2d')
+            let width = canvas.width
+            let height = canvas.height
+            context.putImageData(bestData,0,0)
+            context2.putImageData(currData,0,0)
+            dispatch(stepPPTri(context,context2,goalData,bestData,accuracy,currData,width,height))
         }
     }
 
@@ -66,7 +73,7 @@ export function PixelPerfect(props) {
             <div className='ppOriginalImageBox'>
                 <img className='ppOriginalImage' src='panda.jpg'></img>
             </div>
-            <div><button onClick={start}>Start</button></div>
+            <div><button onClick={start}>Start</button>{started ? <button onClick={step}>Continue (If stuck)</button>:''}</div>
             <canvas className={`canvas ${started ? '' : 'hiddenCanvas'}`} ></canvas>
             {started ? `Best Accuracy: ${(accuracy * 100).toFixed(4).replace(/\.0*$|0+$/, "")}%` : ''}
             <canvas className={`canvas ${started ? '' : 'hiddenCanvas'}`} ></canvas>
