@@ -1,0 +1,121 @@
+.About{
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+
+.aboutCards{
+    position: relative;
+    width: 30vw;
+    height: 80vh;
+    
+}
+
+.flipable {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transition: transform 3s;
+    transform-style: preserve-3d;
+    box-sizing: border-box;
+}
+
+/**********Intro Page*************/
+
+.aboutIntroCard{
+    background-color:rgb(224, 168, 223);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.aboutIntroCard::before {
+    content: '';
+    position: absolute;
+    --spacer: 1em;
+    top: var(--spacer);
+    bottom: var(--spacer);
+    left: var(--spacer);
+    right: var(--spacer);
+    border: 3px solid currentColor;
+    transform: translateZ(2em);
+}
+
+.aboutCardTitle{
+    font-size: 3.5rem;
+    transform: translateZ(2em);
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.aboutCardSubtitle{
+    transform: translateZ(8em);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    font-size: .75rem;
+    font-weight: bold;
+    opacity: .7;
+}
+
+/**********Credits Page*************/
+
+.aboutCreditsCard{
+    background-color: #282c34;
+    color: #b7c9e5;
+    backface-visibility: hidden;
+    transform: rotateY(-.5turn);
+}
+
+.creditsList{
+    text-align: left;
+    margin: 16px;
+}
+
+.creditsLink{
+    color: #b7c9e5;
+    text-decoration: underline;
+}
+
+.creditsLink:hover{
+    color: #ee61fb;
+}
+
+
+
+
+.aboutCards:hover > .aboutIntroCard {
+    transform: rotateY(-.5turn);
+}
+
+.aboutCards:hover > .aboutCreditsCard {
+    transform: rotateY(0turn);
+}
+
+/* .left {
+    transform: rotateY(-.5turn);
+}
+
+.active {
+    transform: rotateY(0turn);
+}
+
+.right{
+    transform: rotateY(.5turn);
+} */
+
+
+
+
+@media (orientation:portrait), (max-width: 715px){
+    .aboutCards{
+        width: 80vw;
+        height: 80vh;
+    }
+
+    .aboutCardTitle{
+        font-size: 2.5rem;
+    }
+  }
