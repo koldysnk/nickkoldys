@@ -11,6 +11,7 @@ export function PixelPerfect(props) {
     const accuracy = useSelector(state => state.ppAccuracy);
     const currAccuracy = useSelector(state => state.ppCurrAccuracy);
     const ppGenerationCount = useSelector(state => state.ppGenerationCount);
+    const menuOpen = useSelector(state => state.menuOpen);
     
     const dispatch = useDispatch();
 
@@ -39,7 +40,7 @@ export function PixelPerfect(props) {
     }
 
     const step = () => {
-        if (started) {
+        if (started && !menuOpen) {
             let canvas = document.getElementsByClassName('canvas')[0]
             let context = canvas.getContext('2d')
             let canvas2 = document.getElementsByClassName('canvas')[1]
@@ -65,7 +66,7 @@ export function PixelPerfect(props) {
             context2.putImageData(currData,0,0)
             dispatch(stepPPTri(context2,goalData,bestData,accuracy,ppGenerationCount,width,height))
         }
-    }, [dispatch,started,ppGenerationCount])
+    }, [dispatch,started,ppGenerationCount,menuOpen])
 
     return (
         <div className='PixelPerfect' >
