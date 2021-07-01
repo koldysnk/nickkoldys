@@ -56,6 +56,8 @@ export const Action = Object.freeze({
     SetPPCurrAccuracy: 'SetPPCurrAccuracy',
     SetPPStarted: 'SetPPStarted',
     SetPPGenerationCount: 'SetPPGenerationCount',
+    SetPPChoosePicture:'SetPPChoosePicture',
+    SetPPActivePicture:'SetPPActivePicture',
 });
 
 const host = 'https://react-man-server.react-man.me:8442';
@@ -3917,6 +3919,20 @@ export function setPPGenerationCount(data) {
 export function setPPCurrAccuracy(data) {
     return {
         type: Action.SetPPCurrAccuracy,
+        payload: data
+    }
+}
+
+export function setPPChoosePicture(data) {
+    return {
+        type: Action.SetPPChoosePicture,
+        payload: data
+    }
+}
+
+export function setPPActivePicture(data) {
+    return {
+        type: Action.SetPPActivePicture,
         payload: data
     }
 }

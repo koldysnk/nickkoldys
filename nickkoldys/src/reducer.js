@@ -62,7 +62,9 @@ const initialState = {
     ppStarted: false,
     ppAccuracy: 0,
     ppCurrAccuracy: 0,
-    ppGenerationCount:0,
+    ppGenerationCount: 0,
+    ppChoosePicture: false,
+    ppActivePicture: 'panda.jpg',
 }
 
 export function reducer(state = initialState, action) {
@@ -336,6 +338,16 @@ export function reducer(state = initialState, action) {
             return {
                 ...state,
                 ppGenerationCount: action.payload,
+            };
+        case Action.SetPPChoosePicture:
+            return {
+                ...state,
+                ppChoosePicture: action.payload,
+            };
+        case Action.SetPPActivePicture:
+            return {
+                ...state,
+                ppActivePicture: action.payload,
             };
         default:
             return state;

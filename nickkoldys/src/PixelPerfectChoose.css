@@ -1,0 +1,18 @@
+.PixelPerfectChoose{
+    width: 80vw;
+    height: 80vh;
+    background-color: white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.ppChooseImg{
+    max-width: 100px;
+    max-height: 100px;
+} 
+
+.ppChooseImg:hover{
+    cursor: pointer;
+}

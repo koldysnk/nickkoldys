@@ -1,7 +1,6 @@
 import React from 'react';
 import { Controller, Scene } from 'react-scrollmagic';
 import './About.css';
-import './AboutScrollMagic';
 
 export function About(props) {
     // let tracker = 0
@@ -48,6 +47,7 @@ export function About(props) {
                 <div className='aboutIntroCard flipable'>
                     <h2 className='aboutCardTitle'>About Me</h2>
                     <p className='aboutCardSubtitle'>Scroll to start</p>
+                    <p className='aboutCardSubtitle'>(In Progress)</p>
                 </div>
 
                 <div className='aboutCreditsCard flipable right'>
@@ -63,12 +63,14 @@ export function About(props) {
                         <li><a className='creditsLink' href='https://trello.com/b/CHd5DDcg/nick-koldys-personal-site'>View Trello</a></li>
                         <li>Panda photo by <a className='creditsLink' href="https://unsplash.com/@muffinwiz?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Lukas W.</a> on <a className='creditsLink' href="https://unsplash.com/s/visual/b8e34082-bf9c-4ecf-a93d-9958649e3e3b?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></li>
                         <li>Colosseum photo by <a className='creditsLink' href="https://unsplash.com/@emilianocicero?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Emiliano Cicero</a> on <a className='creditsLink' href="https://unsplash.com/t/history?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></li>
+                        <li>Dinosaur photo by <a className='creditsLink' href="https://unsplash.com/@matreding?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Mathias P.R. Reding</a> on <a className='creditsLink' href="https://unsplash.com/t/history?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></li>
+                        <li>Underwater photo by <a className='creditsLink' href="https://unsplash.com/@misheng_gz?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Mikhail Preobrazhenskiy</a> on <a className='creditsLink' href="https://unsplash.com/t/history?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></li>
                     </ul>
                 </div>
             </div>
 
             
-            <script src='./AboutScrollMagic.js'></script>
+            {/* <script src='./AboutScrollMagic.js'></script> */}
         </div>
     );
 }
