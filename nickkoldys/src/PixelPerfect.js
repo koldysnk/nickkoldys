@@ -140,6 +140,7 @@ export function PixelPerfect(props) {
         cancelAnimationFrame(animate)
 
         let img = document.getElementsByClassName('ppOriginalImage')[0]
+        img.crossOrigin = "Anonymous";
         let canvas = document.getElementsByClassName('canvas')[0]
         let context = canvas.getContext('2d')
         let canvas2 = document.getElementsByClassName('canvas')[1]

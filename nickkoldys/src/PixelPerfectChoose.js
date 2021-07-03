@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { startPP, startPPTri, stepPP, stepPPTri, setPPBestData, setPPCurrAccuracy, setPPCurrData, setPPGenerationCount, setPPAccuracy, setPPChoosePicture, setPPActivePicture } from './actions';
+import { getRandomIntInclusive, setPPChoosePicture, setPPActivePicture } from './actions';
 import './PixelPerfectChoose.css';
 import {useDropzone} from 'react-dropzone'
 
@@ -23,34 +23,21 @@ export function PixelPerfectChoose(props) {
 
         }
     })
-    
-    const selectWhale = () => {
-        dispatch(setPPActivePicture('whale.jpg'))
-        dispatch(setPPChoosePicture(false))
-    }
-    
-    const selectPanda = () => {
-        dispatch(setPPActivePicture('panda.jpg'))
-        dispatch(setPPChoosePicture(false))
+
+    let list1 = []
+    let list2 = []
+    let list3 = []
+    let list4 = []
+
+    for(let i = 0;i<10;i++){
+        list1.push(`https://picsum.photos/id/${getRandomIntInclusive(0,500)}/${getRandomIntInclusive(200,1000)}/${getRandomIntInclusive(200,1000)}`)
+        list2.push(`https://picsum.photos/id/${getRandomIntInclusive(0,500)}/${getRandomIntInclusive(200,1000)}/${getRandomIntInclusive(200,1000)}`)
+        list3.push(`https://picsum.photos/id/${getRandomIntInclusive(0,500)}/${getRandomIntInclusive(200,1000)}/${getRandomIntInclusive(200,1000)}`)
+        list4.push(`https://picsum.photos/id/${getRandomIntInclusive(0,500)}/${getRandomIntInclusive(200,1000)}/${getRandomIntInclusive(200,1000)}`)
     }
 
-    const selectCol = () => {
-        dispatch(setPPActivePicture('colosseum.jpg'))
-        dispatch(setPPChoosePicture(false))
-    }
-
-    const selectDino = () => {
-        dispatch(setPPActivePicture('dino.jpg'))
-        dispatch(setPPChoosePicture(false))
-    }
-
-    const selectUnder = () => {
-        dispatch(setPPActivePicture('underwater.jpg'))
-        dispatch(setPPChoosePicture(false))
-    }
-
-    const selectEyes = () => {
-        dispatch(setPPActivePicture('eyes.jpg'))
+    const selectPic = (link) => {
+        dispatch(setPPActivePicture(link))
         dispatch(setPPChoosePicture(false))
     }
 
@@ -58,15 +45,42 @@ export function PixelPerfectChoose(props) {
         dispatch(setPPChoosePicture(false))
     }
 
+
+
     return (
         <div className='PixelPerfectChoose' >
             <div className='ppImages'>
-                <img className='ppChooseImg' onClick={selectPanda} src={'panda.jpg'}></img>
-                <img className='ppChooseImg' onClick={selectWhale} src={'whale.jpg'}></img>
-                <img className='ppChooseImg' onClick={selectCol} src={'colosseum.jpg'}></img>
-                <img className='ppChooseImg' onClick={selectDino} src={'dino.jpg'}></img>
-                <img className='ppChooseImg' onClick={selectUnder} src={'underwater.jpg'}></img>
-                <img className='ppChooseImg' onClick={selectEyes} src={'eyes.jpg'}></img>
+                <div className='massonryBox'>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'panda.jpg'}></img>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'whale.jpg'}></img>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'eyes.jpg'}></img>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'mountain.jpg'}></img>
+                {list1.map((x,i)=>{
+                    return <img key={i} className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={x}></img>
+                })}
+                </div>
+                <div className='massonryBox'>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'colosseum.jpg'}></img>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'dog.jpg'}></img>
+                {list2.map((x,i)=>{
+                    return <img key={i} className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={x}></img>
+                })}
+                </div>
+                <div className='massonryBox'>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'dino.jpg'}></img>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'eiffelTower.jpg'}></img>
+                {list3.map((x,i)=>{
+                    return <img key={i} className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={x}></img>
+                })}
+                </div>
+                <div className='massonryBox'>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'underwater.jpg'}></img>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'elephant.jpg'}></img>
+                <img className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={'arches.jpg'}></img>
+                {list4.map((x,i)=>{
+                    return <img key={i} className='ppChooseImg' onClick={e => selectPic(e.target.src)} src={x}></img>
+                })}
+                </div>
             </div>
             <div className='ppUpload' {...getRootProps()}>
                 <input {...getInputProps()}></input>

@@ -15,17 +15,6 @@
     justify-content: space-evenly;
 }
 
-.ppChooseImg{
-    max-height: 100%;
-    width: 100%;
-    display: block;
-} 
-
-.ppChooseImg:hover{
-    cursor: pointer;
-    opacity: .90;
-}
-
 .ppUpload{
     width: 95%;
     height:19%;
@@ -36,16 +25,28 @@
     align-items: center;
 }
 
+.ppChooseImg{
+    width: 100%;
+    display: block;
+    margin: 0;
+} 
+
+.ppChooseImg:hover{
+    cursor: pointer;
+    opacity: .90;
+}
+
 .ppImages{
     width: 95%;
     height: 70%;
-    -webkit-columns: 2 200px;
-    -moz-columns: 2 200px;
-    columns: 4 200px;
-    column-gap: 0;
     overflow-y: scroll;
-    overflow-x:wrap;
+    overflow-x:hidden;
     border: 2px solid #282c34;
+    display: flex;
+}
+
+.masonryBox{
+    column-count: 1;
 }
 
 .ppChooseClose{
