@@ -6,13 +6,53 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    opacity: .95;
+    border-radius: 2%;    
+    border: solid 2px #282c34;
 }
 
 .ppChooseImg{
-    max-width: 100px;
-    max-height: 100px;
+    max-height: 100%;
+    max-width: 100%;
 } 
 
 .ppChooseImg:hover{
     cursor: pointer;
+    opacity: .90;
+}
+
+.ppUpload{
+    width: 95%;
+    height:19%;
+    border: 2px dashed #282c34;
+    margin: 2.5%;
+    border-radius: 2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ppImages{
+    width: 95%;
+    height: 70%;
+    margin: 2.5%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: masonry;
+    overflow-y: scroll;
+    border: 1px solid #282c34;
+}
+
+.ppChooseClose{
+    max-width: 2.5%;
+    max-height: 2.5%;
+    transition-duration: .25s;
+    position: absolute;
+    top: 1%;
+    right: .5%;
+}
+
+.ppChooseClose:hover{
+    cursor: pointer;
+    transform: rotateZ(-.05turn);
 }

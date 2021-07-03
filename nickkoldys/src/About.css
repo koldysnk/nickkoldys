@@ -67,6 +67,7 @@
     color: #b7c9e5;
     backface-visibility: hidden;
     transform: rotateY(-.5turn);
+    overflow-y: hidden;
 }
 
 .creditsList{
