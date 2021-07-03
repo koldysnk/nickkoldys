@@ -17,7 +17,8 @@
 
 .ppChooseImg{
     max-height: 100%;
-    max-width: 100%;
+    width: 100%;
+    display: block;
 } 
 
 .ppChooseImg:hover{
@@ -38,11 +39,13 @@
 .ppImages{
     width: 95%;
     height: 70%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: masonry;
+    -webkit-columns: 2 200px;
+    -moz-columns: 2 200px;
+    columns: 4 200px;
+    column-gap: 0;
     overflow-y: scroll;
-    border: 1px solid #282c34;
+    overflow-x:wrap;
+    border: 2px solid #282c34;
 }
 
 .ppChooseClose{

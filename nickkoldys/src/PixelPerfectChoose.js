@@ -62,10 +62,10 @@ export function PixelPerfectChoose(props) {
         <div className='PixelPerfectChoose' >
             <div className='ppImages'>
                 <img className='ppChooseImg' onClick={selectPanda} src={'panda.jpg'}></img>
+                <img className='ppChooseImg' onClick={selectWhale} src={'whale.jpg'}></img>
                 <img className='ppChooseImg' onClick={selectCol} src={'colosseum.jpg'}></img>
                 <img className='ppChooseImg' onClick={selectDino} src={'dino.jpg'}></img>
                 <img className='ppChooseImg' onClick={selectUnder} src={'underwater.jpg'}></img>
-                <img className='ppChooseImg' onClick={selectWhale} src={'whale.jpg'}></img>
                 <img className='ppChooseImg' onClick={selectEyes} src={'eyes.jpg'}></img>
             </div>
             <div className='ppUpload' {...getRootProps()}>
