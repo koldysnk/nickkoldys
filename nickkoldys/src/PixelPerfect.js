@@ -41,6 +41,7 @@ export function PixelPerfect(props) {
     }
 
     const [count, setCount] = useState(0)
+    const [errMessage, setErrMessage] = useState('')
 
     // Use useRef for mutable variables that we want to persist
     // without triggering a re-render on their change
@@ -52,14 +53,14 @@ export function PixelPerfect(props) {
     const currAccuracy = useRef(0);
 
     const animate = () => {
-        if(started.current){
+        if (started.current) {
             let canvas = document.getElementsByClassName('canvas')[0]
-            if(!canvas){
+            if (!canvas) {
                 return;
             }
             let context = canvas.getContext('2d')
             let canvas2 = document.getElementsByClassName('canvas')[1]
-            if(!canvas2){
+            if (!canvas2) {
                 return;
             }
             let context2 = canvas2.getContext('2d')
@@ -102,7 +103,7 @@ export function PixelPerfect(props) {
                 }
             }
 
-            if (maxAccuracy>accuracy.current){
+            if (maxAccuracy > accuracy.current) {
                 bestData.current = maxData
                 accuracy.current = maxAccuracy
                 context.putImageData(bestData.current, 0, 0)
@@ -121,67 +122,107 @@ export function PixelPerfect(props) {
 
             // Pass on a function to the setter of the state
             // to make sure we always have the latest state
-            setCount(prevCount => (prevCount + 1) );
+            setCount(prevCount => (prevCount + 1));
 
 
 
 
-        
+
             requestAnimationFrame(animate);
         }
     }
 
+    function sleep(milliseconds) {
+        const date = Date.now();
+        let currentDate = null;
+        do {
+            currentDate = Date.now();
+        } while (currentDate - date < milliseconds);
+    }
+
+    const loadImage = (src,width,height) =>
+        new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.width=width
+            img.height=height
+            img.crossOrigin = "Anonymous";
+            img.onerror = reject;
+            img.src = src;
+        })
+        ;
+
     const start = () => {
-        if(started.current){
+        if (started.current) {
             started.current = false
             setCount(0)
-            return 
+            return
         }
         cancelAnimationFrame(animate)
 
-        let img = document.getElementsByClassName('ppOriginalImage')[0]
-        img.crossOrigin = "Anonymous";
-        let canvas = document.getElementsByClassName('canvas')[0]
-        let context = canvas.getContext('2d')
-        let canvas2 = document.getElementsByClassName('canvas')[1]
-        let context2 = canvas2.getContext('2d')
-        let width = img.width
-        let height = img.height
+        let image = document.getElementsByClassName('ppOriginalImage')[0]
+        loadImage(image.src,image.width,image.height).then(img => {
+            
+            // let cv = document.createElement('canvas');
+            // var ct = canvas.getContext('2d');
+            // cv.width = img.width;
+            // cv.height = img.height;
+            // ct.drawImage(img, 0, 0 );
+            // var myData = ct.getImageData(0, 0, img.width, img.height);
 
-        canvas.height = height
-        canvas.width = width
-        canvas2.height = height
-        canvas2.width = width
-        context.drawImage(img, 0, 0, width, height)
-        currData.current = context.getImageData(0, 0, width, height)
-        goalData.current = new ImageData(width, height)
-        goalData.current.data.set(currData.current.data)
-        bestData.current = new ImageData(width, height)
-        bestData.current.data.set(currData.current.data)
-        context.fillStyle = 'white'
-        context2.fillStyle = 'white'
-        context.fillRect(0, 0, width, height)
-        context2.fillRect(0, 0, width, height)
+            let canvas = document.getElementsByClassName('canvas')[0]
+            let context = canvas.getContext('2d')
+            let canvas2 = document.getElementsByClassName('canvas')[1]
+            let context2 = canvas2.getContext('2d')
+            let width = img.width
+            let height = img.height
 
-        
-        currData.current = context.getImageData(0, 0, width, height)
-        bestData.current = new ImageData(width, height)
-        bestData.current.data.set(currData.current.data)
+            canvas.height = height
+            canvas.width = width
+            canvas2.height = height
+            canvas2.width = width
+            context.drawImage(img, 0, 0, width, height)
 
-        let a = ppComputeAccuracy(goalData.current.data,currData.current.data)
+            if (!(img.naturalWidth !== 0)) {
+                console.log('wait')
+                start()
+                return
+            }
 
-        accuracy.current = a
-        currAccuracy.current = a
-        
+            currData.current = context.getImageData(0, 0, width, height)
+            goalData.current = new ImageData(width, height)
+            goalData.current.data.set(currData.current.data)
+            bestData.current = new ImageData(width, height)
+            bestData.current.data.set(currData.current.data)
+            context.fillStyle = 'white'
+            context2.fillStyle = 'white'
+            context.fillRect(0, 0, width, height)
+            context2.fillRect(0, 0, width, height)
 
-        
-        context.putImageData(bestData.current, 0, 0)
-        context2.putImageData(currData.current, 0, 0)
 
-        
-        started.current = true
-        //requestRef.current = requestAnimationFrame(animate);
-        requestAnimationFrame(animate)
+            currData.current = context.getImageData(0, 0, width, height)
+            bestData.current = new ImageData(width, height)
+            bestData.current.data.set(currData.current.data)
+
+            let a = ppComputeAccuracy(goalData.current.data, currData.current.data)
+
+            accuracy.current = a
+            currAccuracy.current = a
+
+
+
+            context.putImageData(bestData.current, 0, 0)
+            context2.putImageData(currData.current, 0, 0)
+
+
+            started.current = true
+            //requestRef.current = requestAnimationFrame(animate);
+            requestAnimationFrame(animate)
+        }).catch(err => {
+            setErrMessage('Image Unavailable')
+        })
+
+
         //return () => cancelAnimationFrame(requestRef.current);
     } // Make sure the effect runs only oncea
 
@@ -190,9 +231,10 @@ export function PixelPerfect(props) {
     }
 
     useEffect(() => {
-        started.current=false
+        started.current = false
         setCount(0)
-    },[activePicture])
+        setErrMessage('')
+    }, [activePicture])
 
     return (
         <div className='PixelPerfect' >
@@ -201,7 +243,7 @@ export function PixelPerfect(props) {
                 <img className='ppOriginalImage' src={activePicture}></img>
             </div>
             <div><button onClick={start}>{started.current ? 'Stop' : 'Start'}</button><button onClick={choosePic}>Select Image</button></div>
-            {`Generation Count: ${Math.round(count)}`}
+            {count>0?`Generation Count: ${Math.round(count)}`:errMessage}
             <canvas className={`canvas ${started.current ? '' : 'hiddenCanvas'}`} ></canvas>
             {started.current ? `Best Accuracy: ${(accuracy.current * 100).toFixed(4).replace(/\.0*$|0+$/, "")}%` : ''}
             <canvas className={`canvas ${started.current ? '' : 'hiddenCanvas'}`} ></canvas>
@@ -209,10 +251,10 @@ export function PixelPerfect(props) {
             {choosePicture ? <PixelPerfectChoose /> : ''}
             <h3 className='descriptionTitle'>Description</h3>
             <p className='descriptionText'>
-                The Pixel Perfect project uses a variation of the genetic algorithm in the hill climber class. 
+                The Pixel Perfect project uses a variation of the genetic algorithm in the hill climber class.
                 The initial build of the algorithm generated a number of random triangles and chose the triangle
-                that improved the accuracy of the developing image the most. This process was repeated at each generation 
-                and the generated image eventually became more and more accurate. However, the original algorithm did not 
+                that improved the accuracy of the developing image the most. This process was repeated at each generation
+                and the generated image eventually became more and more accurate. However, the original algorithm did not
                 fully embody the theory behind a genetic algorithm. To fix this, I added the mutation component to the algorithm.
                 Each time a triangle is generated a new generation of triangles are created by mutating the original triangle.
                 The most accurate triangle from the new generation is then chosen to be the original triangle for the next generation.
