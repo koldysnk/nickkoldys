@@ -98,6 +98,16 @@ export function ChessSingleplayer(props) {
             <button className='chessSingleplayerButton chessButton' onClick={reset}>Reset</button>
             <button className='tttGoSecond tttButton' onClick={swapTurn}>Go {playerFirst ? 'Second' : 'First'}</button>
             </div>
+            <h3 className='descriptionTitle'>Description</h3>
+            <p className='descriptionText'>
+                The chess AI I developed uses a combination of multiple commonly known game AI techniques.
+                The AI is deterministic and the back bone of the algorithm is MinMax analysis. The 
+                evaluation function uses both piece availability and piece position to detirmine a score for each side.
+                To improve the efficiency of the MinMax tree I added Alph Beta pruning which reduces the amount of node searches but does not change
+                the outcome of the analysis. Move ordering is used to find Beta cut offs earlier which greatly reduces the 
+                number of nodes searched. I am currently working on adding a quiescence search to continue evaluating after 
+                the max depth is reached until there are only quiet moves left.
+            </p>
         </div>
     );
 }

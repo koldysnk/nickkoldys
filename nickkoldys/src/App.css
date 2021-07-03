@@ -24,11 +24,15 @@ html{
   color: white;
 }
 
+.descriptionTitle{
+  margin-bottom: 0;
+}
 
 .descriptionText{
   width: 50%;
   align-self: center;
   text-align: left;
+  padding-bottom: 1rem;
 }
 
 

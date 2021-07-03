@@ -206,6 +206,17 @@ export function PixelPerfect(props) {
             <canvas className={`canvas ${started.current ? '' : 'hiddenCanvas'}`} ></canvas>
             {started.current ? `Current Accuracy: ${(currAccuracy.current * 100).toFixed(4).replace(/\.0*$|0+$/, "")}%` : ''}
             {choosePicture ? <PixelPerfectChoose /> : ''}
+            <h3 className='descriptionTitle'>Description</h3>
+            <p className='descriptionText'>
+                The Pixel Perfect project uses a variation of the genetic algorithm in the hill climber class. 
+                The initial build of the algorithm generated a number of random triangles and chose the triangle
+                that improved the accuracy of the developing image the most. This process was repeated at each generation 
+                and the generated image eventually became more and more accurate. However, the original algorithm did not 
+                fully embody the theory behind a genetic algorithm. To fix this, I added the mutation component to the algorithm.
+                Each time a triangle is generated a new generation of triangles are created by mutating the original triangle.
+                The most accurate triangle from the new generation is then chosen to be the original triangle for the next generation.
+                This process is repeated until the accuracy begins to plateau, then a new random triangle is generated and the process starts again.
+            </p>
         </div>
     );
 }

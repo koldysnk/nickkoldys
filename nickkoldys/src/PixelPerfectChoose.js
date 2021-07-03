@@ -72,7 +72,7 @@ export function PixelPerfectChoose(props) {
                 <input {...getInputProps()}></input>
                 <p>{message}</p>
             </div>
-            <img className='ppChooseClose' src='x.png' onClick={close}></img>
+            <p className='ppChooseClose' onClick={close}>Close</p>
         </div>
     );
 }
