@@ -1,19 +1,36 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, {useEffect, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { startPP, startPPTri, stepPP, stepPPTri, setPPBestData, setPPCurrAccuracy, setPPCurrData, setPPGenerationCount, setPPAccuracy, setPPChoosePicture } from './actions';
+import { setPPChoosePicture } from './actions';
 import './PixelPerfect.css';
 import { PixelPerfectChoose } from './PixelPerfectChoose';
 
 export function PixelPerfect(props) {
-    // const currData = useSelector(state => state.ppCurrData);
-    // const bestData = useSelector(state => state.ppBestData);
-    // const goalData = useSelector(state => state.ppGoalData);
-    //const started = useSelector(state => state.ppStarted);
-    //const accuracy = useSelector(state => state.ppAccuracy);
-    //const currAccuracy = useSelector(state => state.ppCurrAccuracy);
-    const ppGenerationCount = useSelector(state => state.ppGenerationCount);
     const activePicture = useSelector(state => state.ppActivePicture);
     const choosePicture = useSelector(state => state.ppChoosePicture);
+
+    const [count, setCount] = useState(0)
+    const [errMessage, setErrMessage] = useState('')
+
+    // Use useRef for mutable variables that we want to persist
+    // without triggering a re-render on their change
+    const started = useRef(false);
+    const currData = useRef();
+    const bestData = useRef();
+    const goalData = useRef();
+    const accuracy = useRef(0);
+    const currAccuracy = useRef(0);
+    const triangle = useRef({
+        aX:0,
+        aY:0,
+        bX:0,
+        bY:0,
+        cX:0,
+        cY:0,
+        r:0,
+        g:0,
+        b:0,
+        a:0,
+    })
 
     const dispatch = useDispatch();
 
@@ -40,17 +57,29 @@ export function PixelPerfect(props) {
         return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
     }
 
-    const [count, setCount] = useState(0)
-    const [errMessage, setErrMessage] = useState('')
+    const mutateTriangle = (mr,width,height,triangle) => {
+        let halfRangeWidth=width*mr
+        let rangeWidth = (halfRangeWidth*2)
+        let halfRangeHeight=height*mr
+        let rangeHeight = (halfRangeHeight*2)
+        let halfRangeColor=256*mr
+        let rangeColor = (halfRangeColor*2)
 
-    // Use useRef for mutable variables that we want to persist
-    // without triggering a re-render on their change
-    const started = useRef(false);
-    const currData = useRef();
-    const bestData = useRef();
-    const goalData = useRef();
-    const accuracy = useRef(0);
-    const currAccuracy = useRef(0);
+        let newTriangle = {
+            aX:triangle.aX+Math.random()*rangeWidth-halfRangeWidth,
+            aY:triangle.aY+Math.random()*rangeHeight-halfRangeHeight,
+            bX:triangle.bX+Math.random()*rangeWidth-halfRangeWidth,
+            bY:triangle.bY+Math.random()*rangeHeight-halfRangeHeight,
+            cX:triangle.bX+Math.random()*rangeWidth-halfRangeWidth,
+            cY:triangle.cY+Math.random()*rangeHeight-halfRangeHeight,
+            r:triangle.r+Math.random()*rangeColor-halfRangeColor,
+            g:triangle.g+Math.random()*rangeColor-halfRangeColor,
+            b:triangle.b+Math.random()*rangeColor-halfRangeColor,
+            a:triangle.a+Math.random()*mr-mr/2,
+        }
+
+        return newTriangle
+    }
 
     const animate = () => {
         if (started.current) {
@@ -66,78 +95,98 @@ export function PixelPerfect(props) {
             let context2 = canvas2.getContext('2d')
 
 
-            let maxAccuracy = 0
-            let maxData = new ImageData(canvas.width, canvas.height)
+            if(count%10==0){
 
-            for (let i = 0; i < 10; i++) {
+                if(currAccuracy.current>accuracy.current){
+                    bestData.current.data.set(currData.current.data)
+                    accuracy.current = currAccuracy.current
+
+                    context.putImageData(bestData.current,0,0)
+                }
+
+                let newTriangle = {
+                    aX:getRandomIntInclusive(0, canvas.width),
+                    aY:getRandomIntInclusive(0, canvas.height),
+                    bX:getRandomIntInclusive(0, canvas.width),
+                    bY:getRandomIntInclusive(0, canvas.height),
+                    cX:getRandomIntInclusive(0, canvas.width),
+                    cY:getRandomIntInclusive(0, canvas.height),
+                    r:getRandomIntInclusive(0, 255),
+                    g:getRandomIntInclusive(0, 255),
+                    b:getRandomIntInclusive(0, 255),
+                    a:Math.random(),
+                }
+
+                //Reset triangle
                 context2.putImageData(bestData.current, 0, 0)
 
-                let r = getRandomIntInclusive(0, 255)
-                let g = getRandomIntInclusive(0, 255)
-                let b = getRandomIntInclusive(0, 255)
-                let a = Math.random()
-
+                //Set color
                 context2.fillStyle = `rgba(
-                ${r},
-                ${g},
-                ${b},
-                ${a})`;
+                ${newTriangle.r},
+                ${newTriangle.g},
+                ${newTriangle.b},
+                ${newTriangle.a})`;
+
                 context2.beginPath();
-                let x1 = getRandomIntInclusive(0, canvas.width)
-                let y1 = getRandomIntInclusive(0, canvas.height)
-                let x2 = getRandomIntInclusive(0, canvas.width)
-                let y2 = getRandomIntInclusive(0, canvas.height)
-                let x3 = getRandomIntInclusive(0, canvas.width)
-                let y4 = getRandomIntInclusive(0, canvas.height)
-                context2.moveTo(x1, y1);
-                context2.lineTo(x2, y2);
-                context2.lineTo(x3, y4);
+                context2.moveTo(newTriangle.aX, newTriangle.aY);
+                context2.lineTo(newTriangle.bX, newTriangle.bY);
+                context2.lineTo(newTriangle.cX, newTriangle.cY);
                 context2.fill();
 
-                let newData = context2.getImageData(0, 0, canvas.width, canvas.height)
-                let newAccuracy = ppComputeAccuracy(goalData.current.data, newData.data)
+                currData.current = context2.getImageData(0, 0, canvas.width, canvas.height)
+                currAccuracy.current = ppComputeAccuracy(goalData.current.data, currData.current.data)
 
-                if (newAccuracy > maxAccuracy) {
-                    maxAccuracy = newAccuracy
-                    maxData = newData
+                context2.putImageData(currData.current, 0, 0)
+            }else{
+                let newData = new ImageData(canvas.width, canvas.height)
+                let newAccuracy = 0
+                let bestTriangle={}
+
+                for (let i = 0; i < 10; i++) {
+                    let newTriangle = mutateTriangle(.05, canvas.width, canvas.height, triangle.current)
+
+                    //Reset triangle
+                    context2.putImageData(bestData.current, 0, 0)
+
+                    //Set color
+                    context2.fillStyle = `rgba(
+                    ${newTriangle.r},
+                    ${newTriangle.g},
+                    ${newTriangle.b},
+                    ${newTriangle.a})`;
+
+                    context2.beginPath();
+                    context2.moveTo(newTriangle.aX, newTriangle.aY);
+                    context2.lineTo(newTriangle.bX, newTriangle.bY);
+                    context2.lineTo(newTriangle.cX, newTriangle.cY);
+                    context2.fill();
+
+                    let mutatedData = context2.getImageData(0, 0, canvas.width, canvas.height)
+                    let mutatedAccuracy = ppComputeAccuracy(goalData.current.data, mutatedData.data)
+
+                    if(mutatedAccuracy>newAccuracy){
+                        newAccuracy = mutatedAccuracy
+                        newData = mutatedData
+                        bestTriangle=newTriangle
+                    }
                 }
+
+
+                if(newAccuracy>currAccuracy.current){
+                    context2.putImageData(newData,0,0)
+                    currData.current = newData
+                    currAccuracy.current = newAccuracy
+                }
+                triangle.current = bestTriangle
+                
             }
-
-            if (maxAccuracy > accuracy.current) {
-                bestData.current = maxData
-                accuracy.current = maxAccuracy
-                context.putImageData(bestData.current, 0, 0)
-            }
-
-            currAccuracy.current = maxAccuracy
-            currData.current = maxData
-            context2.putImageData(currData.current, 0, 0)
-
-
-
-
-
-
-
 
             // Pass on a function to the setter of the state
             // to make sure we always have the latest state
             setCount(prevCount => (prevCount + 1));
 
-
-
-
-
             requestAnimationFrame(animate);
         }
-    }
-
-    function sleep(milliseconds) {
-        const date = Date.now();
-        let currentDate = null;
-        do {
-            currentDate = Date.now();
-        } while (currentDate - date < milliseconds);
     }
 
     const loadImage = (src,width,height) =>
@@ -163,12 +212,7 @@ export function PixelPerfect(props) {
         let image = document.getElementsByClassName('ppOriginalImage')[0]
         loadImage(image.src,image.width,image.height).then(img => {
             
-            // let cv = document.createElement('canvas');
-            // var ct = canvas.getContext('2d');
-            // cv.width = img.width;
-            // cv.height = img.height;
-            // ct.drawImage(img, 0, 0 );
-            // var myData = ct.getImageData(0, 0, img.width, img.height);
+
 
             let canvas = document.getElementsByClassName('canvas')[0]
             let context = canvas.getContext('2d')
@@ -264,3 +308,84 @@ export function PixelPerfect(props) {
     );
 }
 
+/*
+const animate = () => {
+        if (started.current) {
+            let canvas = document.getElementsByClassName('canvas')[0]
+            if (!canvas) {
+                return;
+            }
+            let context = canvas.getContext('2d')
+            let canvas2 = document.getElementsByClassName('canvas')[1]
+            if (!canvas2) {
+                return;
+            }
+            let context2 = canvas2.getContext('2d')
+
+
+            let maxAccuracy = 0
+            let maxData = new ImageData(canvas.width, canvas.height)
+
+            for (let i = 0; i < 10; i++) {
+                context2.putImageData(bestData.current, 0, 0)
+
+                let r = getRandomIntInclusive(0, 255)
+                let g = getRandomIntInclusive(0, 255)
+                let b = getRandomIntInclusive(0, 255)
+                let a = Math.random()
+
+                context2.fillStyle = `rgba(
+                ${r},
+                ${g},
+                ${b},
+                ${a})`;
+                context2.beginPath();
+                let x1 = getRandomIntInclusive(0, canvas.width)
+                let y1 = getRandomIntInclusive(0, canvas.height)
+                let x2 = getRandomIntInclusive(0, canvas.width)
+                let y2 = getRandomIntInclusive(0, canvas.height)
+                let x3 = getRandomIntInclusive(0, canvas.width)
+                let y4 = getRandomIntInclusive(0, canvas.height)
+                context2.moveTo(x1, y1);
+                context2.lineTo(x2, y2);
+                context2.lineTo(x3, y4);
+                context2.fill();
+
+                let newData = context2.getImageData(0, 0, canvas.width, canvas.height)
+                let newAccuracy = ppComputeAccuracy(goalData.current.data, newData.data)
+
+                if (newAccuracy > maxAccuracy) {
+                    maxAccuracy = newAccuracy
+                    maxData = newData
+                }
+            }
+
+            if (maxAccuracy > accuracy.current) {
+                bestData.current = maxData
+                accuracy.current = maxAccuracy
+                context.putImageData(bestData.current, 0, 0)
+            }
+
+            currAccuracy.current = maxAccuracy
+            currData.current = maxData
+            context2.putImageData(currData.current, 0, 0)
+
+
+
+
+
+
+
+
+            // Pass on a function to the setter of the state
+            // to make sure we always have the latest state
+            setCount(prevCount => (prevCount + 1));
+
+
+
+
+
+            requestAnimationFrame(animate);
+        }
+    }
+*/
