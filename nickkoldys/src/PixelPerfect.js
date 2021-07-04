@@ -13,12 +13,13 @@ export function PixelPerfect(props) {
 
     // Use useRef for mutable variables that we want to persist
     // without triggering a re-render on their change
-    const started = useRef(false);
-    const currData = useRef();
-    const bestData = useRef();
-    const goalData = useRef();
-    const accuracy = useRef(0);
-    const currAccuracy = useRef(0);
+    const started = useRef(false)
+    const currData = useRef()
+    const bestData = useRef()
+    const goalData = useRef()
+    const accuracy = useRef(0)
+    const currAccuracy = useRef(0)
+    const generations = useRef(0)
     const triangle = useRef({
         aX:0,
         aY:0,
@@ -95,7 +96,7 @@ export function PixelPerfect(props) {
             let context2 = canvas2.getContext('2d')
 
 
-            if(count%10==0){
+            if(generations.current%50==0){
 
                 if(currAccuracy.current>accuracy.current){
                     bestData.current.data.set(currData.current.data)
@@ -137,6 +138,7 @@ export function PixelPerfect(props) {
                 currAccuracy.current = ppComputeAccuracy(goalData.current.data, currData.current.data)
 
                 context2.putImageData(currData.current, 0, 0)
+                triangle.current = newTriangle
             }else{
                 let newData = new ImageData(canvas.width, canvas.height)
                 let newAccuracy = 0
@@ -184,6 +186,7 @@ export function PixelPerfect(props) {
             // Pass on a function to the setter of the state
             // to make sure we always have the latest state
             setCount(prevCount => (prevCount + 1));
+            generations.current = generations.current+1
 
             requestAnimationFrame(animate);
         }
@@ -252,6 +255,7 @@ export function PixelPerfect(props) {
 
             accuracy.current = a
             currAccuracy.current = a
+            generations.current = 0
 
 
 
