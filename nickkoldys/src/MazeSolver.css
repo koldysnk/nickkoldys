@@ -31,3 +31,11 @@
 .msBorderLeft{
     border-left:solid 1px;
 }
+
+.msStart{
+    background-color: green;
+}
+
+.msEnd{
+    background-color: red;
+}
