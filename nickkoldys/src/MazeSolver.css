@@ -1,0 +1,33 @@
+.MazeSolver{
+    background-color: #61dafb;
+    display:flex;
+    justify-content: top;
+    align-items: center;
+    flex-direction: column;
+}
+
+.msBoard{
+    display: flex;
+}
+
+.mazeSquare{
+    height: 20px;
+    width: 20px;
+    box-sizing: border-box;
+}
+
+.msBorderTop{
+    border-top:solid 1px;
+}
+
+.msBorderRight{
+    border-right:solid 1px;
+}
+
+.msBorderBottom{
+    border-bottom:solid 1px;
+}
+
+.msBorderLeft{
+    border-left:solid 1px;
+}

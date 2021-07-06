@@ -76,7 +76,7 @@ export function PixelPerfect(props) {
             r:triangle.r+Math.random()*rangeColor-halfRangeColor,
             g:triangle.g+Math.random()*rangeColor-halfRangeColor,
             b:triangle.b+Math.random()*rangeColor-halfRangeColor,
-            a:triangle.a+Math.random()*mr-mr/2,
+            a:Math.max(triangle.a+Math.random()*mr-mr/2,0),
         }
 
         return newTriangle
@@ -174,11 +174,11 @@ export function PixelPerfect(props) {
                 }
 
 
-                if(newAccuracy>currAccuracy.current){
+                
                     context2.putImageData(newData,0,0)
                     currData.current = newData
                     currAccuracy.current = newAccuracy
-                }
+                
                 triangle.current = bestTriangle
                 
             }

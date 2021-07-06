@@ -17,6 +17,7 @@ import { ChessMenu } from './ChessMenu';
 import { ChessMultiplayer } from './ChessMultiplayer';
 import { ChessSingleplayer } from './ChessSingleplayer';
 import { PixelPerfect } from './PixelPerfect';
+import { MazeSolver } from './MazeSolver';
 
 function App() {
   return (
@@ -68,6 +69,9 @@ function App() {
         </Route>
         <Route exact path="/pixel_perfect">
           <PixelPerfect />
+        </Route>
+        <Route exact path="/maze_solver">
+          <MazeSolver />
         </Route>
         <Route exact path="/about">
           <About />
