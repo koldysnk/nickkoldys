@@ -202,6 +202,7 @@ export function MazeSolver(props) {
 
     const startDFS = () => {
         cancelAnimationFrame(stepDFS)
+        cancelAnimationFrame(stepBFS)
 
         robot.current = {x:0,y:0}
         completed.current = false
@@ -221,6 +222,99 @@ export function MazeSolver(props) {
         
     } // Make sure the effect runs only once
 
+
+    const downStepBFS = () => {
+        setCount(prevCount => (prevCount + 1));
+        let {x,y} = path.current.pop()
+        maze.current[x][y].path = false
+        maze.current[x][y].past = true
+
+        x = path.current[path.current.length-1].x
+        y = path.current[path.current.length-1].y
+
+        if(!maze.current[x][y].t && y>0 && !maze.current[x][y-1].visited
+            || !maze.current[x][y].r && x<currWidth.current-1 && !maze.current[x+1][y].visited
+            || !maze.current[x][y].b && y<currHeight.current-1 && !maze.current[x][y+1].visited
+            || !maze.current[x][y].l && x>0 && !maze.current[x-1][y].visited){
+
+                requestAnimationFrame(stepBFS)
+        }else{
+            requestAnimationFrame(downStepBFS)
+        }
+
+
+    }
+
+    const stepBFS = () => {
+        setCount(prevCount => (prevCount + 1));
+
+        if(!completed.current){
+            
+            let x = evaluationOrder.current[0].x
+            let y = evaluationOrder.current[0].y
+
+            evaluationOrder.current.shift()
+            path.current.push({x:x,y:y})
+
+            maze.current[x][y].path = true
+            maze.current[x][y].visited = true
+
+            if(x == currWidth.current-1 && y == currHeight.current-1){
+                completed.current = true
+
+                
+                requestAnimationFrame(stepBFS)
+            }else{
+                let paths = []
+                if(!maze.current[x][y].t && y>0 && !maze.current[x][y-1].visited){
+                    paths.push({x:x,y:y-1})
+                }
+                
+                if(!maze.current[x][y].r && x<currWidth.current-1 && !maze.current[x+1][y].visited){
+                    paths.push({x:x+1,y:y})
+                }
+                
+                if(!maze.current[x][y].b && y<currHeight.current-1 && !maze.current[x][y+1].visited){
+                    paths.push({x:x,y:y+1})
+                }
+
+                if(!maze.current[x][y].l && x>0 && !maze.current[x-1][y].visited){
+                    paths.push({x:x-1,y:y})
+                }
+                
+                if(paths.length>0){
+                    evaluationOrder.current.push(...paths)
+                    
+                    requestAnimationFrame(stepBFS)
+                }else{
+                    requestAnimationFrame(downStepBFS)
+                }
+            }
+        }
+    }
+
+    const startBFS = () => {
+        cancelAnimationFrame(stepDFS)
+        cancelAnimationFrame(stepBFS)
+
+        robot.current = {x:0,y:0}
+        completed.current = false
+        maze.current = maze.current.map(w => {
+            return w.map(v => {
+                v.visited = false
+                v.path = false
+                v.past = false
+
+                return v
+            })
+        })
+        evaluationOrder.current=[{x:0,y:0}]
+
+        requestAnimationFrame(stepBFS)
+
+        
+    } // Make sure the effect runs only once
+
     
 
 
@@ -231,6 +325,7 @@ export function MazeSolver(props) {
             <div>
                 <button onClick={initializeMaze}>Generate</button>
                 <button onClick={startDFS}>DFS</button>
+                <button onClick={startBFS}>BFS</button>
             </div>
             <div>
                 <label>Width: </label>
