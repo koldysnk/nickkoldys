@@ -159,7 +159,7 @@ export function MazeSolver(props) {
             
             let x = evaluationOrder.current[0].x
             let y = evaluationOrder.current[0].y
-            console.log(x,y)
+
             evaluationOrder.current.shift()
             path.current.push({x:x,y:y})
 
