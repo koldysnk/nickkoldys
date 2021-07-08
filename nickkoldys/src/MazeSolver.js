@@ -17,6 +17,7 @@ export function MazeSolver(props) {
     const maxWidth = Math.floor(width*.8/20)
     const maxHeight = Math.floor(height*.8/20)
     const maze = useRef([])
+    const path = useRef([])
     const currWidth = useRef(10)
     const currHeight = useRef(10)
 
@@ -27,57 +28,57 @@ export function MazeSolver(props) {
         if(s.length>0){
             let x = s[s.length-1].x
             let y = s[s.length-1].y
-            let numSides = (y<(currWidth.current-1) && !maze.current[y+1][x].visited) +
-                (y>0 && !maze.current[y-1][x].visited) +
-                (x<(currHeight.current-1) && !maze.current[y][x+1].visited) +
-                (x>0 && !maze.current[y][x-1].visited) 
+            let numSides = (x<(currWidth.current-1) && !maze.current[x+1][y].visited) +
+                (x>0 && !maze.current[x-1][y].visited) +
+                (y<(currHeight.current-1) && !maze.current[x][y+1].visited) +
+                (y>0 && !maze.current[x][y-1].visited) 
 
             if(numSides){
                 let rand = Math.floor(Math.random()*numSides)
 
                 //Right to Left
-                if(y<(currWidth.current-1) && !maze.current[y+1][x].visited){
+                if(x<(currWidth.current-1) && !maze.current[x+1][y].visited){
                     if(rand==0){
-                        maze.current[y+1][x].visited = true
-                        maze.current[y+1][x].l = false
-                        maze.current[y][x].r = false
-                        s.push(maze.current[y+1][x])
+                        maze.current[x+1][y].visited = true
+                        maze.current[x+1][y].l = false
+                        maze.current[x][y].r = false
+                        s.push(maze.current[x+1][y])
                         createMaze(s)
                     }
                     rand--
                 }
 
                 //Top to Bottom
-                if(x<(currHeight.current-1) && !maze.current[y][x+1].visited){
+                if(y<(currHeight.current-1) && !maze.current[x][y+1].visited){
                     if(rand==0){
-                        maze.current[y][x+1].visited = true
-                        maze.current[y][x+1].t = false
-                        maze.current[y][x].b = false
-                        s.push(maze.current[y][x+1])
+                        maze.current[x][y+1].visited = true
+                        maze.current[x][y+1].t = false
+                        maze.current[x][y].b = false
+                        s.push(maze.current[x][y+1])
                         createMaze(s)
                     }
                     rand--
                 }
                 
                 //Right to Left
-                if(y>0 && !maze.current[y-1][x].visited){
+                if(x>0 && !maze.current[x-1][y].visited){
                     if(rand==0){
-                        maze.current[y-1][x].visited = true
-                        maze.current[y-1][x].r = false
-                        maze.current[y][x].l = false
-                        s.push(maze.current[y-1][x])
+                        maze.current[x-1][y].visited = true
+                        maze.current[x-1][y].r = false
+                        maze.current[x][y].l = false
+                        s.push(maze.current[x-1][y])
                         createMaze(s)
                     }
                     rand--
                 }
                 
                 //Bottom to Top
-                if(x>0 && !maze.current[y][x-1].visited){
+                if(y>0 && !maze.current[x][y-1].visited){
                     if(rand==0){
-                        maze.current[y][x-1].visited = true
-                        maze.current[y][x-1].b = false
-                        maze.current[y][x].t = false
-                        s.push(maze.current[y][x-1])
+                        maze.current[x][y-1].visited = true
+                        maze.current[x][y-1].b = false
+                        maze.current[x][y].t = false
+                        s.push(maze.current[x][y-1])
                         createMaze(s)
                     }
                     rand--
@@ -96,7 +97,7 @@ export function MazeSolver(props) {
         for (let i = 0; i < currWidth.current; i++) {
             let row = []
             for (let j = 0; j < currHeight.current; j++) {
-                row.push({x:j,y:i, t:true,l:true,r:true,b:true,visited:false})
+                row.push({x:i,y:j, t:true,l:true,r:true,b:true,visited:false})
             }
             newMaze.push(row)
         }
@@ -126,10 +127,26 @@ export function MazeSolver(props) {
         initializeMaze()
     }
 
+    const stepDFS = () => {
+
+    }
+
+    const startDFS = () => {
+        cancelAnimationFrame(stepDFS)
+
+        
+        requestAnimationFrame(stepDFS)
+
+        
+    } // Make sure the effect runs only once
+
+    
+
+
 
     return (
         <div className='MazeSolver' >
-            <h2 className='msTitle'>MazeSolver</h2>
+            <h2 className='msTitle'>Maze Solver</h2>
             <div>
                 <button onClick={initializeMaze}>Generate</button>
             </div>
@@ -147,10 +164,9 @@ export function MazeSolver(props) {
                 {maze.current.map((w, i) => {
                     return <div key={i}>{w.map((v, j) => {
                         let className = 'mazeSquare';
-
                         if(v.x==0 &&v.y==0){
                             className+= ' msStart'
-                        }else if(v.y==currWidth.current-1 &&v.x==currHeight.current-1){
+                        }else if(v.x==currWidth.current-1 &&v.y==currHeight.current-1){
                             className+= ' msEnd'
                         }
 
@@ -167,6 +183,9 @@ export function MazeSolver(props) {
                             className+= ' msBorderLeft'
                         }
 
+                        if(path.current.includes(`${v.x}-${v.y}`)){
+                            return <div key={`${i}-${j}`} className={className}><div className='msDot'></div></div>
+                        }
 
                         return <div key={`${i}-${j}`} className={className}></div>
                     })}<br/></div>
@@ -176,7 +195,7 @@ export function MazeSolver(props) {
             <h3 className='descriptionTitle'>Description</h3>
             <p className='descriptionText'>
                 The Maze Solver project generates a random maze and gives the user the option
-                of solving the maze with a depth first search or a breadth first search. Both
+                of solving the maze with a depth first search (DFS) or a breadth first search (BFS). Both
                 variations are guaranteed to find a solution if one exists, but a breadth first search is guaranteed
                 to find the shortest path.
             </p>
