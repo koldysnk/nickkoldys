@@ -14,8 +14,8 @@ export function MazeSolver(props) {
     // Use useRef for mutable variables that we want to persist
     // without triggering a re-render on their change
     const { height, width } = useWindowDimensions();
-    const maxWidth = Math.floor(width*.8/10)
-    const maxHeight = Math.floor(height*.8/10)
+    const maxWidth = Math.floor(width*.8/20)
+    const maxHeight = Math.floor(height*.8/20)
     const maze = useRef([])
     const currWidth = useRef(10)
     const currHeight = useRef(10)
@@ -116,7 +116,15 @@ export function MazeSolver(props) {
         initializeMaze()
     }, [])
 
+    const setWidth = (newWidth) => {
+        currWidth.current = newWidth
+        initializeMaze()
+    }
 
+    const setHeight = (newHeight) => {
+        currHeight.current = newHeight
+        initializeMaze()
+    }
 
 
     return (
@@ -125,7 +133,16 @@ export function MazeSolver(props) {
             <div>
                 <button onClick={initializeMaze}>Generate</button>
             </div>
-            <input type="range" min="10" max={maxHeight} value={currWidth} class="slider" id="myRange"></input>
+            <div>
+                <label>Width: </label>
+                <input type="range" min="10" max={maxWidth} value={currWidth.current} className="slider" onChange={e => setWidth(e.target.value)}></input>
+                <label> {currWidth.current}</label>
+            </div>
+            <div>
+                <label>Height: </label>
+                <input type="range" min="10" max={maxHeight} value={currHeight.current} className="slider" onChange={e => setHeight(e.target.value)}></input>
+                <label> {currHeight.current}</label>
+            </div>
             <div className='msBoard'>
                 {maze.current.map((w, i) => {
                     return <div key={i}>{w.map((v, j) => {
@@ -133,7 +150,7 @@ export function MazeSolver(props) {
 
                         if(v.x==0 &&v.y==0){
                             className+= ' msStart'
-                        }else if(v.x==currWidth.current-1 &&v.y==currHeight.current-1){
+                        }else if(v.y==currWidth.current-1 &&v.x==currHeight.current-1){
                             className+= ' msEnd'
                         }
 
