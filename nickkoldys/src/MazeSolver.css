@@ -19,6 +19,13 @@
     justify-content: center;
 }
 
+.msPast{
+    border-radius: 50%;
+    border: #282c34 1px solid;
+    width: 60%;
+    height: 60%;
+}
+
 .msDot{
     border-radius: 50%;
     background-color: #282c34;

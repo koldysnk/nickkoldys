@@ -17,9 +17,12 @@ export function MazeSolver(props) {
     const maxWidth = Math.floor(width*.8/20)
     const maxHeight = Math.floor(height*.8/20)
     const maze = useRef([])
+    const evaluationOrder = useRef([])
     const path = useRef([])
     const currWidth = useRef(10)
     const currHeight = useRef(10)
+    const robot = useRef({x:0,y:0})
+    const completed = useRef(false)
 
     const dispatch = useDispatch();
 
@@ -127,14 +130,92 @@ export function MazeSolver(props) {
         initializeMaze()
     }
 
-    const stepDFS = () => {
+    const downStepDFS = () => {
+        setCount(prevCount => (prevCount + 1));
+        let {x,y} = path.current.pop()
+        maze.current[x][y].path = false
+        maze.current[x][y].past = true
 
+        x = path.current[path.current.length-1].x
+        y = path.current[path.current.length-1].y
+
+        if(!maze.current[x][y].t && y>0 && !maze.current[x][y-1].visited
+            || !maze.current[x][y].r && x<currWidth.current-1 && !maze.current[x+1][y].visited
+            || !maze.current[x][y].b && y<currHeight.current-1 && !maze.current[x][y+1].visited
+            || !maze.current[x][y].l && x>0 && !maze.current[x-1][y].visited){
+
+                requestAnimationFrame(stepDFS)
+        }else{
+            requestAnimationFrame(downStepDFS)
+        }
+
+
+    }
+
+    const stepDFS = () => {
+        setCount(prevCount => (prevCount + 1));
+
+        if(!completed.current){
+            
+            let x = evaluationOrder.current[0].x
+            let y = evaluationOrder.current[0].y
+            console.log(x,y)
+            evaluationOrder.current.shift()
+            path.current.push({x:x,y:y})
+
+            maze.current[x][y].path = true
+            maze.current[x][y].visited = true
+
+            if(x == currWidth.current-1 && y == currHeight.current-1){
+                completed.current = true
+
+                
+                requestAnimationFrame(stepDFS)
+            }else{
+                let paths = []
+                if(!maze.current[x][y].t && y>0 && !maze.current[x][y-1].visited){
+                    paths.push({x:x,y:y-1})
+                }
+                
+                if(!maze.current[x][y].r && x<currWidth.current-1 && !maze.current[x+1][y].visited){
+                    paths.push({x:x+1,y:y})
+                }
+                
+                if(!maze.current[x][y].b && y<currHeight.current-1 && !maze.current[x][y+1].visited){
+                    paths.push({x:x,y:y+1})
+                }
+
+                if(!maze.current[x][y].l && x>0 && !maze.current[x-1][y].visited){
+                    paths.push({x:x-1,y:y})
+                }
+                
+                if(paths.length>0){
+                    evaluationOrder.current.unshift(...paths)
+                    
+                    requestAnimationFrame(stepDFS)
+                }else{
+                    requestAnimationFrame(downStepDFS)
+                }
+            }
+        }
     }
 
     const startDFS = () => {
         cancelAnimationFrame(stepDFS)
 
-        
+        robot.current = {x:0,y:0}
+        completed.current = false
+        maze.current = maze.current.map(w => {
+            return w.map(v => {
+                v.visited = false
+                v.path = false
+                v.past = false
+
+                return v
+            })
+        })
+        evaluationOrder.current=[{x:0,y:0}]
+
         requestAnimationFrame(stepDFS)
 
         
@@ -149,6 +230,7 @@ export function MazeSolver(props) {
             <h2 className='msTitle'>Maze Solver</h2>
             <div>
                 <button onClick={initializeMaze}>Generate</button>
+                <button onClick={startDFS}>DFS</button>
             </div>
             <div>
                 <label>Width: </label>
@@ -183,8 +265,10 @@ export function MazeSolver(props) {
                             className+= ' msBorderLeft'
                         }
 
-                        if(path.current.includes(`${v.x}-${v.y}`)){
+                        if(v.path){
                             return <div key={`${i}-${j}`} className={className}><div className='msDot'></div></div>
+                        }else if(v.past){
+                            return <div key={`${i}-${j}`} className={className}><div className='msPast'></div></div>
                         }
 
                         return <div key={`${i}-${j}`} className={className}></div>
