@@ -20,6 +20,7 @@ export function PixelPerfect(props) {
     const accuracy = useRef(0)
     const currAccuracy = useRef(0)
     const generations = useRef(0)
+    const requestID = useRef()
     const triangle = useRef({
         aX:0,
         aY:0,
@@ -188,7 +189,7 @@ export function PixelPerfect(props) {
             setCount(prevCount => (prevCount + 1));
             generations.current = generations.current+1
 
-            requestAnimationFrame(animate);
+            requestID.current = requestAnimationFrame(animate);
         }
     }
 
@@ -210,7 +211,7 @@ export function PixelPerfect(props) {
             setCount(0)
             return
         }
-        cancelAnimationFrame(animate)
+        cancelAnimationFrame(requestID.current)
 
         let image = document.getElementsByClassName('ppOriginalImage')[0]
         loadImage(image.src,image.width,image.height).then(img => {
@@ -264,8 +265,8 @@ export function PixelPerfect(props) {
 
 
             started.current = true
-            //requestRef.current = requestAnimationFrame(animate);
-            requestAnimationFrame(animate)
+            //requestRef.current = requestID.current = requestAnimationFrame(animate);
+            requestID.current = requestAnimationFrame(animate)
         }).catch(err => {
             setErrMessage('Image Unavailable')
         })
@@ -389,7 +390,7 @@ const animate = () => {
 
 
 
-            requestAnimationFrame(animate);
+            requestID.current = requestAnimationFrame(animate);
         }
     }
 */
