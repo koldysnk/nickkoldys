@@ -130,6 +130,11 @@ export function HangmanChoose(props) {
     }
 
     if (!gameStarted) {
+        window.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+              onConfirmLength()
+            }
+        });
         return (
             <div className='HangmanChoose'>
                 <h2 className='hangmanTitle'>Hangman</h2>
@@ -149,6 +154,11 @@ export function HangmanChoose(props) {
     if (gameOver) {
         if (result == 2) {
             if (!wordUpdated) {
+                window.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                      updateWord()
+                    }
+                });
                 return (
                     <div className='HangmanChoose'>
                         <h2 className='hangmanTitle'>Hangman</h2>
@@ -233,6 +243,11 @@ export function HangmanChoose(props) {
         );
     }
     if (guessedCorrect) {
+        window.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+              onConfirmLetter()
+            }
+        });
         return (
             <div className='HangmanChoose'>
                 <h2 className='hangmanTitle'>Hangman</h2>
