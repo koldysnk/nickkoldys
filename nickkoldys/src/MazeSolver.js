@@ -19,10 +19,12 @@ export function MazeSolver(props) {
     const maze = useRef([])
     const evaluationOrder = useRef([])
     const path = useRef([])
+    const displayPath = useRef([])
     const currWidth = useRef(10)
     const currHeight = useRef(10)
     const robot = useRef({x:0,y:0})
     const completed = useRef(false)
+    const bfsActive = useRef(false)
 
     const dispatch = useDispatch();
 
@@ -216,6 +218,8 @@ export function MazeSolver(props) {
             })
         })
         evaluationOrder.current=[{x:0,y:0}]
+        path.current = []
+        bfsActive.current = false
 
         requestAnimationFrame(stepDFS)
 
@@ -225,17 +229,20 @@ export function MazeSolver(props) {
 
     const downStepBFS = () => {
         setCount(prevCount => (prevCount + 1));
-        let {x,y} = path.current.pop()
+        let x = parseInt(displayPath.current[displayPath.current.length-1].split('-')[0])
+        let y = parseInt(displayPath.current[displayPath.current.length-1].split('-')[1])
+
         maze.current[x][y].path = false
         maze.current[x][y].past = true
 
-        x = path.current[path.current.length-1].x
-        y = path.current[path.current.length-1].y
+        x = parseInt(displayPath.current[displayPath.current.length-2].split('-')[0])
+        x = parseInt(displayPath.current[displayPath.current.length-2].split('-')[1])
 
-        if(!maze.current[x][y].t && y>0 && !maze.current[x][y-1].visited
-            || !maze.current[x][y].r && x<currWidth.current-1 && !maze.current[x+1][y].visited
-            || !maze.current[x][y].b && y<currHeight.current-1 && !maze.current[x][y+1].visited
-            || !maze.current[x][y].l && x>0 && !maze.current[x-1][y].visited){
+
+        if((!maze.current[x][y].t && y>0 && !maze.current[x][y-1].past
+            + !maze.current[x][y].r && x<currWidth.current-1 && !maze.current[x+1][y].past
+            + !maze.current[x][y].b && y<currHeight.current-1 && !maze.current[x][y+1].past
+            + !maze.current[x][y].l && x>0 && !maze.current[x-1][y].past)<2){
 
                 requestAnimationFrame(stepBFS)
         }else{
@@ -250,11 +257,11 @@ export function MazeSolver(props) {
 
         if(!completed.current){
             
-            let x = evaluationOrder.current[0].x
-            let y = evaluationOrder.current[0].y
+            let currPath = path.current.shift()
+            displayPath.current = currPath
 
-            evaluationOrder.current.shift()
-            path.current.push({x:x,y:y})
+            let x = parseInt(currPath[currPath.length-1].split('-')[0])
+            let y = parseInt(currPath[currPath.length-1].split('-')[1])
 
             maze.current[x][y].path = true
             maze.current[x][y].visited = true
@@ -267,23 +274,23 @@ export function MazeSolver(props) {
             }else{
                 let paths = []
                 if(!maze.current[x][y].t && y>0 && !maze.current[x][y-1].visited){
-                    paths.push({x:x,y:y-1})
+                    paths.push([...currPath,`${x}-${y-1}`])
                 }
                 
                 if(!maze.current[x][y].r && x<currWidth.current-1 && !maze.current[x+1][y].visited){
-                    paths.push({x:x+1,y:y})
+                    paths.push([...currPath,`${x+1}-${y}`])
                 }
                 
                 if(!maze.current[x][y].b && y<currHeight.current-1 && !maze.current[x][y+1].visited){
-                    paths.push({x:x,y:y+1})
+                    paths.push([...currPath,`${x}-${y+1}`])
                 }
 
                 if(!maze.current[x][y].l && x>0 && !maze.current[x-1][y].visited){
-                    paths.push({x:x-1,y:y})
+                    paths.push([...currPath,`${x-1}-${y}`])
                 }
                 
                 if(paths.length>0){
-                    evaluationOrder.current.push(...paths)
+                    path.current.push(...paths)
                     
                     requestAnimationFrame(stepBFS)
                 }else{
@@ -309,6 +316,8 @@ export function MazeSolver(props) {
             })
         })
         evaluationOrder.current=[{x:0,y:0}]
+        path.current = [['0-0']]
+        displayPath.current = ['0-0']
 
         requestAnimationFrame(stepBFS)
 
@@ -358,6 +367,18 @@ export function MazeSolver(props) {
                         }
                         if(v.l){
                             className+= ' msBorderLeft'
+                        }
+
+                        if(bfsActive){
+                            if(displayPath.current.includes(`${v.x}-${v.y}`)){
+                                return <div key={`${i}-${j}`} className={className}><div className='msDot'></div></div>
+                            }
+
+                            if(v.path){
+                                return <div key={`${i}-${j}`} className={className}><div className='msHalfDot'></div></div>
+                            }else if(v.past){
+                                return <div key={`${i}-${j}`} className={className}><div className='msPast'></div></div>
+                            }
                         }
 
                         if(v.path){

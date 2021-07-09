@@ -33,6 +33,14 @@
     height: 60%;
 }
 
+.msHalfDot{
+    border-radius: 50%;
+    background-color: #282c34;
+    opacity: .5;
+    width: 60%;
+    height: 60%;
+}
+
 .msBorderTop{
     border-top:solid 1px;
 }
