@@ -547,7 +547,8 @@ export function MazeSolver(props) {
                 variations are guaranteed to find a solution if one exists, but a breadth first search is guaranteed
                 to find the shortest path. The current path is represented by solid dots and squares that have been searched
                 but lead to a dead-end are represented by hollow dots. During a BFS the light dots represent a node that has
-                been searched but is not on the current path.
+                been searched but is not on the current path. To change the location of the start or end squares, click on the
+                square you wish to change then the location you wish to place it.
             </p>
             {moveStart.current ? <div className='msStartSquare'></div> :''}
             {moveEnd.current ? <div className='msEndSquare'></div> :''}
