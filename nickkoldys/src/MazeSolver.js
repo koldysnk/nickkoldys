@@ -22,13 +22,33 @@ export function MazeSolver(props) {
     const displayPath = useRef([])
     const currWidth = useRef(10)
     const currHeight = useRef(10)
-    const robot = useRef({ x: 0, y: 0 })
     const completed = useRef(false)
     const bfsActive = useRef(false)
     const started = useRef(false)
     const requestID = useRef()
+    const startPosition = useRef({x:0,y:0})
+    const endPosition = useRef({x:currWidth.current-1,y:currHeight.current-1})
+    const moveStart = useRef(false)
+    const moveEnd = useRef(false)
 
     const dispatch = useDispatch();
+
+    const resetStuff = () => {
+        completed.current = false
+        bfsActive.current = false
+        path.current = []
+        displayPath.current = []
+        evaluationOrder.current = []
+        maze.current = maze.current.map((w) => {
+            return w.map((v)=>{
+                v.path = false
+                v.past = false
+                v.visited = false
+
+                return v
+            })
+        })
+    }
 
 
     const createMaze = (s) => {
@@ -130,6 +150,8 @@ export function MazeSolver(props) {
         cancelAnimationFrame(requestID.current)
         currWidth.current = newWidth
         started.current = false
+        startPosition.current = {x:0,y:0}
+        endPosition.current = {x:currWidth.current-1,y:currHeight.current-1}
         initializeMaze()
     }
 
@@ -137,6 +159,8 @@ export function MazeSolver(props) {
         cancelAnimationFrame(requestID.current)
         currHeight.current = newHeight
         started.current = false
+        startPosition.current = {x:0,y:0}
+        endPosition.current = {x:currWidth.current-1,y:currHeight.current-1}
         initializeMaze()
     }
 
@@ -181,7 +205,7 @@ export function MazeSolver(props) {
                 maze.current[x][y].path = true
                 maze.current[x][y].visited = true
 
-                if (x == currWidth.current - 1 && y == currHeight.current - 1) {
+                if (x == endPosition.current.x && y == endPosition.current.y) {
                     completed.current = true
 
 
@@ -219,7 +243,6 @@ export function MazeSolver(props) {
     const startDFS = () => {
         cancelAnimationFrame(requestID.current)
 
-        robot.current = { x: 0, y: 0 }
         completed.current = false
         maze.current = maze.current.map(w => {
             return w.map(v => {
@@ -230,7 +253,7 @@ export function MazeSolver(props) {
                 return v
             })
         })
-        evaluationOrder.current = [{ x: 0, y: 0 }]
+        evaluationOrder.current = [{ x: startPosition.current.x, y: startPosition.current.y }]
         path.current = []
         bfsActive.current = false
         started.current = true
@@ -256,7 +279,7 @@ export function MazeSolver(props) {
             y = parseInt(displayPath.current[displayPath.current.length - 1].split('-')[1])
 
 
-            if ((x != 0 || y != 0) && ((!maze.current[x][y].t && y > 0 && !maze.current[x][y - 1].past)
+            if ((x != startPosition.current.x || y != startPosition.current.y) && ((!maze.current[x][y].t && y > 0 && !maze.current[x][y - 1].past)
                 + (!maze.current[x][y].r && x < currWidth.current - 1 && !maze.current[x + 1][y].past)
                 + (!maze.current[x][y].b && y < currHeight.current - 1 && !maze.current[x][y + 1].past)
                 + (!maze.current[x][y].l && x > 0 && !maze.current[x - 1][y].past)) < 2) {
@@ -285,7 +308,7 @@ export function MazeSolver(props) {
                 maze.current[x][y].path = true
                 maze.current[x][y].visited = true
 
-                if (x == currWidth.current - 1 && y == currHeight.current - 1) {
+                if (x == endPosition.current.x && y == endPosition.current.y) {
                     completed.current = true
 
 
@@ -323,7 +346,6 @@ export function MazeSolver(props) {
     const startBFS = () => {
         cancelAnimationFrame(requestID.current)
 
-        robot.current = { x: 0, y: 0 }
         completed.current = false
         maze.current = maze.current.map(w => {
             return w.map(v => {
@@ -334,9 +356,9 @@ export function MazeSolver(props) {
                 return v
             })
         })
-        evaluationOrder.current = [{ x: 0, y: 0 }]
-        path.current = [['0-0']]
-        displayPath.current = ['0-0']
+        evaluationOrder.current = [{ x: startPosition.current.x, y: startPosition.current.y }]
+        path.current = [[`${startPosition.current.x}-${startPosition.current.y}`]]
+        displayPath.current = [`${startPosition.current.x}-${startPosition.current.y}`]
         started.current = true
         bfsActive.current = true
 
@@ -347,7 +369,74 @@ export function MazeSolver(props) {
 
 
 
+    const pickUpStart = () => {
+        cancelAnimationFrame(requestID.current)
+        moveStart.current = true
+        document.body.style.cursor = 'grabbing'
+        setCount(prevCount => (prevCount + 1));
+    }
 
+    const placeStart = (x,y) => {
+        if (moveStart.current) {
+            resetStuff()
+            cancelAnimationFrame(requestID)
+            moveStart.current = false
+            startPosition.current = {x:x,y:y}
+            document.body.style.cursor = 'default'
+            setCount(prevCount => (prevCount + 1));
+        }
+    }
+
+    const pickUpEnd = () => {
+        cancelAnimationFrame(requestID.current)
+        moveEnd.current = true
+        document.body.style.cursor = 'grabbing'
+        setCount(prevCount => (prevCount + 1));
+    }
+
+    const placeEnd = (x,y) => {
+        if (moveEnd.current) {
+            resetStuff()
+            cancelAnimationFrame(requestID)
+            moveEnd.current = false
+            endPosition.current = {x:x,y:y}
+            document.body.style.cursor = 'default'
+            setCount(prevCount => (prevCount + 1));
+        }
+    }
+
+    const swapStartAndEnd  = (x,y) => {
+        if (moveStart.current) {
+            resetStuff()
+            cancelAnimationFrame(requestID)
+            moveEnd.current = true
+            moveStart.current = false
+            startPosition.current = {x:x,y:y}
+            setCount(prevCount => (prevCount + 1));
+        }else if(moveEnd.current){
+            resetStuff()
+            cancelAnimationFrame(requestID)
+            moveStart.current = true
+            moveEnd.current = false
+            endPosition.current = {x:x,y:y}
+            setCount(prevCount => (prevCount + 1));
+        }
+    }
+
+
+    window.addEventListener('mousemove', (e) => {
+        if(moveStart.current){
+            let square = document.getElementsByClassName('msStartSquare')[0]
+
+            square.style.left = e.pageX + 'px';
+            square.style.top = e.pageY + 'px';
+        }else if (moveEnd.current){
+            let square = document.getElementsByClassName('msEndSquare')[0]
+
+            square.style.left = e.pageX + 'px';
+            square.style.top = e.pageY + 'px';
+        }
+    });
 
     return (
         <div className='MazeSolver' >
@@ -371,10 +460,14 @@ export function MazeSolver(props) {
                 {maze.current.map((w, i) => {
                     return <div key={i}>{w.map((v, j) => {
                         let className = 'mazeSquare';
-                        if (v.x == 0 && v.y == 0) {
+                        let start = false
+                        let end = false
+                        if (v.x == startPosition.current.x && v.y == startPosition.current.y) {
                             className += ' msStart'
-                        } else if (v.x == currWidth.current - 1 && v.y == currHeight.current - 1) {
+                            start = true
+                        } else if (v.x == endPosition.current.x && v.y == endPosition.current.y) {
                             className += ' msEnd'
+                            end = true
                         }
 
                         if (v.t) {
@@ -388,6 +481,36 @@ export function MazeSolver(props) {
                         }
                         if (v.l) {
                             className += ' msBorderLeft'
+                        }
+
+                        if(moveStart.current){
+                            if(end){
+                                return <div key={`${i}-${j}`} className={className} onClick={e => swapStartAndEnd(v.x,v.y)}></div>    
+                            }
+                            return <div key={`${i}-${j}`} className={className} onClick={e => placeStart(v.x,v.y)}></div>
+                        }
+
+                        if(moveEnd.current){
+                            if(start){
+                                return <div key={`${i}-${j}`} className={className} onClick={e => swapStartAndEnd(v.x,v.y)}></div>    
+                            }
+                            return <div key={`${i}-${j}`} className={className} onClick={e => placeEnd(v.x,v.y)}></div>
+                        }
+
+                        if(start){
+                            if(v.path){
+                                return <div key={`${i}-${j}`} className={className} onClick={pickUpStart}><div className='msDot'></div></div>
+                            }
+
+                            return <div key={`${i}-${j}`} className={className} onClick={pickUpStart}></div>
+                        }
+
+                        if(end){
+                            if(v.path){
+                                return <div key={`${i}-${j}`} className={className} onClick={pickUpEnd}><div className='msDot'></div></div>
+                            }
+
+                            return <div key={`${i}-${j}`} className={className} onClick={pickUpEnd}></div>
                         }
 
                         if (started.current) {
@@ -426,6 +549,8 @@ export function MazeSolver(props) {
                 but lead to a dead-end are represented by hollow dots. During a BFS the light dots represent a node that has
                 been searched but is not on the current path.
             </p>
+            {moveStart.current ? <div className='msStartSquare'></div> :''}
+            {moveEnd.current ? <div className='msEndSquare'></div> :''}
         </div>
     );
 }

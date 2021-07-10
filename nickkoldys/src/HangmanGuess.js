@@ -80,11 +80,11 @@ export function HangmanGuess(props) {
     }
 
     if (!gameStarted) {
-        window.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-              onConfirmLength()
-            }
-        });
+        // window.addEventListener('keypress', function (e) {
+        //     if (e.key === 'Enter') {
+        //       onConfirmLength()
+        //     }
+        // });
         return (
             <div className='HangmanGuess'>
                 <h2 className='hangmanTitle'>Hangman</h2>
@@ -102,11 +102,11 @@ export function HangmanGuess(props) {
         );
     }
     if (!gameOver) {
-        window.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-              guessLetter()
-            }
-        });
+        // window.addEventListener('keypress', function (e) {
+        //     if (e.key === 'Enter') {
+        //         guessLetter()
+        //     }
+        // });
         return (
             <div className='HangmanGuess'>
                 <h2 className='hangmanTitle'>Hangman</h2>
