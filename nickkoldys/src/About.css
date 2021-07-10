@@ -1,11 +1,10 @@
-.About{
-    display: grid;
-    place-items: center;
-    height: 100vh;
-}
+
 
 .aboutCards{
-    position: relative;
+    position: fixed;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
     width: 30vw;
     height: 80vh;
     
@@ -60,15 +59,36 @@
     opacity: .7;
 }
 
+/**********Education Page*************/
+
+.aboutEducationCard{
+    background-color: #282c34;
+    color: #b7c9e5;
+    backface-visibility: hidden;
+    transform: rotateY(.5turn);
+    overflow-y: hidden;
+}
+
 /**********Credits Page*************/
 
 .aboutCreditsCard{
     background-color: #282c34;
     color: #b7c9e5;
     backface-visibility: hidden;
-    transform: rotateY(-.5turn);
+    transform: rotateY(.5turn);
     overflow-y: hidden;
 }
+
+.aboutCreditsListBox{
+    overflow-y: scroll;
+    height: 80%;
+}
+
+
+.aboutCreditsListBox::-webkit-scrollbar {
+    width: 0px;
+}
+  
 
 .creditsList{
     text-align: left;
@@ -85,15 +105,20 @@
 }
 
 
+.left{
+    transform: rotateY(-.5turn);
+}
+.front{
+    transform: rotateY(0turn);
+}
 
-
-.aboutCards:hover > .aboutIntroCard {
+/* .aboutCards:hover > .aboutIntroCard {
     transform: rotateY(-.5turn);
 }
 
 .aboutCards:hover > .aboutCreditsCard {
     transform: rotateY(0turn);
-}
+} */
 
 /* .left {
     transform: rotateY(-.5turn);
@@ -107,6 +132,13 @@
     transform: rotateY(.5turn);
 } */
 
+.bigSpacer{
+    height: 75vh;
+}
+
+.mediumSpacer{
+    height: 50vh;
+}
 
 
 
