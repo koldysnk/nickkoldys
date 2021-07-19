@@ -17,10 +17,18 @@
     left: 0;
     right: 0;
     transition: transform 3s;
+    
     transform-style: preserve-3d;
     box-sizing: border-box;
 }
 
+.introAndEdu{
+    backface-visibility: hidden;
+}
+
+.left > .aboutIntroCard{
+    display: none;
+}
 /**********Intro Page*************/
 
 .aboutIntroCard{
@@ -107,6 +115,7 @@
 
 .left{
     transform: rotateY(-.5turn);
+    
 }
 .front{
     transform: rotateY(0turn);
@@ -145,7 +154,7 @@
 @media (orientation:portrait), (max-width: 715px){
     .aboutCards{
         width: 80vw;
-        height: 80vh;
+        height: 70vh;
     }
 
     .aboutCardTitle{
