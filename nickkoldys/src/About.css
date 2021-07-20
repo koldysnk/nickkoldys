@@ -112,6 +112,11 @@
     color: #ee61fb;
 }
 
+/* .aboutCardSmallTitle{
+    
+    transform: translateZ(2rem);
+} */
+
 
 .left{
     transform: rotateY(-.5turn);
@@ -119,6 +124,13 @@
 }
 .front{
     transform: rotateY(0turn);
+}
+
+.aboutCardVerySmallTitle{
+    font-size: 1rem;
+    text-align: left;
+    margin-left: 16px;
+    text-decoration: underline;
 }
 
 /* .aboutCards:hover > .aboutIntroCard {
