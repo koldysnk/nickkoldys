@@ -1,6 +1,4 @@
 import React from 'react';
-import ScrollMagic from 'scrollmagic';
-import { Controller, Scene } from 'react-scrollmagic';
 import './About.css';
 
 export function About(props) {
@@ -10,7 +8,29 @@ export function About(props) {
 
     return (
         <div className='About' >
-            <div className="bigSpacer" />
+            <div className='aboutIntro'>
+                <svg className='aboutWord'>
+                    <text textAnchor='end' x="100%" y="45%" fill='#282c34' className='aboutWordStyle' >About</text>
+                </svg>
+                <svg className='aboutMe'>
+                    <text  x="5%" y="45%" fill='#282c34' className='aboutWordStyle'>Me</text>
+                </svg>
+            </div>
+            <div className='aboutJMU'>
+
+            </div>
+
+
+
+
+
+
+        </div>
+    );
+}
+/*
+
+<div className="bigSpacer" />
             <div id="trigger" />
             <div className="mediumSpacer" />
             <div id="trigger2" />
@@ -106,15 +126,6 @@ export function About(props) {
             </div>
 
 
-
-
-
-
-
-        </div>
-    );
-}
-/*
 <div className='About' >
             <script>
                 var controller = new ScrollMagic.Controller();
