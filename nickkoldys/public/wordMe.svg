@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="wordMe.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.8529742"
+     inkscape:cx="49.919746"
+     inkscape:cy="84.188976"
+     inkscape:window-width="1284"
+     inkscape:window-height="1040"
+     inkscape:window-x="326"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="-559.10115"
+       y="230.98001"
+       width="97.141121"
+       height="62.602059"
+       id="rect9697" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       aria-label="Me"
+       transform="matrix(0.26458333,0,0,0.26458333,148.7567,-62.394233)"
+       id="text9695"
+       style="font-weight:bold;font-size:53.3333px;line-height:1.25;font-family:'Snap ITC';-inkscape-font-specification:'Snap ITC Bold';white-space:pre;shape-inside:url(#rect9697);fill:none;stroke:#282c34;stroke-width:1.00157;stroke-linecap:round;stroke-linejoin:round">
+      <path
+         d="m -499.25785,277.64711 -31.35415,-1.11979 5.70313,-3.20313 4.99999,-23.15102 -11.61457,19.14061 -9.97396,-21.3802 3.98438,27.78645 8.38541,3.8802 -29.3229,-2.60416 4.47916,-2.55209 2.96875,-29.24477 -5.85937,-2.60416 24.58332,-2.99479 3.30729,14.24478 3.15104,-12.68229 23.82811,1.38021 -7.1875,2.5 2.99479,28.64582 z"
+         style="font-weight:bold;font-size:53.3333px;line-height:1.25;font-family:'Snap ITC';-inkscape-font-specification:'Snap ITC Bold';white-space:pre;shape-inside:url(#rect9697);fill:none;stroke:#282c34;stroke-width:1.00157;stroke-linecap:round;stroke-linejoin:round"
+         id="path23872" />
+    </g>
+  </g>
+</svg>

@@ -13,7 +13,7 @@ export function About(props) {
                     <text textAnchor='end' x="100%" y="45%" fill='#282c34' className='aboutWordStyle' >About</text>
                 </svg>
                 <svg className='aboutMe'>
-                    <text  x="5%" y="45%" fill='#282c34' className='aboutWordStyle'>Me</text>
+                    
                 </svg>
             </div>
             <div className='aboutJMU'>
