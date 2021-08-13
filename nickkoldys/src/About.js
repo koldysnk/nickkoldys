@@ -33,10 +33,14 @@ export function About(props) {
             particleTransition.canvas.width = particleTransition.W;
             particleTransition.canvas.height = particleTransition.H;
     
-            setInterval(function(){
+            const foo = () => {
                 particleTransition.changeWord();
                 particleTransition.getPixels(particleTransition.tmpCanvas, particleTransition.tmpCtx);
-            }, 1200);
+            }
+            
+            foo()
+
+            setInterval(foo, 2400);
     
             particleTransition.makeParticles(1000);
             particleTransition.animate();
@@ -87,8 +91,8 @@ export function About(props) {
                 p = particleTransition.particles[i];
                 pPos = particleTransition.particlePositions[i];
                 if (particleTransition.particles.indexOf(p) === particleTransition.particlePositions.indexOf(pPos)) {
-                p.x += (pPos.x - p.x) * .3;
-                p.y += (pPos.y - p.y) * .3;
+                p.x += (pPos.x - p.x) * .2;
+                p.y += (pPos.y - p.y) * .2;
                 p.draw(particleTransition.ctx);
             }
             }
