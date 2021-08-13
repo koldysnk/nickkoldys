@@ -1,20 +1,123 @@
-import React from 'react';
+import React, { useEffect }  from 'react';
 import './About.css';
 
 export function About(props) {
 
+    const particleTransition = {
+        Particle: function(x, y) {
+            this.x = x;
+            this.y = y;
+            this.radius = 3.5;
+            this.draw = function(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.fillStyle = '#282c34';
+                ctx.fillRect(0, 0, this.radius, this.radius);
+                ctx.restore();
+            };
+        },
+        init: function() {
+            particleTransition.canvas = document.getElementsByClassName('transitionWord')[0]
+            particleTransition.ctx = particleTransition.canvas.getContext('2d')
+            if(window.innerHeight>window.innerWidth || window.innerWidth<715){
+                particleTransition.W = window.innerWidth*4/5;
+            }else{
+                particleTransition.W = window.innerWidth/3;
+            }
+            particleTransition.H = window.innerHeight/5;
+            particleTransition.particlePositions = [];
+            particleTransition.particles = [];
+            particleTransition.tmpCanvas = document.createElement('canvas');
+            particleTransition.tmpCtx = particleTransition.tmpCanvas.getContext('2d');
+    
+            particleTransition.canvas.width = particleTransition.W;
+            particleTransition.canvas.height = particleTransition.H;
+    
+            setInterval(function(){
+                particleTransition.changeWord();
+                particleTransition.getPixels(particleTransition.tmpCanvas, particleTransition.tmpCtx);
+            }, 1200);
+    
+            particleTransition.makeParticles(1000);
+            particleTransition.animate();
+        }, 
+        currentPos: 0,
+        changeWord: function() {
+            var letters = ['Me', 'Nick']
+            particleTransition.time = letters[particleTransition.currentPos];
+            particleTransition.currentPos++;
+            if (particleTransition.currentPos >= letters.length) {
+                particleTransition.currentPos = 0;
+            }
+        },
+        makeParticles: function(num) {
+            for (var i = 0; i <= num; i++) {
+                particleTransition.particles.push(new particleTransition.Particle(particleTransition.W / 2 + Math.random() * 400 - 200, particleTransition.H / 2 + Math.random() * 400 -200));
+            }
+        },
+        getPixels: function(canvas, ctx) {
+            var keyword = particleTransition.time,
+                gridX = 6,
+                gridY = 6;
+            if(window.innerHeight>window.innerWidth || window.innerWidth<715){
+                canvas.width = window.innerWidth*4/5;
+                ctx.font = `italic bold ${window.innerHeight/10}px Noto Serif`;
+            }else{
+                canvas.width = window.innerWidth/3;
+                ctx.font = `italic bold ${window.innerHeight/5}px Noto Serif`;
+            }
+            canvas.height = window.innerHeight/5;
+            ctx.fillStyle = 'red';
+            ctx.font = `italic bold ${window.innerHeight/5}px Noto Serif`;
+            ctx.fillText(keyword, canvas.width / 2 - ctx.measureText(keyword).width / 2, canvas.height*3 / 4 );
+            var idata = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var buffer32 = new Uint32Array(idata.data.buffer);
+            if (particleTransition.particlePositions.length > 0) particleTransition.particlePositions = [];
+            for (var y = 0; y < canvas.height; y += gridY) {
+                for (var x = 0; x < canvas.width; x += gridX) {
+                    if (buffer32[y * canvas.width + x]) {
+                        particleTransition.particlePositions.push({x: x, y: y});
+                    }
+                }
+            }
+        },
+        animateParticles: function() {
+            var p, pPos;
+            for (var i = 0, num = particleTransition.particles.length; i < num; i++) {
+                p = particleTransition.particles[i];
+                pPos = particleTransition.particlePositions[i];
+                if (particleTransition.particles.indexOf(p) === particleTransition.particlePositions.indexOf(pPos)) {
+                p.x += (pPos.x - p.x) * .3;
+                p.y += (pPos.y - p.y) * .3;
+                p.draw(particleTransition.ctx);
+            }
+            }
+        },
+        animate: function() {
+            requestAnimationFrame(particleTransition.animate);
+            particleTransition.ctx.fillStyle = 'rgba(97, 218, 251, .8)';
+            particleTransition.ctx.fillRect(0, 0, particleTransition.W, particleTransition.H);
+            particleTransition.animateParticles();
+        }
+    };
 
+    function cancelAllAnimationFrames() {
+        var id = window.requestAnimationFrame(function () { });
+        while (id--) {
+            window.cancelAnimationFrame(id);
+        }
+    }
 
+    useEffect(() => {
+        cancelAllAnimationFrames()
+        particleTransition.init()
+    }, []);
 
     return (
         <div className='About' >
             <div className='aboutIntro'>
-                <svg className='aboutWord'>
-                    <text textAnchor='end' x="100%" y="45%" fill='#282c34' className='aboutWordStyle' >About</text>
-                </svg>
-                <svg className='aboutMe'>
-                    
-                </svg>
+                <h2 className='aboutWordStyle' >About</h2>
+                <canvas className='transitionWord'></canvas>
             </div>
             <div className='aboutJMU'>
 

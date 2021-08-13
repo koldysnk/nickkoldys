@@ -4,26 +4,34 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-}
-
-.aboutWord{
-    height:100vh;
-    width: 50%;
+    align-items: center;
 }
 
 .aboutWordStyle{
+    margin: 0;
+    padding: 5px;
     font-family: "Bowlby One SC"; 
     font-size: 10vh; 
     font-style: normal; 
     font-variant: normal; 
     font-weight: 700; 
-    line-height: 26.4px; 
     color: #282c34;
 }
 
-.aboutMe{
-    height:100vh;
-    width: 50%;
+.transitionWord{
+    display: block;
+}
+
+@media (orientation:portrait), (max-width: 715px){
+    .aboutIntro{
+        flex-direction:column;
+        align-items: flex-end;
+    }
+    
+
+    .aboutWordStyle,.transitionWord{
+        margin-right:5%;
+    }
 }
 
 
