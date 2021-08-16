@@ -62,7 +62,7 @@ export const Action = Object.freeze({
     SetPPActivePicture:'SetPPActivePicture',
 });
 
-const host = 'https://react-man-server.react-man.me:8442';
+const host = 'https://server.nickkoldys.com:8442';
 const wordLimit = 100;
 const numWords = 370099;
 const maxPage = Math.ceil(numWords / wordLimit) - 1;
