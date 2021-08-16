@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 //import {hangmanResetGame} from './actions';
 import './HangmanGuess.css';
-import { loadRandWord, setErrorMessage, setWordToGuess, startHangman, tttUpdateResult, updateGuessedLetters, updateNumberOfTries } from './actions';
+import { clearServerError, loadRandWord, setErrorMessage, setWordToGuess, startHangman, tttUpdateResult, updateGuessedLetters, updateNumberOfTries } from './actions';
 import { HangmanDrawing } from './HangmanDrawing';
 
 export function HangmanGuess(props) {
     const isWaiting = useSelector(state => state.isWaiting);
+    const serverError = useSelector(state => state.serverError);
+    const serverErrorMessage = useSelector(state => state.serverErrorMessage);
     const numLetters = useSelector(state => state.numLetters);
     const gameStarted = useSelector(state => state.hangmanGameStarted);
     const gameOver = useSelector(state => state.gameOver);
@@ -20,6 +22,10 @@ export function HangmanGuess(props) {
 
     const [nL, setNL] = useState(numLetters);
     const [letterToGuess, setLetterToGuess] = useState('');
+
+    useEffect(() => {
+        dispatch(clearServerError);
+    }, [dispatch]);
 
     const onConfirmLength = () => {
         if(nL.length>0){
@@ -101,6 +107,18 @@ export function HangmanGuess(props) {
             </div>
         );
     }
+
+    if(serverError){
+        return (
+            <div className='HangmanChoose'>
+                <h2 className='hangmanTitle'>Hangman</h2>
+                <div className='hangmanContent'>
+                    <p className='hangmanContentP'>{serverErrorMessage}</p>
+                </div>
+            </div>
+        );
+    }
+
     if (!gameOver) {
         // window.addEventListener('keypress', function (e) {
         //     if (e.key === 'Enter') {

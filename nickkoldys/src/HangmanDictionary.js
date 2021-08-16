@@ -1,16 +1,19 @@
 import React, {useEffect}  from 'react';
 import {useSelector,useDispatch} from 'react-redux';
 import './HangmanDictionary.css';
-import {loadAllWords, pageLeft, pageRight} from './actions';
+import {clearServerError, loadAllWords, pageLeft, pageRight} from './actions';
 import { Spinner } from './Spinner';
 import { Word } from './Word';
 
 export function HangmanDictionary(props) {
     const dictionary = useSelector(state=> state.dictionary);
     const currPage = useSelector(state => state.currPage);
+    const serverError = useSelector(state => state.serverError);
+    const errorMessage = useSelector(state => state.serverErrorMessage);
     const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(clearServerError);
         dispatch(loadAllWords(currPage));
     }, [dispatch, currPage]);
 
@@ -24,7 +27,18 @@ export function HangmanDictionary(props) {
     }
     
     let loading = <br></br>;
-    if (dictionary.length<1){
+    
+
+    if(serverError){
+        return (
+            <div className='HangmanDictionary'>
+                <div className="dictionaryHeader">
+                    <h1>Dictionary</h1>
+                    <p>{errorMessage}</p>
+                </div>
+            </div>
+        );
+    }else if (dictionary.length<1){
         loading = <Spinner />;
     }
 

@@ -1,4 +1,6 @@
 export const Action = Object.freeze({
+    ServerError:'ServerError',
+    ClearServerError:'ClearServerError',
     StartWaiting: 'StartWaiting',
     StopWaiting: 'StopWaiting',
     OpenMenu: 'OpenMenu',
@@ -70,6 +72,19 @@ function checkForErrors(response) {
         throw Error(`${response.status}: ${response.statusText}`);
     }
     return response;
+}
+
+export function serverError(message){
+    return {
+        type:Action.ServerError,
+        message:message,
+    }
+}
+
+export function clearServerError(){
+    return {
+        type:Action.ClearServerError,
+    }
 }
 
 export function startWaiting() {
@@ -430,9 +445,13 @@ export function loadAllWords(offset) {
             .then(data => {
                 if (data.ok) {
                     dispatch(loadDictionary(data.dictionary));
+                } else {
+                    dispatch(serverError(`Unfortunately the dictionary is unavailable due to a server error.`))
                 }
             })
-            .catch(e => console.error(e));
+            .catch(e => {
+                dispatch(serverError(`Unfortunately the dictionary is unavailable due to a server error: ${e}`))
+            });
     };
 }
 
@@ -446,9 +465,13 @@ export function makeGuess(length, regex, guessed) {
                 if (data.ok) {
                     dispatch(setMostRecentLetter(data.guess));
                     dispatch(stopWaiting());
+                } else {
+                    dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error.`))
                 }
             })
-            .catch(e => console.error(e));
+            .catch(e => {
+                dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error: ${e}`))
+            });
     };
 }
 
@@ -467,7 +490,9 @@ export function wordLost(word) {
 
                 dispatch(stopWaiting());
             })
-            .catch(e => console.error(e));
+            .catch(e => {
+                dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error: ${e}`))
+            });
     };
 }
 
@@ -481,9 +506,13 @@ export function loadRandWord(length, difficulty) {
                 if (data.ok) {
                     dispatch(setRandWord(data.word));
                     dispatch(stopWaiting())
+                } else {
+                    dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error.`))
                 }
             })
-            .catch(e => console.error(e));
+            .catch(e => {
+                dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error: ${e}`))
+            });
     };
 }
 

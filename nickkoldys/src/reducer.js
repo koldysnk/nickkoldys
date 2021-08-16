@@ -1,6 +1,8 @@
 import { Action } from './actions';
 
 const initialState = {
+    serverError:false,
+    serverErrorMessage:'',
     isWaiting: false,
     error: false,
     errorMessage: '',
@@ -69,6 +71,18 @@ const initialState = {
 
 export function reducer(state = initialState, action) {
     switch (action.type) {
+        case Action.ServerError:
+            return{
+                ...state,
+                serverError: true,
+                serverErrorMessage: action.message,
+            };
+        case Action.ClearServerError:
+            return {
+                ...state,
+                serverError: false,
+                serverErrorMessage: '',
+            };
         case Action.StartWaiting:
             return {
                 ...state,

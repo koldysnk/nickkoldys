@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { startHangman, makeGuess, updateGuessedLetters, updateNumberOfTries, setGuessedCorrect, setWordToGuess, tttUpdateResult, wordLost } from './actions';
+import { clearServerError, startHangman, makeGuess, updateGuessedLetters, updateNumberOfTries, setGuessedCorrect, setWordToGuess, tttUpdateResult, wordLost } from './actions';
 import './HangmanChoose.css';
 import { HangmanDrawing } from './HangmanDrawing';
 import { Spinner } from './Spinner';
 
 export function HangmanChoose(props) {
     const isWaiting = useSelector(state => state.isWaiting);
+    const serverError = useSelector(state => state.serverError);
+    const serverErrorMessage = useSelector(state => state.serverErrorMessage);
     const numLetters = useSelector(state => state.numLetters);
     const gameStarted = useSelector(state => state.hangmanGameStarted);
     const gameOver = useSelector(state => state.gameOver);
@@ -23,6 +25,10 @@ export function HangmanChoose(props) {
     const dispatch = useDispatch();
 
     const [nL, setNL] = useState(numLetters);
+
+    useEffect(() => {
+        dispatch(clearServerError);
+    }, [dispatch]);
 
     const onConfirmLength = () => {
         if (nL.length > 0) {
@@ -129,6 +135,8 @@ export function HangmanChoose(props) {
         alreadyGuessed = <p className='hangmanContentP'>The computer's previous guesses: <br></br>{guessedLetters.map(letter => <span key={letter + (Math.floor(Math.random() * 10000000))}> {letter} </span>)}</p>
     }
 
+
+
     if (!gameStarted) {
         // window.addEventListener('keypress', function (e) {
         //     if (e.key === 'Enter') {
@@ -151,6 +159,18 @@ export function HangmanChoose(props) {
             </div>
         );
     }
+
+    if(serverError){
+        return (
+            <div className='HangmanChoose'>
+                <h2 className='hangmanTitle'>Hangman</h2>
+                <div className='hangmanContent'>
+                    <p className='hangmanContentP'>{serverErrorMessage}</p>
+                </div>
+            </div>
+        );
+    }
+    
     if (gameOver) {
         if (result == 2) {
             if (!wordUpdated) {
