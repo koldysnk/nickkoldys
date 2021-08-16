@@ -1,0 +1,5 @@
+First run createSQLforDictionary.py if populateDictionary does not exist.
+Next run make.sql
+Next run schema_accounts.sql
+Next run schema_dictionary.sql
+Next run populateDictionary.sql     This one will take a while.
