@@ -27,6 +27,7 @@ export function SideBar(){
             <Link to="/about"><p onClick={toggleOpen} className="menu-option">About</p></Link>
             <Link to="/home"><p onClick={toggleOpen} className="menu-option">Home</p></Link>
         </div>
+        <div className='menuCover'></div>
     </div>
     );
 }

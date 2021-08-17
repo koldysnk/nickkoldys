@@ -8,6 +8,14 @@
   transition-duration: 1s;
 }
 
+.menuCover{
+  position: fixed;
+  background-color: #282c34;
+  width:100vw;
+  height: 100vh;
+  left: -100vw;
+}
+
 .SideBarOpen {
   width: 200px;
 }
@@ -95,6 +103,10 @@ Link, Link > p, a {
   
   .SideBarOpen {
     width: 100vw;
+  }
+
+  .menuCover{
+    display: none;
   }
 }
 
