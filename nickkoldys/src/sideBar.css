@@ -6,6 +6,7 @@
   color: white;
   box-shadow: 5px 0px 5px 2px rgb(109, 107, 112);
   transition-duration: 1s;
+  padding-left: env(safe-area-inset-left);
 }
 
 .menuCover{
