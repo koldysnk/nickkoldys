@@ -79,7 +79,7 @@ Link, Link > p, a {
 
   
 
-@media (orientation:portrait), (max-width:715px){
+@media (orientation:portrait), (max-width:715px), (pointer:none), (pointer:coarse){
 
   .menu-option{
     font-size: 1.5rem;
