@@ -41,6 +41,11 @@ html{
   display:none;
 }
 
+@media (pointer:none), (pointer:coarse){
+  .App {
+    padding-left: env(safe-area-inset-left);
+  }
+}
 
 @media (orientation:portrait), (max-width: 715px){
   .App {
