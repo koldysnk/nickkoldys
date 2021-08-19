@@ -91,7 +91,7 @@ export function ChessSingleplayer(props) {
 
     return (
         <div className='ChessSingleplayer'>
-            <h2 className='chessTitle'>Chess</h2>
+            <h2 className='pageTitle'>Chess</h2>
             <p>{turnText}</p>
             {board}
             <div>
@@ -108,6 +108,7 @@ export function ChessSingleplayer(props) {
                 number of nodes searched. I am currently working on adding a quiescence search to continue evaluating after 
                 the max depth is reached until there are only quiet moves left.
             </p>
+            <br></br>
         </div>
     );
 }

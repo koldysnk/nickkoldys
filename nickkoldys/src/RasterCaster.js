@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import './rasterCaster.css';
+import './RasterCaster.css';
 import { VertexArray } from './VertexArray';
 import { VertexAttributes } from './VertexAttributes';
 import { ShaderProgram } from './ShaderProgram';
@@ -329,7 +329,7 @@ return vec3(0,0,0);`
 
     return (
         <div className='RasterCaster'>
-            <h2>Raster Caster</h2>
+            <h2 className='pageTitle'>Raster Caster</h2>
             <div className={`rasterCasterDisclaimer ${!disclaimer ? 'rasterCasterHidden' : ''}`}>
                 <p>
                     This page is not optimized for small screens or mobile devices.
@@ -383,6 +383,7 @@ return vec3(0,0,0);`
                     same color as the background), you may need to turn on WebGl in your browser settings. This is especially
                     true if you are using an IOS device. 
                 </p>
+                <br></br>
             </div>
             <script defer src="dist/bundle.js"></script>
         </div>

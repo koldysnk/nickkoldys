@@ -35,7 +35,7 @@ export function TicTacToeMultiplayer(props) {
 
     return (
         <div className='TicTacToeMultiplayer'>
-            <h2 className='tttTitle'>Tic-Tac-Toe</h2>
+            <h2 className='pageTitle'>Tic-Tac-Toe</h2>
             <p>{turnText}</p>
             <TicTacToeBoard playable={playable}/>
             <button className='tttSingleplayerButton tttButton' onClick={reset}>Reset</button>

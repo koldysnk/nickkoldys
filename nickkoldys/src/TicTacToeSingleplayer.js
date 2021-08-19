@@ -55,7 +55,7 @@ export function TicTacToeSingleplayer(props) {
 
     return (
         <div className='TicTacToeSingleplayer'>
-            <h2 className='tttTitle'>Tic-Tac-Toe</h2>
+            <h2 className='pageTitle'>Tic-Tac-Toe</h2>
             <p>{turnText}</p>
             <TicTacToeBoard playable={((playerFirst ? playable : !playable)  && !gameOver)}/>
             <div>
@@ -69,6 +69,7 @@ export function TicTacToeSingleplayer(props) {
                 Because there is a relatively low number of game states in Tic-Tac-Toe the computer is able to 
                 analyze all possible moves at an arbitrary depth to an end state without any optimization strategies.
             </p>
+            <br></br>
         </div>
     );
 }

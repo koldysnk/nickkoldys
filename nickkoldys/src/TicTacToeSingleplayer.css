@@ -2,15 +2,8 @@
     background-color: #61dafb;
     height: 100vh;
     display:flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
-}
-
-.tttTitle{
-    margin: 0;
-    padding: 5vh;
-    padding-bottom: 0;
 }
 
 .tttButton{

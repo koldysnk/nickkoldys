@@ -13,10 +13,20 @@
 }
 
 .ppOriginalImageBox{
+    padding-top: 15px;
     max-width: 40vw;
     max-height: 40vh;
 }
 
 .hiddenCanvas{
     opacity: 0;
+}
+
+
+@media (orientation:portrait), (max-width: 715px){
+    .ppOriginalImageBox{
+        padding-top: 15px;
+        max-width: 70vw;
+        max-height: 70vh;
+    }
 }

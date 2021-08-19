@@ -440,7 +440,7 @@ export function MazeSolver(props) {
 
     return (
         <div className='MazeSolver' >
-            <h2 className='msTitle'>Maze Solver</h2>
+            <h2 className='pageTitle'>Maze Solver</h2>
             <div>
                 <button onClick={initializeMaze}>Generate</button>
                 <button onClick={startDFS}>DFS</button>
@@ -536,8 +536,8 @@ export function MazeSolver(props) {
 
 
                         return <div key={`${i}-${j}`} className={className}></div>
-                    })}<br /></div>
-
+                    })}
+                    <br /></div>
                 })}
             </div>
             <h3 className='descriptionTitle'>Description</h3>
@@ -550,6 +550,7 @@ export function MazeSolver(props) {
                 been searched but is not on the current path. To change the location of the start or end squares, click on the
                 square you wish to change then the location you wish to place it.
             </p>
+            <br></br>
             {moveStart.current ? <div className='msStartSquare'></div> :''}
             {moveEnd.current ? <div className='msEndSquare'></div> :''}
         </div>

@@ -287,7 +287,7 @@ export function PixelPerfect(props) {
 
     return (
         <div className='PixelPerfect' >
-            <h2 className='ppTitle'>Pixel Perfect</h2>
+            <h2 className='pageTitle'>Pixel Perfect</h2>
             <div className='ppOriginalImageBox'>
                 <img className='ppOriginalImage' src={activePicture}></img>
             </div>
@@ -309,6 +309,7 @@ export function PixelPerfect(props) {
                 The most accurate triangle from the new generation is then chosen to be the original triangle for the next generation.
                 This process is repeated until the accuracy begins to plateau, then a new random triangle is generated and the process starts again.
             </p>
+            <br></br>
         </div>
     );
 }

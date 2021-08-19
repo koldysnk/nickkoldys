@@ -7,11 +7,6 @@
     flex-direction: column;
 }
 
-.chessTitle{
-    margin: 0;
-    padding: 0;
-}
-
 .chessButton{
     margin: 5px;
 }
@@ -19,9 +14,5 @@
 @media (orientation:portrait){
     .ChessSingleplayer{
         justify-content: flex-start;
-    }
-
-    .chessTitle{
-        padding-top: 2.5vh;
     }
 }
