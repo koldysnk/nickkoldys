@@ -24,10 +24,10 @@ export function Projects(props) {
                     <p className='projectTileText mazeSolverTileText'>Generate random mazes then then watch a depth first search solve the maze.</p>
                 </div>
             </Link>
-            <div className="projectTile sortingAlgorithmsTile">
+            {/* <div className="projectTile sortingAlgorithmsTile">
                 <h2 className='projectTileTitle sortingAlgorithmsTileTitle'>Sorting Algorithms Visualizations</h2>
                 <p className='projectTileText sortingAlgorithmsTileText'>Watch various sorting algorithms sort data. (Coming Soon)</p>
-            </div>
+            </div> */}
         </div>
     );
 }

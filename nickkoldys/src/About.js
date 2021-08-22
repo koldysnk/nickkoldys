@@ -1,4 +1,6 @@
 import React, { useEffect }  from 'react';
+import {Link} from 'react-router-dom';
+import anime from 'animejs/lib/anime.es.js';
 import './About.css';
 
 export function About(props) {
@@ -117,21 +119,100 @@ export function About(props) {
         particleTransition.init()
     }, []);
 
+    let boxes = []
+
+    for (let i = 0; i < 180; i++) {
+        let className = 'gridSquare'
+
+        if (i != 138) {
+            if (i == 82 || i == 26 || i == 86 || i == 146 || i == 149 || i == 152 || i == 35 || i == 155) {
+                className += ' targetSquare'
+            } else if (i > 20 && i < 160) {
+                let col = i % 20
+                if (col == 1 || col == 3 || col == 5 || col == 8 || col == 11 || col == 14 || col == 16 || col == 18) {
+                    className += ' targetSquare'
+                }
+            }
+        }
+
+
+        boxes.push(<div key={i} className={className}></div>)
+    }
+
+    const animateGrid = () => {
+        anime.timeline({ loop: true })
+            .add({
+                targets: '.targetSquare',
+                scale: [
+                  {value: .1, easing: 'easeOutSine', duration: 750},
+                  {value: 1, easing: 'easeInOutQuad', duration: 1800}
+                ],
+            });
+    }
+
     return (
-        <div className='About' >
+        <div className='About' onLoad={animateGrid}>
             <div className='aboutIntro'>
                 <h2 className='aboutWordStyle' >About</h2>
                 <canvas className='transitionWord'></canvas>
             </div>
-            <div className='aboutJMU'>
-
+            <div className='aboutSection section1'>
+                <div className='aboutGridContainer'>
+                    {boxes.map(square => {
+                        return square
+                    })}
+                </div>
+                <div className='aboutContainer'>
+                    <h3 className='aboutSubheader'>Early Life</h3>
+                    <p className='aboutDescription'>During my highschool years, I developed a passion for programming. I enjoyed the problem
+                        solving aspect of the activity and was driven towards as many computer science classes 
+                        as I could take. In those classes I learned my first programming language: Visual Basic. 
+                    </p>
+                    <p className='aboutDescription'>As I enrolled in more advanced classes I also moved on to more advanced
+                        languages like Java and Python. My intrest in the subject continued to grow and I even started tutoring 
+                        students outside of class which I still do to this day. By the end of my highschool career I knew I wanted to contiue my education at James Madison University.
+                    </p>
+                </div>
             </div>
-
-
-
-
-
-
+            <br></br>
+            <div className='aboutSection section2'>
+                <div className='aboutContainer'>
+                    <h3 className='aboutSubheader'>College Life</h3>
+                    <p className='aboutDescription'>While at college I pursued a Bachelor of Science in Computer Science and 
+                    a Minor in Mathematics. I excelled in both course studies and especially enjoyed my AI and machine learning classes,
+                    my compilers class, my web development and graphics classes and an indepent study in which I explored the Euler Project. Throghout my classes I also learned many more
+                    languages including but not limited to C, MatLab, JavaScript, and SQL.
+                    </p>
+                    <p className='aboutDescription'>While I did spend plenty of time on my studies, my college life was 
+                    not entirely centered around the classroom. During three of my four years on the JMU Club Ultimate Frisbee team 
+                    held the position of social chair. Furthermore, I was the treasurer for the JMU chapter of Upsilon Pi Epsilon, the International
+                    Honor Society for the Computing and Information Disciplines. By the end of my fourth year I graduated Magna cum laude
+                    and was ready to join the workforce as a software engineer. 
+                    </p>
+                </div>
+                <div className='aboutImageContainer'>
+                    <img className='jmuImage' src='jmu-sign.jpg'></img>
+                </div>
+            </div>
+            <br></br>
+            <div className='aboutSection section3'>
+                <div className='aboutImageContainer'>
+                    <img className='jmuImage' src=''></img>
+                </div>
+                <div className='aboutContainer'>
+                    <h3 className='aboutSubheader'>Adult Life</h3>
+                    <p className='aboutDescription'>During the summer before I graduated and the height of the COVID-19 pandemic I was fortunate to participate in an internship
+                    at Ernst and Young. The internship was centered around cybersecurity as myself and three other interns 
+                    developed a plugin for the Identity Access Management system at EY. The project itself was my first envolvement
+                    with cybersecurity and since then I have continued working cybersecurity for EY.
+                    </p>
+                    <p className='aboutDescription'>As cybersecurity is not my only interest, I have also pursued a career as a freelancer.
+                    Most of my projects include web development but I also work on AI and machine learning projects. Some of my smaller projects 
+                    are displayed on the <Link to="/games" className='aboutLink'>Games</Link> and <Link to="/projects" className='aboutLink'>Projects</Link> pages.
+                    </p>
+                </div>
+            </div>
+            <br></br>
         </div>
     );
 }

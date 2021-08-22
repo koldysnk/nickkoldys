@@ -22,6 +22,73 @@
     display: block;
 }
 
+.aboutGridContainer{
+    display: grid;
+    height: 18vh;
+    gap: 1px;
+    grid-template-columns: repeat(20, 1fr);
+}
+
+.gridSquare{
+    width: 2vh;
+    height: 2vh;
+    background-color: #282c34;
+}
+
+.targetSquare{
+    background-color: #5f687a;
+}
+
+.aboutSection{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    padding: 0 10%;
+    justify-content: center;
+    align-items: center;
+}
+
+.aboutImageContainer{
+    width: 40%;
+}
+
+.jmuImage{
+    width: 100%;
+    height: auto;
+}
+
+.aboutContainer{
+    width: 60%;
+    box-sizing: border-box;
+    padding: 0 15px;
+}
+
+.aboutSubheader{
+    text-align: left;
+    font-size: 2em;
+    margin-block-start: 0;
+    margin-block-end: .5em;
+}
+
+.aboutDescription{
+    text-align: left;
+}
+
+.aboutLink{
+    text-decoration: underline;
+    color:black;
+}
+
+.aboutLink:link, .aboutLink:visited, .aboutLink:active{
+    text-decoration: underline;
+    color:black;
+}
+
+.aboutLink:hover{
+    color:#ee61fb;
+}
+
+
 @media (orientation:portrait), (max-width: 715px){
     .aboutIntro{
         flex-direction:column;
@@ -31,6 +98,22 @@
 
     .aboutWordStyle,.transitionWord{
         margin-right:5%;
+    }
+
+    .aboutSection{
+        flex-direction: column;
+    }
+
+    .section1, .section3{
+        flex-direction: column-reverse;
+    }
+
+    .aboutContainer{
+        width: 100%;
+    }
+
+    .aboutImageContainer{
+        width: 100%;
     }
 }
 
