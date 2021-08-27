@@ -1,9 +1,11 @@
-import React, { useEffect }  from 'react';
+import React, { useEffect, useRef  }  from 'react';
 import {Link} from 'react-router-dom';
 import anime from 'animejs/lib/anime.es.js';
 import './About.css';
 
 export function About(props) {
+
+    const animationId = useRef(-1)
 
     const particleTransition = {
         Particle: function(x, y) {
@@ -100,22 +102,18 @@ export function About(props) {
             }
         },
         animate: function() {
-            requestAnimationFrame(particleTransition.animate);
+            animationId.current = requestAnimationFrame(particleTransition.animate);
             particleTransition.ctx.fillStyle = 'rgba(97, 218, 251, .8)';
             particleTransition.ctx.fillRect(0, 0, particleTransition.W, particleTransition.H);
             particleTransition.animateParticles();
         }
     };
 
-    function cancelAllAnimationFrames() {
-        var id = window.requestAnimationFrame(function () { });
-        while (id--) {
-            window.cancelAnimationFrame(id);
-        }
-    }
 
     useEffect(() => {
-        cancelAllAnimationFrames()
+        if(animationId.current!=-1){
+            cancelAnimationFrame(animationId.current)
+        }
         particleTransition.init()
     }, []);
 
@@ -164,13 +162,14 @@ export function About(props) {
                 </div>
                 <div className='aboutContainer'>
                     <h3 className='aboutSubheader'>Early Life</h3>
-                    <p className='aboutDescription'>During my highschool years, I developed a passion for programming. I enjoyed the problem
+                    <p className='aboutDescription'>During my high school years, I developed a passion for programming. I enjoyed the problem
                         solving aspect of the activity and was driven towards as many computer science classes 
                         as I could take. In those classes I learned my first programming language: Visual Basic. 
                     </p>
                     <p className='aboutDescription'>As I enrolled in more advanced classes I also moved on to more advanced
-                        languages like Java and Python. My intrest in the subject continued to grow and I even started tutoring 
-                        students outside of class which I still do to this day. By the end of my highschool career I knew I wanted to contiue my education at James Madison University.
+                        languages like Java and Python. My interest in the subject continued to grow and I even started tutoring 
+                        students outside of class which I still do to this day. By the end of my high school career, I knew I wanted
+                        to continue my education at James Madison University.
                     </p>
                 </div>
             </div>
@@ -180,13 +179,13 @@ export function About(props) {
                     <h3 className='aboutSubheader'>College Life</h3>
                     <p className='aboutDescription'>While at college I pursued a Bachelor of Science in Computer Science and 
                     a Minor in Mathematics. I excelled in both course studies and especially enjoyed my AI and machine learning classes,
-                    my compilers class, my web development and graphics classes and an indepent study in which I explored the Euler Project. Throghout my classes I also learned many more
-                    languages including but not limited to C, MatLab, JavaScript, and SQL.
+                    my compilers class, my web development and graphics classes, and an independent study in which I explored the Euler Project. Throughout my classes I also learned many more
+                    languages including but not limited to C, MATLAB, JavaScript, and SQL.
                     </p>
                     <p className='aboutDescription'>While I did spend plenty of time on my studies, my college life was 
                     not entirely centered around the classroom. During three of my four years on the JMU Club Ultimate Frisbee team 
                     held the position of social chair. Furthermore, I was the treasurer for the JMU chapter of Upsilon Pi Epsilon, the International
-                    Honor Society for the Computing and Information Disciplines. By the end of my fourth year I graduated Magna cum laude
+                    Honor Society for the Computing and Information Disciplines. By the end of my fourth year, I graduated Magna cum laude
                     and was ready to join the workforce as a software engineer. 
                     </p>
                 </div>
@@ -196,14 +195,14 @@ export function About(props) {
             </div>
             <br></br>
             <div className='aboutSection section3'>
-                <div className='aboutImageContainer'>
-                    <img className='jmuImage' src=''></img>
+                <div className='aboutSpace'>
+                    <div className='aboutEarth' style={{background:"url('/earthmap.jpg') "}}></div>
                 </div>
                 <div className='aboutContainer'>
                     <h3 className='aboutSubheader'>Adult Life</h3>
                     <p className='aboutDescription'>During the summer before I graduated and the height of the COVID-19 pandemic I was fortunate to participate in an internship
-                    at Ernst and Young. The internship was centered around cybersecurity as myself and three other interns 
-                    developed a plugin for the Identity Access Management system at EY. The project itself was my first envolvement
+                    at Ernst and Young. The internship was centered around cybersecurity as me and three other interns 
+                    developed a plugin for the Identity Access Management system at EY. The project itself was my first involvement
                     with cybersecurity and since then I have continued working cybersecurity for EY.
                     </p>
                     <p className='aboutDescription'>As cybersecurity is not my only interest, I have also pursued a career as a freelancer.
