@@ -106,7 +106,7 @@
     width: 250px;
     height: 250px;
     margin: 3em auto;
-    transform: rotateZ(18deg);
+    transform: rotateZ(23.5deg);
     transition: transform 200ms linear;
     animation: rotate 8s linear infinite;
     color: #000;
