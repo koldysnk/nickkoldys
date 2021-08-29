@@ -24,18 +24,37 @@ export function MazeSolver(props) {
     const currHeight = useRef(10)
     const completed = useRef(false)
     const bfsActive = useRef(false)
+    const dfsActive = useRef(false)
     const started = useRef(false)
     const requestID = useRef()
-    const startPosition = useRef({x:0,y:0})
-    const endPosition = useRef({x:currWidth.current-1,y:currHeight.current-1})
+    const generateStartPosition = () => {
+        return {x:Math.floor(Math.random()*currWidth.current),y:Math.floor(Math.random()*currHeight.current)}
+    }
+    const startPosition = useRef(generateStartPosition())
+    const generateEndPosition = () => {
+        let x = Math.floor(Math.random()*(currWidth.current-1))
+        let y = Math.floor(Math.random()*(currHeight.current-1))
+        if(x>=startPosition.current.x){
+            x++
+        }
+        if(y>=startPosition.current.y){
+            y++
+        }
+        return {x:x,y:y}
+    }
+    const endPosition = useRef(generateEndPosition())
     const moveStart = useRef(false)
     const moveEnd = useRef(false)
+    const aStarActive = useRef(false)
+
 
     const dispatch = useDispatch();
 
     const resetStuff = () => {
         completed.current = false
         bfsActive.current = false
+        dfsActive.current = false
+        aStarActive.current = false
         path.current = []
         displayPath.current = []
         evaluationOrder.current = []
@@ -120,6 +139,8 @@ export function MazeSolver(props) {
 
     const initializeMaze = () => {
         bfsActive.current = false
+        dfsActive.current = false
+        aStarActive.current = false
         displayPath.current = []
         let newMaze = []
 
@@ -150,8 +171,8 @@ export function MazeSolver(props) {
         cancelAnimationFrame(requestID.current)
         currWidth.current = newWidth
         started.current = false
-        startPosition.current = {x:0,y:0}
-        endPosition.current = {x:currWidth.current-1,y:currHeight.current-1}
+        startPosition.current = generateStartPosition()
+        endPosition.current = generateEndPosition()
         initializeMaze()
     }
 
@@ -159,13 +180,13 @@ export function MazeSolver(props) {
         cancelAnimationFrame(requestID.current)
         currHeight.current = newHeight
         started.current = false
-        startPosition.current = {x:0,y:0}
-        endPosition.current = {x:currWidth.current-1,y:currHeight.current-1}
+        startPosition.current = generateStartPosition()
+        endPosition.current = generateEndPosition()
         initializeMaze()
     }
 
     const downStepDFS = () => {
-        if (started.current && !bfsActive.current) {
+        if (started.current && dfsActive.current) {
 
             setCount(prevCount => (prevCount + 1));
             let { x, y } = path.current.pop()
@@ -190,7 +211,7 @@ export function MazeSolver(props) {
     }
 
     const stepDFS = () => {
-        if (started.current && !bfsActive.current) {
+        if (started.current && dfsActive.current) {
 
             setCount(prevCount => (prevCount + 1));
 
@@ -256,6 +277,8 @@ export function MazeSolver(props) {
         evaluationOrder.current = [{ x: startPosition.current.x, y: startPosition.current.y }]
         path.current = []
         bfsActive.current = false
+        dfsActive.current = true
+        aStarActive.current = false
         started.current = true
 
         requestID.current = requestAnimationFrame(stepDFS)
@@ -360,12 +383,166 @@ export function MazeSolver(props) {
         path.current = [[`${startPosition.current.x}-${startPosition.current.y}`]]
         displayPath.current = [`${startPosition.current.x}-${startPosition.current.y}`]
         started.current = true
+        dfsActive.current = false
+        aStarActive.current = false
         bfsActive.current = true
 
         requestID.current = requestAnimationFrame(stepBFS)
 
 
     } // Make sure the effect runs only once
+
+
+    const downStepAStar = () => {
+        if (started.current && aStarActive.current) {
+
+            setCount(prevCount => (prevCount + 1));
+            let spot = displayPath.current.pop().split('-')
+            let x = parseInt(spot[0])
+            let y = parseInt(spot[1])
+
+            maze.current[x][y].path = false
+            maze.current[x][y].past = true
+
+            x = parseInt(displayPath.current[displayPath.current.length - 1].split('-')[0])
+            y = parseInt(displayPath.current[displayPath.current.length - 1].split('-')[1])
+
+
+            if ((x != startPosition.current.x || y != startPosition.current.y) && ((!maze.current[x][y].t && y > 0 && !maze.current[x][y - 1].past)
+                + (!maze.current[x][y].r && x < currWidth.current - 1 && !maze.current[x + 1][y].past)
+                + (!maze.current[x][y].b && y < currHeight.current - 1 && !maze.current[x][y + 1].past)
+                + (!maze.current[x][y].l && x > 0 && !maze.current[x - 1][y].past)) < 2) {
+
+                requestID.current = requestAnimationFrame(downStepAStar)
+            } else {
+                requestID.current = requestAnimationFrame(stepAStar)
+            }
+
+        }
+    }
+
+    const stepAStar = () => {
+        if (started.current && aStarActive.current) {
+
+            setCount(prevCount => (prevCount + 1));
+
+            if (!completed.current) {
+
+                let currPath = path.current.shift()
+                let currNode = evaluationOrder.current.shift()
+                displayPath.current = currPath
+
+                let x = currNode.x
+                let y = currNode.y
+
+                maze.current[x][y].path = true
+                maze.current[x][y].visited = true
+
+                if (x == endPosition.current.x && y == endPosition.current.y) {
+                    completed.current = true
+
+
+                    requestID.current = requestAnimationFrame(stepAStar)
+                } else {
+                    let pathAdded = false
+                    
+                    let newX = x
+                    let newY = y-1
+                    if (!maze.current[x][y].t && y > 0 && !maze.current[x][newY].visited) {
+                        let heuristic = Math.abs(newX-endPosition.current.x)+Math.abs(newY-endPosition.current.y)+currNode.cost+1
+                        let node = {x:newX,y:newY,cost:currNode.cost+1,heuristic:heuristic}
+                        let i = 0
+                        while(i<evaluationOrder.current.length && evaluationOrder.current[i].heuristic<heuristic){
+                            i++
+                        }
+                        evaluationOrder.current.splice(i,0,node)
+                        path.current.splice(i,0,[...currPath, `${newX}-${newY}`])
+
+                        pathAdded = true
+                    }
+
+                    newX = x+1
+                    newY = y
+                    if (!maze.current[x][y].r && x < currWidth.current - 1 && !maze.current[newX][newY].visited) {
+                        let heuristic = Math.abs(newX-endPosition.current.x)+Math.abs(newY-endPosition.current.y)+currNode.cost+1
+                        let node = {x:newX,y:newY,cost:currNode.cost+1,heuristic:heuristic}
+                        let i = 0
+                        while(i<evaluationOrder.current.length && evaluationOrder.current[i].heuristic<heuristic){
+                            i++
+                        }
+                        evaluationOrder.current.splice(i,0,node)
+                        path.current.splice(i,0,[...currPath, `${newX}-${newY}`])
+
+                        pathAdded = true
+                    }
+
+                    newX = x
+                    newY = y+1
+                    if (!maze.current[x][y].b && y < currHeight.current - 1 && !maze.current[newX][newY].visited) {
+                        let heuristic = Math.abs(newX-endPosition.current.x)+Math.abs(newY-endPosition.current.y)+currNode.cost+1
+                        let node = {x:newX,y:newY,cost:currNode.cost+1,heuristic:heuristic}
+                        let i = 0
+                        while(i<evaluationOrder.current.length && evaluationOrder.current[i].heuristic<heuristic){
+                            i++
+                        }
+                        evaluationOrder.current.splice(i,0,node)
+                        path.current.splice(i,0,[...currPath, `${newX}-${newY}`])
+
+                        pathAdded = true
+                    }
+
+                    newX = x-1
+                    newY = y
+                    if (!maze.current[x][y].l && x > 0 && !maze.current[newX][newY].visited) {
+                        let heuristic = Math.abs(newX-endPosition.current.x)+Math.abs(newY-endPosition.current.y)+currNode.cost+1
+                        let node = {x:newX,y:newY,cost:currNode.cost+1,heuristic:heuristic}
+                        let i = 0
+                        while(i<evaluationOrder.current.length && evaluationOrder.current[i].heuristic<heuristic){
+                            i++
+                        }
+                        evaluationOrder.current.splice(i,0,node)
+                        path.current.splice(i,0,[...currPath, `${newX}-${newY}`])
+
+                        pathAdded = true
+                    }
+
+                    if (pathAdded) {
+                        requestID.current = requestAnimationFrame(stepAStar)
+                    } else {
+                        requestID.current = requestAnimationFrame(downStepAStar)
+                    }
+                }
+            }
+        }
+    }
+
+    const startAStar = () => {
+        cancelAnimationFrame(requestID.current)
+
+        completed.current = false
+        maze.current = maze.current.map(w => {
+            return w.map(v => {
+                v.visited = false
+                v.path = false
+                v.past = false
+
+                return v
+            })
+        })
+        let heuristic = Math.abs(startPosition.current.x-endPosition.current.x)+Math.abs(startPosition.current.y-endPosition.current.y)
+        evaluationOrder.current = [{ x: startPosition.current.x, y: startPosition.current.y ,cost:0,heuristic:heuristic}]
+        path.current = [[`${startPosition.current.x}-${startPosition.current.y}`]]
+        displayPath.current = [`${startPosition.current.x}-${startPosition.current.y}`]
+        started.current = true
+        bfsActive.current = false
+        dfsActive.current = false
+        aStarActive.current = true
+
+        requestID.current = requestAnimationFrame(stepAStar)
+
+
+    }
+
 
 
 
@@ -423,6 +600,15 @@ export function MazeSolver(props) {
         }
     }
 
+    const newMaze = () => {
+        cancelAnimationFrame(requestID.current)
+        started.current = false
+        startPosition.current = generateStartPosition()
+        endPosition.current = generateEndPosition()
+
+        initializeMaze()
+    }
+
 
     window.addEventListener('mousemove', (e) => {
         if(moveStart.current){
@@ -442,9 +628,11 @@ export function MazeSolver(props) {
         <div className='MazeSolver' >
             <h2 className='pageTitle'>Maze Solver</h2>
             <div>
-                <button onClick={initializeMaze}>Generate</button>
+                <button onClick={newMaze}>New Maze</button>
+                <br></br>
                 <button onClick={startDFS}>DFS</button>
                 <button onClick={startBFS}>BFS</button>
+                <button onClick={startAStar}>A*</button>
             </div>
             <div>
                 <label>Width: </label>
@@ -514,7 +702,7 @@ export function MazeSolver(props) {
                         }
 
                         if (started.current) {
-                            if (bfsActive.current) {
+                            if (bfsActive.current || aStarActive.current) {
                                 if (displayPath.current.includes(`${v.x}-${v.y}`)) {
                                     return <div key={`${i}-${j}`} className={className}><div className='msDot'></div></div>
                                 }
@@ -543,11 +731,13 @@ export function MazeSolver(props) {
             <h3 className='descriptionTitle'>Description</h3>
             <p className='descriptionText'>
                 The Maze Solver project generates a random maze and gives the user the option
-                of solving the maze with a depth first search (DFS) or a breadth first search (BFS). Both
+                of solving the maze with a depth first search (DFS), a breadth first search (BFS), or an A-Star search (A*). All
                 variations are guaranteed to find a solution if one exists, but a breadth first search is guaranteed
-                to find the shortest path. The current path is represented by solid dots and squares that have been searched
-                but lead to a dead-end are represented by hollow dots. During a BFS the light dots represent a node that has
-                been searched but is not on the current path. To change the location of the start or end squares, click on the
+                to find the shortest path. An A* algorithm is only guaranteed to find the optimal solution if the heuristic never 
+                overestimates the cost. The heuristic used for this A* search adds the current path length and the Manhattan distance.
+                The current path is represented by solid dots and squares that have been searched
+                but lead to a dead-end are represented by hollow dots. During BFS and A* the light dots represent a node that has
+                been searched but is not on the current path and not yet eliminated. To change the location of the start or end squares, click on the
                 square you wish to change then the location you wish to place it.
             </p>
             <br></br>
