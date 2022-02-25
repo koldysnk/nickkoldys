@@ -446,11 +446,11 @@ export function loadAllWords(offset) {
                 if (data.ok) {
                     dispatch(loadDictionary(data.dictionary));
                 } else {
-                    dispatch(serverError(`Unfortunately the dictionary is unavailable due to a server error.`))
+                    dispatch(serverError(`Unfortunately the dictionary is unavailable due to a server error. All games and projects besides hangman are functional.`))
                 }
             })
             .catch(e => {
-                dispatch(serverError(`Unfortunately the dictionary is unavailable due to a server error: ${e}`))
+                dispatch(serverError(`Unfortunately the dictionary is unavailable due to a server error: ${e}. All games and projects besides hangman are functional.`))
             });
     };
 }
@@ -466,11 +466,11 @@ export function makeGuess(length, regex, guessed) {
                     dispatch(setMostRecentLetter(data.guess));
                     dispatch(stopWaiting());
                 } else {
-                    dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error.`))
+                    dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error. All games and projects besides hangman are functional.`))
                 }
             })
             .catch(e => {
-                dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error: ${e}`))
+                dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error: ${e}. All games and projects besides hangman are functional.`))
             });
     };
 }
@@ -491,7 +491,7 @@ export function wordLost(word) {
                 dispatch(stopWaiting());
             })
             .catch(e => {
-                dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error: ${e}`))
+                dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error: ${e}. All games and projects besides hangman are functional.`))
             });
     };
 }
@@ -507,11 +507,11 @@ export function loadRandWord(length, difficulty) {
                     dispatch(setRandWord(data.word));
                     dispatch(stopWaiting())
                 } else {
-                    dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error.`))
+                    dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error. All games and projects besides hangman are functional.`))
                 }
             })
             .catch(e => {
-                dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error: ${e}`))
+                dispatch(serverError(`Unfortunately the Hangman is unavailable due to a server error: ${e}. All games and projects besides hangman are functional.`))
             });
     };
 }
