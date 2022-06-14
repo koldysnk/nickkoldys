@@ -7,6 +7,7 @@ function App() {
         <p>
           nickkoldys.com version 2 coming soon.
         </p>
+        <p><a href="https://nickkoldys.com">version 1</a></p>
       </header>
     </div>
   );
