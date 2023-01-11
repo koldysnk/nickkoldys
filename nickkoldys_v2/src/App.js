@@ -1,14 +1,22 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+import { Home } from './Home';
+import { NotFound } from './NotFound';
+import { FoodPlannerHome } from './food-planner/FoodPlannerHome';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          nickkoldys.com version 2 coming soon.
-        </p>
-        <p><a href="https://nickkoldys.com">version 1</a></p>
-      </header>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/home" element={<Home />} />
+          <Route path="/food-planner" element={<FoodPlannerHome />} />
+          <Route path="/404" element={<NotFound />} />
+          <Route path="*" element={<Navigate replace to="/404" />} />
+        </Routes>
+      </BrowserRouter>
+
+
     </div>
   );
 }
