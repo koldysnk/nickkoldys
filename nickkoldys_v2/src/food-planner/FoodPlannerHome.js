@@ -1,15 +1,18 @@
 import React from 'react';
-
+import { RecipeTile } from './RecipeTile.js';
 export function FoodPlannerHome(props) {
+    const recipe_list = ['Greek Dinner Spaghetti with Feta','Pork and Pepper Enchiladas']
 
     return (
         <div>
-            <header className="App-header">
-                <p>
-                    nickkoldys.com version  coming soon.
-                </p>
-                <p><a href="https://nickkoldys.com">version 1</a></p>
+            <header className="Food-Planner-header">
+                <h2>Recipes</h2>
             </header>
+            <body className="Food-Planner-body">
+                {recipe_list.map(i => {
+                    return <RecipeTile name={i}/>
+                })}
+            </body>
         </div>
     );
 }
