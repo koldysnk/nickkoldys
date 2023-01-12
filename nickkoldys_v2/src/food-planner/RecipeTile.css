@@ -1,0 +1,22 @@
+.Recipe-Tile{
+    box-sizing: border-box;
+    transition: .5s;
+    transition-timing-function: ease-out;
+    border: solid lightslategray 1pt;
+    padding: 5px;
+    margin: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    height: 10vh;
+    width: 95vw;
+}
+.Recipe-Tile:hover{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-color: lightgrey;
+}
+.Recipe-Tile-Image{
+    height: 90%;
+    border: solid black 1pt;
+}
