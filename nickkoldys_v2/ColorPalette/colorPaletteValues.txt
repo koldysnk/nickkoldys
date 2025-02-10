@@ -1,0 +1,7 @@
+Color Palette 1 (Light blue theme)
+Dark Blue - 0, 44, 64
+Blue - 61, 127, 195
+Purplish Gray - 157. 158, 181
+Light Blue - 186, 209, 241
+Blueish white - 229, 233, 255        
+lighter blueish white: 239, 243, 253
