@@ -3,3 +3,4 @@ dist
 .vscode
 env
 email_credentials.txt
+variables.json
