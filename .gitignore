@@ -4,3 +4,4 @@ dist
 env
 email_credentials.txt
 maintenance/log*
+variables.json
