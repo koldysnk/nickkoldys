@@ -1,21 +1,25 @@
+import os
 import json
 import smtplib
 import requests
 import traceback
 import subprocess
-from datetime import date
 from os.path import basename
-from requests.exceptions import SSLError
-from email.mime.application import MIMEApplication
-from email.mime.multipart import MIMEMultipart
+from datetime import date, timedelta
 from email.mime.text import MIMEText
+from requests.exceptions import SSLError
 from email.utils import COMMASPACE, formatdate
+from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 
 
 todays_date = date.today()
 location = "/home/nkoldys/personalSite/nickkoldys"
 log_file = f"{location}/maintenance/log_restart_server_{todays_date.year}-{todays_date.month}-{todays_date.day}.txt"
-variables = json.load(f"{location}/variables.json")
+
+variables ={} 
+with open(f"{location}/variables.json") as file:
+        variables = json.load(file)
 
 def output(value,f=None):
         print(value)
@@ -104,6 +108,10 @@ def main():
                 notify = True
         else:
                 output("Process concluded with no errors.",f)
+                if not notify:
+                        yesterday = todays_date - timedelta(days=1)
+                        log_file2 = f"{location}/maintenance/log_restart_server_{yesterday.year}-{yesterday.month}-{yesterday.day}.txt"
+                        os.remove(log_file2)
         finally:
                 f.close()
                 if notify:
