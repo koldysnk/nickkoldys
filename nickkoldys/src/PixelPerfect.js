@@ -275,6 +275,20 @@ export function PixelPerfect(props) {
         //return () => cancelAnimationFrame(requestRef.current);
     } // Make sure the effect runs only oncea
 
+    const download = () => {
+        let canvas = document.getElementsByClassName('canvas')[0]
+        // Convert canvas to data URL
+        const dataURL = canvas.toDataURL('image/png');
+
+        // Create a link element
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = 'pixel_perfect_image.png';
+
+        // Trigger the download
+        link.click();
+    }
+
     const choosePic = () => {
         dispatch(setPPChoosePicture(true))
     }
@@ -291,7 +305,7 @@ export function PixelPerfect(props) {
             <div className='ppOriginalImageBox'>
                 <img className='ppOriginalImage' src={activePicture}></img>
             </div>
-            <div><button onClick={start}>{started.current ? 'Stop' : 'Start'}</button><button onClick={choosePic}>Select Image</button></div>
+            <div><button onClick={start}>{started.current ? 'Stop' : 'Start'}</button><button onClick={choosePic}>Select Image</button>{started.current ? <button onClick={download}>Download</button> : ''}</div>
             {count>0?`Generation Count: ${Math.round(count)}`:errMessage}
             <canvas className={`canvas ${started.current ? '' : 'hiddenCanvas'}`} ></canvas>
             {started.current ? `Best Accuracy: ${(accuracy.current * 100).toFixed(4).replace(/\.0*$|0+$/, "")}%` : ''}
