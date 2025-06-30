@@ -17,12 +17,17 @@ todays_date = date.today()
 location = "/home/nkoldys/personalSite/nickkoldys"
 log_file = f"{location}/maintenance/log_restart_server_{todays_date.year}-{todays_date.month}-{todays_date.day}.txt"
 
-variables ={} 
+variables ={}
+
+attachment_string = ""
+
 with open(f"{location}/variables.json") as file:
         variables = json.load(file)
 
 def output(value,f=None):
+        global attachment_string
         print(value)
+        attachment_string += str(value) + "\n"
         if f:
                 f.write(f'{value}\n')
 
@@ -31,7 +36,7 @@ def email(message,file=None):
         send_from = variables.get("email")
         send_to = [send_from]
         subject = message
-        text = "This is an alert from your server. Please view the attachment for more information."
+        text = "This is an alert from your server. Please view the attachment for more information.\n\n"+attachment_string
         msg['From'] = send_from
         msg['To'] = COMMASPACE.join(send_to)
         msg['Date'] = formatdate(localtime=True)

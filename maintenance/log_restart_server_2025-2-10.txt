@@ -1,3 +1,0 @@
-Starting Restart Process...
-Server is online.
-Process concluded with no errors.
