@@ -101,7 +101,24 @@ def main():
                                 notify = True
                 except SSLError as e:
                         output(e)
-                        output("The server certification needs to be refreshed")
+                        output("The server certification needs to be refreshed",f)
+
+                        #Restarting nginx
+                        output("Attempting to restart nginx",f)
+                        command = ["sudo","service","nginx","restart"]
+                        output(" ".join(command))
+                        nginx_restart = subprocess.run(command,capture_output=True,text=True)
+                        output(nginx_restart.stdout,f)
+
+                        #Restarting apache
+                        output("Attempting to restart apache",f)
+                        command = ["sudo","service","apache2","restart"]
+                        output(" ".join(command))
+                        apache_restart = subprocess.run(command,capture_output=True,text=True)
+                        output(apache_restart.stdout,f)
+
+                        output("Restart atempts complete. Please review.",f)
+
                         problem = True
                         notify = True
 
