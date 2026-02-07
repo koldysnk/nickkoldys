@@ -103,6 +103,13 @@ def main():
                         output(e)
                         output("The server certification needs to be refreshed",f)
 
+                        #Renewing certificate
+                        output("Attempting to renew the certificates",f)
+                        command = ["sudo","certbot","renew"]
+                        output(" ".join(command))
+                        nginx_restart = subprocess.run(command,capture_output=True,text=True)
+                        output(nginx_restart.stdout,f)
+
                         #Restarting nginx
                         output("Attempting to restart nginx",f)
                         command = ["sudo","service","nginx","restart"]
